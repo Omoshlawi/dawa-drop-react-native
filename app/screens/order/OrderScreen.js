@@ -1,4 +1,4 @@
-import { StyleSheet, View, Platform } from "react-native";
+import { StyleSheet, View, Platform, Modal } from "react-native";
 import React, { useState } from "react";
 import * as Yup from "yup";
 import {
@@ -11,6 +11,7 @@ import { Button, IconButton, List, Text } from "react-native-paper";
 import AppDateTimePicker from "../../components/input/AppDateTimePicker";
 import AppFormDateTimePicker from "../../components/forms/AppFormDateTimePicker";
 import Logo from "../../components/Logo";
+import LocationChoice from "../../components/order/LocationChoice";
 
 const validationSchemer = Yup.object().shape({
   national_id: Yup.number().label("National Id"),
@@ -28,6 +29,7 @@ const OrderScreen = () => {
   const handleSubmit = async (values, { setFieldError }) => {
     console.log(values);
   };
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <View>
@@ -55,12 +57,21 @@ const OrderScreen = () => {
         />
         <AppFormDateTimePicker icon="timetable" name="date_of_depletion" />
         <List.Item
-          onPress={() => {}}
+          onPress={() => {
+            setShowModal(true);
+          }}
           title="Select Delivery Location"
           left={(props) => <List.Icon {...props} icon="google-maps" />}
         />
         <AppFormSubmitButton title="Order Now" />
       </AppForm>
+      <Modal
+        visible={showModal}
+        onDismiss={() => setShowModal(false)}
+        animationType="slide"
+      >
+        <LocationChoice setVisible={setShowModal} />
+      </Modal>
     </View>
   );
 };

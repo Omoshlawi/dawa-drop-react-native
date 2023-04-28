@@ -6,6 +6,7 @@ import { Avatar, IconButton } from "react-native-paper";
 import { useUserContext } from "../../context/hooks";
 import colors from "../../utils/colors";
 import routes from "../../navigation/routes";
+import SearchHeader from "../../components/SearchHeader";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUserContext();
