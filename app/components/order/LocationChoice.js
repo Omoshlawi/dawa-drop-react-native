@@ -1,20 +1,44 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Button, IconButton } from "react-native-paper";
 import useLocation from "../../hooks/useLocation";
 import MapView, { Marker } from "react-native-maps";
 import colors from "../../utils/colors";
+/**
+ *
+ * @param {*} param0
+ * docs: https://github.com/react-native-maps/react-native-maps/blob/master/docs/marker.md
+ * docs2:https://github.com/react-native-maps/react-native-maps
+ * @returns
+ */
 
 const LocationChoice = ({ setVisible, onLocationChosen }) => {
   const location = useLocation();
+  const [markerLocation, setMarkerLocation] = useState();
+  useEffect(() => {
+    setMarkerLocation({ ...location });
+  }, [location]);
   return (
     <View style={styles.screen}>
-      <IconButton
-        icon="close"
-        mode="outlined"
-        style={styles.close}
-        onPress={() => setVisible(false)}
-      />
+      <View style={styles.buttonsGroup}>
+        <IconButton
+          icon="check"
+          mode="outlined"
+          iconColor={colors.primary}
+          onPress={() => {
+            if (onLocationChosen instanceof Function) {
+              onLocationChosen(markerLocation);
+            }
+            setVisible(false);
+          }}
+        />
+        <IconButton
+          icon="close"
+          mode="outlined"
+          iconColor={colors.danger}
+          onPress={() => setVisible(false)}
+        />
+      </View>
       {location && (
         <View style={styles.mapContainer}>
           <MapView
@@ -27,10 +51,18 @@ const LocationChoice = ({ setVisible, onLocationChosen }) => {
             }}
           >
             <Marker
-              coordinate={location}
-              title="You current location"
-              // description="You current location"
-            />
+              coordinate={markerLocation}
+              title="Long press and drag to your desired location"
+              draggable
+              onDragEnd={(e) => {
+                setMarkerLocation(e.nativeEvent.coordinate);
+              }}
+            >
+              <Image
+                source={require("../../assets/hospitalmarker.png")}
+                style={{ width: 60, height: 60 }}
+              />
+            </Marker>
           </MapView>
         </View>
       )}
@@ -41,10 +73,6 @@ const LocationChoice = ({ setVisible, onLocationChosen }) => {
 export default LocationChoice;
 
 const styles = StyleSheet.create({
-  close: {
-    alignSelf: "flex-end",
-    margin: 10,
-  },
   mapContainer: {
     flex: 1,
   },
@@ -54,5 +82,10 @@ const styles = StyleSheet.create({
   },
   screen: {
     flex: 1,
+  },
+  buttonsGroup: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
   },
 });
