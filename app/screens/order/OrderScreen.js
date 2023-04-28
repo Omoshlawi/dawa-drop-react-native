@@ -1,10 +1,15 @@
 import { StyleSheet, View, Platform } from "react-native";
 import React, { useState } from "react";
 import * as Yup from "yup";
-import { AppForm, AppFormField } from "../../components/forms";
+import {
+  AppForm,
+  AppFormField,
+  AppFormSubmitButton,
+} from "../../components/forms";
 import moment from "moment";
 import { Button, Text } from "react-native-paper";
 import AppDateTimePicker from "../../components/input/AppDateTimePicker";
+import AppFormDateTimePicker from "../../components/forms/AppFormDateTimePicker";
 
 const validationSchemer = Yup.object().shape({
   national_id: Yup.number().label("National Id"),
@@ -14,12 +19,14 @@ const validationSchemer = Yup.object().shape({
 
 const initialValues = {
   national_id: 0,
-  date_of_depletion: moment.now(),
+  date_of_depletion: new Date(Date.now()).toISOString(),
   reach_out_phone_number: "",
 };
 
 const OrderScreen = () => {
-  const handleSubmit = async (values, { setFieldError }) => {};
+  const handleSubmit = async (values, { setFieldError }) => {
+    console.log(values);
+  };
 
   return (
     <View>
@@ -29,10 +36,13 @@ const OrderScreen = () => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
-        <AppFormField name="national_id" plaholder="National Id" />
-        <AppFormField name="date_of_depletion" />
-        <AppFormField name="reach_out_phone_number" />
-        <AppDateTimePicker onChangeDate={(date) => console.log(date)} />
+        <AppFormField name="national_id" placeholder="National Id" />
+        <AppFormField
+          name="reach_out_phone_number"
+          placeholder="Phone Number"
+        />
+        <AppFormDateTimePicker name="date_of_depletion" />
+        <AppFormSubmitButton title="Order Now" />
       </AppForm>
     </View>
   );

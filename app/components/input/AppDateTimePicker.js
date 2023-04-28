@@ -10,7 +10,7 @@ const AppDateTimePicker = ({
   value,
   onChangeDate,
 }) => {
-  const [date, setDate] = useState(new Date(value ? value : moment.now()));
+  const [date, setDate] = useState(new Date(value ? value : Date.now()));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const onChange = (event, selectedDate) => {
@@ -34,6 +34,7 @@ const AppDateTimePicker = ({
       <TextInput
         style={styles.textInput}
         placeholder={placeholder}
+        placeholderTextColor={colors.medium}
         value={date.toDateString()}
       />
       {show && (
