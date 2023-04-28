@@ -34,6 +34,8 @@ export const useUser = () => {
     apiClient.get("orders/", params, { headers: getAuthHeader(token) });
   const postOrder = (token, data) =>
     apiClient.post("orders/", data, { headers: getAuthHeader(token) });
+  const checkoutDelivery = (token, data) =>
+    apiClient.post("orders/feedback/", data, { headers: getAuthHeader(token) });
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
   return {
@@ -45,6 +47,7 @@ export const useUser = () => {
     getOrders,
     getPayments,
     postOrder,
+    checkoutDelivery,
   };
 };
 

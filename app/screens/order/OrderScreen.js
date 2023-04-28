@@ -1,6 +1,5 @@
 import { StyleSheet, View, Platform, Modal } from "react-native";
 import React, { useState } from "react";
-import * as Yup from "yup";
 import {
   AppForm,
   AppFormField,
@@ -17,6 +16,7 @@ import { useUser } from "../../api/hooks";
 import { useUserContext } from "../../context/hooks";
 import routes from "../../navigation/routes";
 
+import * as Yup from "yup";
 const validationSchemer = Yup.object().shape({
   national_id: Yup.string().label("National Id").required(),
   date_of_depletion: Yup.string().label("Date of depletion"),
@@ -31,6 +31,7 @@ const initialValues = {
 
 const OrderScreen = ({ navigation }) => {
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [deliverLocation, setDeliveryLocation] = useState();
   const [showLocError, setShowLocError] = useState(false);
   const { postOrder } = useUser();
@@ -50,7 +51,9 @@ const OrderScreen = ({ navigation }) => {
     setFieldValue("longitude", deliverLocation.longitude);
     setFieldValue("latitude", deliverLocation.latitude);
     // post to server
+    setLoading(true);
     const response = await postOrder(token, values);
+    setLoading(false);
     if (!response.ok) {
       if (response.problem === "CLIENT_ERROR") {
         for (const key in response.data) {
@@ -120,7 +123,7 @@ const OrderScreen = ({ navigation }) => {
             </Text>
           )}
         </View>
-        <AppFormSubmitButton title="Order Now" />
+        <AppFormSubmitButton title="Order Now" loading={loading} />
       </AppForm>
       <Modal
         visible={showModal}

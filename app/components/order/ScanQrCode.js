@@ -4,15 +4,15 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import colors from "../../utils/colors";
 import { IconButton } from "react-native-paper";
 
-const ScanQrCode = () => {
+const ScanQrCode = ({ onScanned }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [scannedCode, setScannedCode] = useState();
+  const [backCam, setBackCam] = useState(true);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    setScannedCode(data);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    if (onScanned instanceof Function) onScanned(data);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   useEffect(() => {
@@ -33,22 +33,32 @@ const ScanQrCode = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={StyleSheet.absoluteFillObject}
-        />
-      </View>
-      {scanned && (
-        <View style={styles.rescanButton}>
+      {!scanned && (
+        <View style={styles.container}>
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={StyleSheet.absoluteFillObject}
+            type={backCam ? "back" : "front"}
+          />
+        </View>
+      )}
+      <View style={styles.rescanButton}>
+        {scanned ? (
           <IconButton
             icon="refresh"
             size={50}
             mode="outlined"
             onPress={() => setScanned(false)}
           />
-        </View>
-      )}
+        ) : (
+          <IconButton
+            icon={backCam ? "camera-flip" : "camera-flip-outline"}
+            size={50}
+            mode="outlined"
+            onPress={() => setBackCam(!backCam)}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -57,7 +67,7 @@ export default ScanQrCode;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 4,
   },
   rescanButton: {
     alignItems: "center",
