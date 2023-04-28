@@ -4,11 +4,13 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import { Button, IconButton } from "react-native-paper";
 import colors from "../../utils/colors";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const AppDateTimePicker = ({
   placeholder = "Select Date",
   value,
   onChangeDate,
+  icon,
 }) => {
   const [date, setDate] = useState(new Date(value ? value : Date.now()));
   const [mode, setMode] = useState("date");
@@ -31,6 +33,9 @@ const AppDateTimePicker = ({
 
   return (
     <View style={styles.container}>
+      {icon && (
+        <MaterialCommunityIcons name={icon} size={20} color={colors.medium} />
+      )}
       <TextInput
         style={styles.textInput}
         placeholder={placeholder}
@@ -58,7 +63,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: colors.white,
     paddingHorizontal: 10,
-    marginHorizontal: 5,
+    alignItems: "center",
+    margin: 5,
     borderRadius: 20,
   },
   textInput: {

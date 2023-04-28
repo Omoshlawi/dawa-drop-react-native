@@ -4,7 +4,7 @@ import { useFormikContext } from "formik";
 import AppErrorMessage from "./AppErrorMessage";
 import AppDateTimePicker from "../input/AppDateTimePicker";
 
-const AppFormDateTimePicker = ({ name }) => {
+const AppFormDateTimePicker = ({ name, ...otherProps }) => {
   const { setFieldTouched, handleChange, touched, errors, values } =
     useFormikContext();
   return (
@@ -15,7 +15,7 @@ const AppFormDateTimePicker = ({ name }) => {
           const selectedDate = new Date(date);
           handleChange(name)(selectedDate.toISOString());
         }}
-        // onChangeDate={handleChange(name)}
+        {...otherProps}
       />
       <AppErrorMessage error={errors[name]} visible={touched[name]} />
     </>
