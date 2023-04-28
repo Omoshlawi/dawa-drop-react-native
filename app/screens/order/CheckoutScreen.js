@@ -1,13 +1,6 @@
-import { Alert, StyleSheet, View } from "react-native";
-import React, { useState } from "react";
-import TabBar from "../../components/tab/TabBar";
-import colors from "../../utils/colors";
-import { chechoutTabs } from "../../utils/contants";
-import ScanQrCode from "../../components/order/ScanQrCode";
-import TypeCode from "../../components/order/TypeCode";
-import { Snackbar, Text, IconButton, TextInput } from "react-native-paper";
-import RatingBar from "../../components/ratingbar/RatingBar";
-import TextInputField from "../../components/input/TextInputField";
+import { Alert, StyleSheet, View, Button } from "react-native";
+import { Text } from "react-native-paper";
+import React, { useState, useEffect } from "react";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
 import FeedBackForm from "../../components/order/FeedBackForm";
@@ -17,6 +10,9 @@ import {
   AppFormField,
   AppFormSubmitButton,
 } from "../../components/forms";
+
+import { BarCodeScanner } from "expo-barcode-scanner";
+import { IconButton } from "react-native-paper";
 const validationSchemer = Yup.object().shape({
   code: Yup.string().label("Delivery Code").required(),
   review: Yup.string().label("Review").required(),
@@ -25,25 +21,23 @@ const validationSchemer = Yup.object().shape({
 
 const CheckoutScreen = () => {
   const { checkoutDelivery } = useUser();
-  const [currentTab, setCurrenTab] = useState(0);
   const [initialFormData, setInitialFormData] = useState({
     code: "",
     rating: 4,
     review: "",
   });
-
   const [loading, setLoading] = useState(false);
   const { token } = useUserContext();
-  const tabs = [
-    <ScanQrCode
-      scannedCode={initialFormData.code}
-      onScanned={(code) => {
-        setInitialFormData({ ...initialFormData, code });
-      }}
-    />,
-    <TypeCode />,
-  ];
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState();
+  const [backCam, setBackCam] = useState(true);
+  const [type, setType] = useState(false);
 
+  const handleBarCodeScanned = ({ type, data: code }) => {
+    setScanned(true);
+    setInitialFormData({ ...initialFormData, code });
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
   const handleSubmit = async (values, { setFieldError }) => {
     setLoading(true);
     const response = await checkoutDelivery(token, values);
@@ -67,31 +61,82 @@ const CheckoutScreen = () => {
     }
     Alert.alert("Sucess", "Delivery feedback was a sucess!Thank you");
   };
+
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    getBarCodeScannerPermissions();
+  }, []);
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
   return (
     <View style={styles.screen}>
-      <View style={styles.feedBackRegion}>
-        <TabBar
-          tabItems={chechoutTabs}
-          activeIndex={currentTab}
-          activeBackgroundColor={colors.secondary}
-          onTabItemClicked={(item, index) => {
-            setCurrenTab(index);
-          }}
-        />
-        {tabs[currentTab]}
-        {Boolean(initialFormData.code) && (
-          <AppForm
-            validationSchema={validationSchemer}
-            initialValues={initialFormData}
-            onSubmit={handleSubmit}
-          >
-            <FeedBackForm />
-            <AppFormSubmitButton title="Submitt" loading={loading} />
-          </AppForm>
+      {!scanned && !type && (
+        <>
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleText} variant="titleLarge">
+              Point the camera QR code
+            </Text>
+          </View>
+          <View style={styles.container}>
+            <BarCodeScanner
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              style={StyleSheet.absoluteFillObject}
+              type={backCam ? "back" : "front"}
+            />
+          </View>
+        </>
+      )}
+      <View style={styles.rescanButton}>
+        {!(!scanned && !type) && (
+          <IconButton
+            icon="data-matrix-scan"
+            size={50}
+            mode="outlined"
+            onPress={() => {
+              setScanned(false);
+              setInitialFormData({ ...initialFormData, code: "" });
+              setType(false);
+            }}
+          />
         )}
-
-        <View style={{ flex: 1 }} />
+        {!scanned && !type && (
+          <>
+            <IconButton
+              icon="keyboard"
+              size={50}
+              mode="outlined"
+              onPress={() => setType(true)}
+            />
+            <IconButton
+              icon={backCam ? "camera-flip" : "camera-flip-outline"}
+              size={50}
+              mode="outlined"
+              onPress={() => setBackCam(!backCam)}
+            />
+          </>
+        )}
       </View>
+
+      {(Boolean(initialFormData.code) || type) && (
+        <AppForm
+          validationSchema={validationSchemer}
+          initialValues={initialFormData}
+          onSubmit={handleSubmit}
+        >
+          <FeedBackForm />
+          <AppFormSubmitButton title="Submitt" loading={loading} />
+        </AppForm>
+      )}
+      <View style={{ flex: 1 }} />
     </View>
   );
 };
@@ -102,7 +147,19 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
-  feedBackRegion: {
-    flex: 1,
+
+  container: {
+    flex: 3,
+  },
+  rescanButton: {
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  titleContainer: {
+    alignContent: "center",
+    padding: 10,
+  },
+  titleText: {
+    textAlign: "center",
   },
 });
