@@ -4,9 +4,9 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import colors from "../../utils/colors";
 import { IconButton } from "react-native-paper";
 
-const ScanQrCode = ({ onScanned }) => {
+const ScanQrCode = ({ scannedCode, onScanned }) => {
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+  const [scanned, setScanned] = useState(Boolean(scannedCode));
   const [backCam, setBackCam] = useState(true);
 
   const handleBarCodeScanned = ({ type, data }) => {
@@ -48,7 +48,10 @@ const ScanQrCode = ({ onScanned }) => {
             icon="refresh"
             size={50}
             mode="outlined"
-            onPress={() => setScanned(false)}
+            onPress={() => {
+              setScanned(false);
+              onScanned("");
+            }}
           />
         ) : (
           <IconButton

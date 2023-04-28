@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import TabBar from "../../components/tab/TabBar";
 import colors from "../../utils/colors";
@@ -10,47 +10,62 @@ import RatingBar from "../../components/ratingbar/RatingBar";
 import TextInputField from "../../components/input/TextInputField";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
+import FeedBackForm from "../../components/order/FeedBackForm";
 import * as Yup from "yup";
+import {
+  AppForm,
+  AppFormField,
+  AppFormSubmitButton,
+} from "../../components/forms";
 const validationSchemer = Yup.object().shape({
   code: Yup.string().label("Delivery Code").required(),
-  review: Yup.string().label("Date of depletion").required(),
+  review: Yup.string().label("Review").required(),
+  rating: Yup.number().required().label("Rating"),
 });
-
-const initialValues = {
-  code: "",
-  review: "",
-  rating: 4,
-};
 
 const CheckoutScreen = () => {
   const { checkoutDelivery } = useUser();
   const [currentTab, setCurrenTab] = useState(0);
-  const [formState, setFormState] = useState({
+  const [initialFormData, setInitialFormData] = useState({
+    code: "",
+    rating: 4,
     review: "",
-    rating: 3,
-    code: undefined,
   });
-  const tabs = [
-    <ScanQrCode setFormState={setFormState} />,
-    <TypeCode setFormState={setFormState} />,
-  ];
-  const [refreshing, setRefreshing] = useState(false);
-  const { token } = useUserContext();
-  const [visible, setVisible] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const handleSubmit = async () => {
-    setVisible(false);
-    const response = await checkoutDelivery(token, formState);
+  const [loading, setLoading] = useState(false);
+  const { token } = useUserContext();
+  const tabs = [
+    <ScanQrCode
+      scannedCode={initialFormData.code}
+      onScanned={(code) => {
+        setInitialFormData({ ...initialFormData, code });
+      }}
+    />,
+    <TypeCode />,
+  ];
+
+  const handleSubmit = async (values, { setFieldError }) => {
+    setLoading(true);
+    const response = await checkoutDelivery(token, values);
+    setLoading(false);
     if (!response.ok) {
-      setMessage("Please provide both rating and review and scan/type code");
-      setVisible(true);
+      if (response.problem === "CLIENT_ERROR") {
+        for (const key in response.data) {
+          const element = response.data[key];
+          if (element instanceof Array) {
+            setFieldError(key, element.join(";"));
+          } else if (element instanceof Object) {
+            for (const key1 in element) {
+              const element1 = element[key1];
+              setFieldError(key1, element1.join(";"));
+            }
+          }
+        }
+        return console.log("Checkout: ", response.problem, response.data);
+      }
       return console.log("ReviewScreen: ", response.problem, response.data);
     }
-    setMessage("Review added successfully.Thank you!");
-    setVisible(true);
-    await handleFetch();
-    setFormState({ review: "", rating: 3 });
+    Alert.alert("Sucess", "Delivery feedback was a sucess!Thank you");
   };
   return (
     <View style={styles.screen}>
@@ -64,6 +79,17 @@ const CheckoutScreen = () => {
           }}
         />
         {tabs[currentTab]}
+        {Boolean(initialFormData.code) && (
+          <AppForm
+            validationSchema={validationSchemer}
+            initialValues={initialFormData}
+            onSubmit={handleSubmit}
+          >
+            <FeedBackForm />
+            <AppFormSubmitButton title="Submitt" loading={loading} />
+          </AppForm>
+        )}
+
         <View style={{ flex: 1 }} />
       </View>
     </View>
