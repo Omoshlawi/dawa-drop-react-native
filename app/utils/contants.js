@@ -24,7 +24,17 @@ export const menItems = [
       },
     },
   },
-  { title: "Order History", image: require("../assets/clock.png"), id: 3 },
+  {
+    title: "Order History",
+    image: require("../assets/clock.png"),
+    id: 3,
+    destination: {
+      parentRoute: routes.ORDER_NAVIGATION,
+      nestedRoute: {
+        screen: routes.ORDERS_HISTORY_SCREEN,
+      },
+    },
+  },
   {
     title: "Pending Orders",
     image: require("../assets/pending_1.png"),

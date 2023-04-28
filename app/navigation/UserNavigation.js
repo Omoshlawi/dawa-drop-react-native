@@ -32,11 +32,6 @@ const UserNavigation = () => {
         })}
       />
       <Screen
-        name={routes.ORDERS_SCREEN}
-        component={OrdersScreen}
-        options={{ title: "Orders" }}
-      />
-      <Screen
         name={routes.ORDER_SCREEN}
         component={OrderDetailScreen}
         options={({ route }) => ({
