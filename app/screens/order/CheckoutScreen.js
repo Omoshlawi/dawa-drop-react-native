@@ -13,6 +13,7 @@ import {
 
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { IconButton } from "react-native-paper";
+import colors from "../../utils/colors";
 const validationSchemer = Yup.object().shape({
   code: Yup.string().label("Delivery Code").required(),
   review: Yup.string().label("Review").required(),
@@ -100,6 +101,7 @@ const CheckoutScreen = () => {
           <IconButton
             icon="data-matrix-scan"
             size={50}
+            iconColor={colors.primary}
             mode="outlined"
             onPress={() => {
               setScanned(false);
@@ -115,12 +117,14 @@ const CheckoutScreen = () => {
               size={50}
               mode="outlined"
               onPress={() => setType(true)}
+              iconColor={colors.primary}
             />
             <IconButton
               icon={backCam ? "camera-flip" : "camera-flip-outline"}
               size={50}
               mode="outlined"
               onPress={() => setBackCam(!backCam)}
+              iconColor={colors.primary}
             />
           </>
         )}
