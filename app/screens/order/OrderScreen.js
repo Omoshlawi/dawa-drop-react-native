@@ -76,7 +76,10 @@ const OrderScreen = () => {
                 ? `Change Location (${deliverLocation.latitude},${deliverLocation.longitude})`
                 : `Select Delivery Location`
             }
-            left={(props) => <List.Icon {...props} icon="google-maps" />}
+            titleStyle={{ color: colors.primary }}
+            left={(props) => (
+              <List.Icon {...props} icon="google-maps" color={colors.medium} />
+            )}
           />
           {showLocError && (
             <Text style={styles.error}>
