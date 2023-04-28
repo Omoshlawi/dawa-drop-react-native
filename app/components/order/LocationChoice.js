@@ -25,6 +25,7 @@ const LocationChoice = ({ setVisible, onLocationChosen }) => {
           icon="check"
           mode="outlined"
           iconColor={colors.primary}
+          disabled={!Boolean(location)}
           onPress={() => {
             if (onLocationChosen instanceof Function) {
               onLocationChosen(markerLocation);

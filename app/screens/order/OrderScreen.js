@@ -12,6 +12,7 @@ import AppDateTimePicker from "../../components/input/AppDateTimePicker";
 import AppFormDateTimePicker from "../../components/forms/AppFormDateTimePicker";
 import Logo from "../../components/Logo";
 import LocationChoice from "../../components/order/LocationChoice";
+import colors from "../../utils/colors";
 
 const validationSchemer = Yup.object().shape({
   national_id: Yup.number().label("National Id"),
@@ -26,11 +27,19 @@ const initialValues = {
 };
 
 const OrderScreen = () => {
-  const handleSubmit = async (values, { setFieldError }) => {
-    console.log(values);
-  };
   const [showModal, setShowModal] = useState(false);
   const [deliverLocation, setDeliveryLocation] = useState();
+  const [showLocError, setShowLocError] = useState(false);
+  const handleSubmit = async (values, { setFieldError, setFieldValue }) => {
+    if (!deliverLocation) {
+      return setShowLocError(true);
+    }
+    setShowLocError(false);
+    // console.log(deliverLocation);
+    setFieldValue("longitude", deliverLocation.longitude);
+    setFieldValue("latitude", deliverLocation.latitude);
+    console.log(values);
+  };
 
   return (
     <View>
@@ -57,17 +66,24 @@ const OrderScreen = () => {
           placeholder="Phone Number"
         />
         <AppFormDateTimePicker icon="timetable" name="date_of_depletion" />
-        <List.Item
-          onPress={() => {
-            setShowModal(true);
-          }}
-          title={
-            deliverLocation
-              ? `Change Location (${deliverLocation.latitude},${deliverLocation.longitude})`
-              : `Select Delivery Location`
-          }
-          left={(props) => <List.Icon {...props} icon="google-maps" />}
-        />
+        <View>
+          <List.Item
+            onPress={() => {
+              setShowModal(true);
+            }}
+            title={
+              deliverLocation
+                ? `Change Location (${deliverLocation.latitude},${deliverLocation.longitude})`
+                : `Select Delivery Location`
+            }
+            left={(props) => <List.Icon {...props} icon="google-maps" />}
+          />
+          {showLocError && (
+            <Text style={styles.error}>
+              Delivery Location must be specified
+            </Text>
+          )}
+        </View>
         <AppFormSubmitButton title="Order Now" />
       </AppForm>
       <Modal
@@ -93,5 +109,9 @@ const styles = StyleSheet.create({
   headerText: {
     padding: 10,
     fontSize: 40,
+  },
+  error: {
+    color: colors.danger,
+    paddingHorizontal: 10,
   },
 });
