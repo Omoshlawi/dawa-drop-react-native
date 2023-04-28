@@ -5,6 +5,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../utils/colors";
 import AccountScreen from "../screens/tab/AccountScreen";
 import SearchScreen from "../screens/tab/SearchScreen";
+import { Image, View, StyleSheet } from "react-native";
+import ActionMenuScreen from "../screens/tab/ActionMenuScreen";
 
 const Tab = createBottomTabNavigator();
 const Navigator = Tab.Navigator;
@@ -13,10 +15,10 @@ function BottomTabNavigation() {
   return (
     <Navigator
       screenOptions={{
-        tabBarInactiveBackgroundColor: colors.secondary,
-        tabBarActiveBackgroundColor: colors.primary,
-        tabBarActiveTintColor: colors.white,
-        tabBarInactiveTintColor: colors.black,
+        // tabBarInactiveBackgroundColor: colors.light,
+        // tabBarActiveBackgroundColor: colors.primary,
+        tabBarActiveTintColor: colors.primary,
+        // tabBarInactiveTintColor: colors.black,
         headerShown: false,
       }}
     >
@@ -31,12 +33,18 @@ function BottomTabNavigation() {
         }}
       />
       <Screen
-        component={SearchScreen}
-        name={routes.SEARCH_SCREEN}
+        component={ActionMenuScreen}
+        name={routes.ACTION_MENU_SCREEN}
         options={{
           tabBarLabel: "Search",
+          tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="magnify" color={color} size={size} />
+            <View style={styles.mainTabBar}>
+              <Image
+                style={{ width: size, height: size }}
+                source={require("../assets/heart.png")}
+              />
+            </View>
           ),
         }}
       />
@@ -55,5 +63,20 @@ function BottomTabNavigation() {
     </Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  mainTabBar: {
+    borderRadius: 70 * 0.5,
+    backgroundColor: colors.secondary,
+    width: 70,
+    height: 70,
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 10,
+    borderWidth: 7,
+    borderColor: colors.white,
+  },
+});
 
 export default BottomTabNavigation;
