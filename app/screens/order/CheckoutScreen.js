@@ -37,7 +37,7 @@ const CheckoutScreen = () => {
   };
   return (
     <View style={styles.screen}>
-      <View>
+      <View style={styles.feedBackRegion}>
         <TabBar
           tabItems={chechoutTabs}
           activeIndex={currentTab}
@@ -108,5 +108,8 @@ const styles = StyleSheet.create({
   },
   review: {
     marginBottom: 5,
+  },
+  feedBackRegion: {
+    flex: 1,
   },
 });
