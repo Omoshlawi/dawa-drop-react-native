@@ -10,37 +10,11 @@ import React from "react";
 import colors from "../../utils/colors";
 import AppSafeArea from "../../components/AppSafeArea";
 import { Surface, Text } from "react-native-paper";
+import routes from "../../navigation/routes";
+import { menItems } from "../../utils/contants";
 
-const menItems = [
-  {
-    title: "Order Medicine",
-    image: require("../../assets/medicine.png"),
-    id: 1,
-  },
-  {
-    title: "Checkout Delivery",
-    image: require("../../assets/delivery-truck.png"),
-    id: 2,
-  },
-  { title: "Order History", image: require("../../assets/clock.png"), id: 3 },
-  {
-    title: "Pending Orders",
-    image: require("../../assets/pending_1.png"),
-    id: 4,
-  },
-  {
-    title: "Redeeme Points",
-    image: require("../../assets/box.png"),
-    id: 5,
-  },
-  {
-    title: "Request Tranfer",
-    image: require("../../assets/migration.png"),
-    id: 6,
-  },
-];
 const itemWidth = Dimensions.get("window").width / 2 - 5;
-const ActionMenuScreen = () => {
+const ActionMenuScreen = ({ navigation }) => {
   return (
     <AppSafeArea>
       <View style={styles.screen}>
@@ -62,7 +36,14 @@ const ActionMenuScreen = () => {
             renderItem={({ item }) => {
               const { title, image } = item;
               return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(
+                      item.destination.parentRoute,
+                      item.destination.nestedRoute
+                    )
+                  }
+                >
                   <View style={styles.item}>
                     <Image
                       resizeMode="contain"
