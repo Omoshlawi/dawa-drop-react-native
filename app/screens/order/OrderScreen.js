@@ -43,6 +43,7 @@ const OrderScreen = () => {
         onSubmit={handleSubmit}
       >
         <AppFormField
+          keyboardType="numeric"
           icon="account"
           name="national_id"
           placeholder="National Id"

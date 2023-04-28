@@ -1,4 +1,5 @@
 import routes from "../navigation/routes";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const menItems = [
   {
@@ -8,7 +9,7 @@ export const menItems = [
     destination: {
       parentRoute: routes.ORDER_NAVIGATION,
       nestedRoute: {
-        screen: routes.ORDER_NAVIGATION,
+        screen: routes.ORDER_SCREEN,
       },
     },
   },
@@ -19,7 +20,7 @@ export const menItems = [
     destination: {
       parentRoute: routes.ORDER_NAVIGATION,
       nestedRoute: {
-        screen: routes.ORDER_NAVIGATION,
+        screen: routes.CHECHOUT_SCREEN,
       },
     },
   },
@@ -56,5 +57,28 @@ export const menItems = [
         screen: routes.ORDER_NAVIGATION,
       },
     },
+  },
+];
+
+export const chechoutTabs = [
+  {
+    title: "Scan QR code",
+    icon: (
+      <MaterialCommunityIcons
+        name="data-matrix-scan"
+        size={20}
+        style={{ paddingRight: 10 }}
+      />
+    ),
+  },
+  {
+    title: "Type in code ",
+    icon: (
+      <MaterialCommunityIcons
+        name="keyboard"
+        size={20}
+        style={{ paddingRight: 10 }}
+      />
+    ),
   },
 ];

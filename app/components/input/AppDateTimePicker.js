@@ -69,6 +69,6 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
   },
 });
