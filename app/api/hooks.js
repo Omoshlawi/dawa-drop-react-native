@@ -32,9 +32,20 @@ export const useUser = () => {
     });
   const getOrders = (token, params) =>
     apiClient.get("orders/", params, { headers: getAuthHeader(token) });
+  const postOrder = (token, data) =>
+    apiClient.post("orders/", data, { headers: getAuthHeader(token) });
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
-  return { login, logout, getUser, register, putUser, getOrders, getPayments };
+  return {
+    login,
+    logout,
+    getUser,
+    register,
+    putUser,
+    getOrders,
+    getPayments,
+    postOrder,
+  };
 };
 
 export const httpService = {

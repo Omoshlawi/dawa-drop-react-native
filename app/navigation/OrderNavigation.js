@@ -5,6 +5,7 @@ import OrderScreen from "../screens/order/OrderScreen";
 import routes from "./routes";
 import CheckoutScreen from "../screens/order/CheckoutScreen";
 import OrdersHistoryScreen from "../screens/order/OrdersHistoryScreen";
+import OrderDetailScreen from "../screens/order/OrderDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,11 @@ const OrderNavigation = () => {
       <Screen
         name={routes.ORDERS_HISTORY_SCREEN}
         component={OrdersHistoryScreen}
+        options={{ title: "Orders History" }}
+      />
+      <Screen
+        name={routes.ORDERS_DETAIL_SCREEN}
+        component={OrderDetailScreen}
         options={{ title: "Orders History" }}
       />
     </Navigator>

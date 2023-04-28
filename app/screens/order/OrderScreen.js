@@ -13,32 +13,65 @@ import AppFormDateTimePicker from "../../components/forms/AppFormDateTimePicker"
 import Logo from "../../components/Logo";
 import LocationChoice from "../../components/order/LocationChoice";
 import colors from "../../utils/colors";
+import { useUser } from "../../api/hooks";
+import { useUserContext } from "../../context/hooks";
+import routes from "../../navigation/routes";
 
 const validationSchemer = Yup.object().shape({
-  national_id: Yup.number().label("National Id"),
+  national_id: Yup.string().label("National Id").required(),
   date_of_depletion: Yup.string().label("Date of depletion"),
   reach_out_phone_number: Yup.string().label("Phone Number").required(),
 });
 
 const initialValues = {
-  national_id: 0,
+  national_id: "",
   date_of_depletion: new Date(Date.now()).toISOString(),
   reach_out_phone_number: "",
 };
 
-const OrderScreen = () => {
+const OrderScreen = ({ navigation }) => {
   const [showModal, setShowModal] = useState(false);
   const [deliverLocation, setDeliveryLocation] = useState();
   const [showLocError, setShowLocError] = useState(false);
+  const { postOrder } = useUser();
+  const { token } = useUserContext();
   const handleSubmit = async (values, { setFieldError, setFieldValue }) => {
+    // convert date time to date SURPOTED BY ENDPOINT
+    setFieldValue(
+      "date_of_depletion",
+      moment(values["date_of_depletion"]).format("YYYY-MM-DD")
+    );
+    // validate location
     if (!deliverLocation) {
       return setShowLocError(true);
     }
     setShowLocError(false);
-    // console.log(deliverLocation);
+    // set location params
     setFieldValue("longitude", deliverLocation.longitude);
     setFieldValue("latitude", deliverLocation.latitude);
-    console.log(values);
+    // post to server
+    const response = await postOrder(token, values);
+    if (!response.ok) {
+      if (response.problem === "CLIENT_ERROR") {
+        for (const key in response.data) {
+          const element = response.data[key];
+          if (element instanceof Array) {
+            setFieldError(key, element.join(";"));
+          } else if (element instanceof Object) {
+            for (const key1 in element) {
+              const element1 = element[key1];
+              setFieldError(key1, element1.join(";"));
+            }
+          }
+        }
+        return console.log("LoginScreen: ", response.problem, response.data);
+      }
+    }
+    navigation.navigate(routes.ORDER_NAVIGATION, {
+      screen: routes.ORDERS_DETAIL_SCREEN,
+      params: response.data,
+    });
+    console.log(response.data);
   };
 
   return (

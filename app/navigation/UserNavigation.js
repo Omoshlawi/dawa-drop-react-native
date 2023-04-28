@@ -1,6 +1,4 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import OrderDetailScreen from "../screens/user/OrderDetailScreen";
-import OrdersScreen from "../screens/user/OrdersScreen";
 import PaymentsScreen from "../screens/user/PaymentsScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import routes from "./routes";
@@ -29,13 +27,6 @@ const UserNavigation = () => {
         component={PaymentDetailScreen}
         options={({ route }) => ({
           title: route.params.payment_id,
-        })}
-      />
-      <Screen
-        name={routes.ORDER_SCREEN}
-        component={OrderDetailScreen}
-        options={({ route }) => ({
-          title: route.params.order_id,
         })}
       />
     </Navigator>
