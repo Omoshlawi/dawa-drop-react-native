@@ -30,6 +30,7 @@ const OrderScreen = () => {
     console.log(values);
   };
   const [showModal, setShowModal] = useState(false);
+  const [deliverLocation, setDeliveryLocation] = useState();
 
   return (
     <View>
@@ -60,7 +61,11 @@ const OrderScreen = () => {
           onPress={() => {
             setShowModal(true);
           }}
-          title="Select Delivery Location"
+          title={
+            deliverLocation
+              ? `Change Location (${deliverLocation.latitude},${deliverLocation.longitude})`
+              : `Select Delivery Location`
+          }
           left={(props) => <List.Icon {...props} icon="google-maps" />}
         />
         <AppFormSubmitButton title="Order Now" />
@@ -70,7 +75,10 @@ const OrderScreen = () => {
         onDismiss={() => setShowModal(false)}
         animationType="slide"
       >
-        <LocationChoice setVisible={setShowModal} />
+        <LocationChoice
+          setVisible={setShowModal}
+          onLocationChosen={setDeliveryLocation}
+        />
       </Modal>
     </View>
   );
