@@ -94,7 +94,9 @@ const PendingOrdersScreen = ({ navigation }) => {
                     icon="truck-delivery"
                     iconColor={colors.primary}
                     {...props}
-                    onPress={() => {}}
+                    onPress={() =>
+                      navigation.navigate(routes.TRACK_DELIVERY_SCREEN, item)
+                    }
                   />
                 )}
               />
