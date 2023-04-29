@@ -8,7 +8,11 @@ const TriStatusBar = ({ status, barThickness = 10 }) => {
       <View
         style={[
           styles.progress,
-          { height: barThickness },
+          {
+            height: barThickness,
+            borderTopLeftRadius: barThickness * 2,
+            borderBottomLeftRadius: barThickness * 2,
+          },
           styles.first,
           status === 1 && { backgroundColor: colors.success },
           status === 2 && { backgroundColor: colors.success },
@@ -38,7 +42,13 @@ const TriStatusBar = ({ status, barThickness = 10 }) => {
       <View
         style={[
           styles.progress,
-          { height: barThickness },
+          {
+            height: barThickness,
+          },
+          status !== 3 && {
+            borderTopRightRadius: barThickness * 2,
+            borderBottomRightRadius: barThickness * 2,
+          },
           styles.third,
           status === 1 && { backgroundColor: colors.danger },
           status === 2 && { backgroundColor: colors.danger },
@@ -74,8 +84,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   percentageContainer: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     borderRadius: 15,
     borderWidth: 1,
     alignItems: "center",
@@ -83,5 +93,6 @@ const styles = StyleSheet.create({
   },
   percentage: {
     textAlign: "center",
+    fontSize: 10,
   },
 });
