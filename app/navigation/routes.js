@@ -11,6 +11,7 @@ export default Object.freeze({
   USER_NAVIGATION: "User nav",
   ORDERS_HISTORY_SCREEN: "Orders Screen",
   ORDERS_DETAIL_SCREEN: "OrderDetail Screen",
+  PENDING_ORDERS_SCREEN: "Pending Screen",
   ORDER_NAVIGATION: "Order Nav",
   ORDER_SCREEN: "Order Screen",
   CHECHOUT_SCREEN: "Checkout Screen",

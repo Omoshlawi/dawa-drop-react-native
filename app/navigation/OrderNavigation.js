@@ -6,6 +6,7 @@ import routes from "./routes";
 import CheckoutScreen from "../screens/order/CheckoutScreen";
 import OrdersHistoryScreen from "../screens/order/OrdersHistoryScreen";
 import OrderDetailScreen from "../screens/order/OrderDetailScreen";
+import PendingOrdersScreen from "../screens/order/PendingOrdersScreen";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,11 @@ const OrderNavigation = () => {
         name={routes.ORDERS_DETAIL_SCREEN}
         component={OrderDetailScreen}
         options={{ title: "Orders Detail" }}
+      />
+      <Screen
+        name={routes.PENDING_ORDERS_SCREEN}
+        component={PendingOrdersScreen}
+        options={{ title: "Pending Orders" }}
       />
     </Navigator>
   );

@@ -32,6 +32,8 @@ export const useUser = () => {
     });
   const getOrders = (token, params) =>
     apiClient.get("orders/", params, { headers: getAuthHeader(token) });
+  const getPendingOrders = (token, params) =>
+    apiClient.get("orders/pending/", params, { headers: getAuthHeader(token) });
   const postOrder = (token, data) =>
     apiClient.post("orders/", data, { headers: getAuthHeader(token) });
   const checkoutDelivery = (token, data) =>
@@ -48,6 +50,7 @@ export const useUser = () => {
     getPayments,
     postOrder,
     checkoutDelivery,
+    getPendingOrders,
   };
 };
 

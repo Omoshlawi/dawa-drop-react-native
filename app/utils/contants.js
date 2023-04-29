@@ -42,7 +42,7 @@ export const menItems = [
     destination: {
       parentRoute: routes.ORDER_NAVIGATION,
       nestedRoute: {
-        screen: routes.ORDER_NAVIGATION,
+        screen: routes.PENDING_ORDERS_SCREEN,
       },
     },
   },

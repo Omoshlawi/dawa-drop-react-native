@@ -1,9 +1,10 @@
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
 import {
   Avatar,
+  Button,
   Card,
   Checkbox,
   DataTable,
@@ -15,18 +16,18 @@ import moment from "moment/moment";
 import QuanterSizer from "../../components/input/QuanterSizer";
 import routes from "../../navigation/routes";
 import colors from "../../utils/colors";
-import TriStatusBar from "../../components/display/TriStatusBar";
-import { statusTorange } from "../../utils/helpers";
+import StatusBar from "../../components/display/TriStatusBar";
+import { callNumber, statusTorange } from "../../utils/helpers";
 
-const OrdersHistoryScreen = ({ navigation }) => {
+const PendingOrdersScreen = ({ navigation }) => {
   const { token } = useUserContext();
-  const { getOrders } = useUser();
+  const { getPendingOrders } = useUser();
   const [orders, setOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const handleFetch = async () => {
     setRefreshing(true);
-    const response = await getOrders(token, { page_size: 100 });
+    const response = await getPendingOrders(token, { page_size: 100 });
     setRefreshing(false);
     if (!response.ok) {
       return console.log("OrderScreen: ", response.problem, response.data);
@@ -40,9 +41,8 @@ const OrdersHistoryScreen = ({ navigation }) => {
   useEffect(() => {
     handleFetch();
   }, []);
-
   return (
-    <View style={styles.screen}>
+    <View>
       <FlatList
         data={orders}
         refreshing={refreshing}
@@ -54,6 +54,10 @@ const OrdersHistoryScreen = ({ navigation }) => {
             created_at,
             is_delivered,
             is_approved,
+            delivery: {
+              agent: { phone_number: agent_phone },
+              doctor: { phone_number: doctor_phone },
+            },
             longitude,
             latitude,
             reach_out_phone_number,
@@ -86,14 +90,33 @@ const OrdersHistoryScreen = ({ navigation }) => {
                   />
                 )}
                 right={(props) => (
-                  <IconButton icon="chevron-right" {...props} />
+                  <IconButton
+                    icon="truck-delivery"
+                    iconColor={colors.primary}
+                    {...props}
+                    onPress={() => {}}
+                  />
                 )}
               />
               <Card.Content>
-                <TriStatusBar
-                  status={statusTorange(is_delivered, is_approved)}
-                  barThickness={2}
-                />
+                <Card.Actions>
+                  <Button
+                    icon="phone"
+                    textColor={colors.primary}
+                    disabled={!Boolean(agent_phone)}
+                    onPress={() => callNumber(agent_phone)}
+                  >
+                    Call Agent
+                  </Button>
+                  <Button
+                    icon="phone"
+                    disabled={!Boolean(doctor_phone)}
+                    buttonColor={colors.primary}
+                    onPress={() => callNumber(doctor_phone)}
+                  >
+                    Call Doctor
+                  </Button>
+                </Card.Actions>
               </Card.Content>
             </Card>
           );
@@ -103,7 +126,7 @@ const OrdersHistoryScreen = ({ navigation }) => {
   );
 };
 
-export default OrdersHistoryScreen;
+export default PendingOrdersScreen;
 
 const styles = StyleSheet.create({
   orderCard: {
@@ -111,9 +134,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     marginTop: 5,
     borderRadius: 20,
-  },
-  screen: {
-    marginBottom: 20,
-    flex: 1,
   },
 });

@@ -10,4 +10,5 @@ export default {
   success: "#A6D71C",
   danger: "#FF1616",
   transparent: "#FFFF0000",
+  warning: "yellow"
 };
