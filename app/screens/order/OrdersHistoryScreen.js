@@ -7,6 +7,7 @@ import {
   Card,
   Checkbox,
   DataTable,
+  IconButton,
   List,
   Text,
 } from "react-native-paper";
@@ -49,7 +50,6 @@ const OrdersHistoryScreen = ({ navigation }) => {
           const {
             order_id,
             created_at,
-            total_cost,
             is_delivered,
             is_approved,
             longitude,
@@ -60,12 +60,18 @@ const OrdersHistoryScreen = ({ navigation }) => {
           } = item;
           return (
             <TouchableOpacity
-              onPress={() => navigation.navigate(routes.ORDER_SCREEN, item)}
+              onPress={() =>
+                navigation.navigate(routes.ORDERS_DETAIL_SCREEN, item)
+              }
             >
               <Card.Title
                 style={styles.orderCard}
                 title={order_id}
-                subtitle={`${moment(created_at).format("Do MMM YYYY, h:mm a")}`}
+                subtitle={`${moment(created_at).format(
+                  "Do MMM YYYY, h:mm a"
+                )} ${is_approved ? "| Aprooved" : ""} ${
+                  is_delivered ? "| Delivered" : ""
+                } `}
                 subtitleVariant="bodySmall"
                 subtitleStyle={{ color: colors.medium }}
                 left={(props) => (
@@ -77,16 +83,7 @@ const OrdersHistoryScreen = ({ navigation }) => {
                   />
                 )}
                 right={(props) => (
-                  <Text
-                    {...props}
-                    style={{
-                      paddingHorizontal: 10,
-                      fontWeight: "bold",
-                      color: colors.medium,
-                    }}
-                  >
-                    Ksh. {total_cost}
-                  </Text>
+                  <IconButton icon="chevron-right" {...props} />
                 )}
               />
             </TouchableOpacity>

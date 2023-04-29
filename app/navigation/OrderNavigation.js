@@ -33,7 +33,7 @@ const OrderNavigation = () => {
       <Screen
         name={routes.ORDERS_DETAIL_SCREEN}
         component={OrderDetailScreen}
-        options={{ title: "Orders History" }}
+        options={{ title: "Orders Detail" }}
       />
     </Navigator>
   );

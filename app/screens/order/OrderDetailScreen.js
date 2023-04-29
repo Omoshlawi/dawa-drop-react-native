@@ -12,20 +12,182 @@ import colors from "../../utils/colors";
 import moment from "moment";
 import Logo from "../../components/Logo";
 
+const Delivery = ({ is_approved, delivery }) => {
+  if (!is_approved) {
+    return null;
+  }
+  const {
+    delivery_id,
+    created_at,
+    delivery_medicine,
+    instruction,
+    agent,
+    doctor,
+  } = delivery;
+  return (
+    <>
+    
+      <View style={styles.title}>
+        <Text variant="titleLarge">Delivery: {delivery_id}</Text>
+      </View>
+      <Card.Title
+        style={styles.userCard}
+        title={doctor.name}
+        subtitle={doctor.phone_number}
+        subtitleVariant="bodySmall"
+        subtitleStyle={{ color: colors.medium }}
+        left={(props) =>
+          agent.image ? (
+            <Avatar.Image
+              {...props}
+              style={{ backgroundColor: colors.light }}
+              source={{ uri: doctor.image }}
+            />
+          ) : (
+            <Avatar.Icon
+              icon="account"
+              {...props}
+              style={{ backgroundColor: colors.light }}
+              color={colors.primary}
+            />
+          )
+        }
+        right={(props) => (
+          <Text
+            {...props}
+            style={{
+              paddingHorizontal: 10,
+              fontWeight: "bold",
+              color: colors.medium,
+            }}
+          >
+            Doctor
+          </Text>
+        )}
+      />
+      <Card.Title
+        style={styles.userCard}
+        title={agent.name}
+        subtitle={agent.phone_number}
+        subtitleVariant="bodySmall"
+        subtitleStyle={{ color: colors.medium }}
+        left={(props) =>
+          agent.image ? (
+            <Avatar.Image
+              {...props}
+              style={{ backgroundColor: colors.light }}
+              source={{ uri: agent.image }}
+            />
+          ) : (
+            <Avatar.Icon
+              icon="account"
+              {...props}
+              style={{ backgroundColor: colors.light }}
+              color={colors.primary}
+            />
+          )
+        }
+        right={(props) => (
+          <Text
+            {...props}
+            style={{
+              paddingHorizontal: 10,
+              fontWeight: "bold",
+              color: colors.medium,
+            }}
+          >
+            Agent
+          </Text>
+        )}
+      />
+      {/* <View style={styles.detailsRow}>
+        <View>
+          <View style={styles.valuesRow}>
+            <Text>Deliver Id: </Text>
+            <Text style={styles.value}>{delivery_id}</Text>
+          </View>
+          <View style={styles.valuesRow}>
+            <Text>Date Odered:</Text>
+            <Text style={styles.value}>
+              {moment(created_at).format("Do MMM YYYY, h:mm a")}
+            </Text>
+          </View>
+          <View style={styles.valuesRow}>
+            <Text>Date Finished: </Text>
+            <Text style={styles.value}>
+              {moment(date_of_depletion).format("Do MMM YYYY")}
+            </Text>
+          </View>
+          <View style={styles.valuesRow}>
+            <Text>Aprooved Status: </Text>
+            <Text
+              style={[
+                { borderRadius: 5, padding: 2, color: colors.white },
+                is_approved
+                  ? { backgroundColor: colors.success }
+                  : { backgroundColor: colors.danger },
+              ]}
+            >
+              {is_approved ? "aprooved" : "pending"}
+            </Text>
+          </View>
+        </View>
+        <View>
+          <View style={styles.valuesRow}>
+            <Text>National Id: </Text>
+            <Text style={styles.value}>{national_id}</Text>
+          </View>
+          <View style={styles.valuesRow}>
+            <Text>Phone Number: </Text>
+            <Text style={styles.value}>{reach_out_phone_number}</Text>
+          </View>
+          <View style={styles.valuesRow}>
+            <Text>Delivery Location: </Text>
+            <Text style={styles.value}>{`(${parseFloat(latitude).toFixed(
+              2
+            )}, ${parseFloat(longitude).toFixed(2)})`}</Text>
+          </View>
+
+          <View style={styles.valuesRow}>
+            <Text>Delivery Status: </Text>
+            <Text
+              style={[
+                { borderRadius: 5, padding: 2, color: colors.white },
+                is_delivered
+                  ? { backgroundColor: colors.success }
+                  : { backgroundColor: colors.danger },
+              ]}
+            >
+              {is_delivered ? "delivered" : "pending"}
+            </Text>
+          </View>
+        </View>
+      </View> */}
+    </>
+  );
+};
+
 const OrderDetailScreen = ({ navigation, route }) => {
   const {
     order_id,
-    updated,
-    items,
-    total_cost,
-    amount_paid,
-    balance,
+    created_at,
+    is_delivered,
+    is_approved,
+    longitude,
+    latitude,
+    reach_out_phone_number,
+    date_of_depletion,
+    national_id,
+    delivery,
     paid: completed,
   } = route.params;
   return (
     <View>
       <View style={styles.logo}>
         <Logo variant="black" />
+      </View>
+      <View style={styles.title}>
+        <Text variant="titleLarge">Order: {order_id}</Text>
       </View>
       <View style={styles.detailsRow}>
         {/* col1 */}
@@ -35,90 +197,64 @@ const OrderDetailScreen = ({ navigation, route }) => {
             <Text style={styles.value}>{order_id}</Text>
           </View>
           <View style={styles.valuesRow}>
-            <Text>Date:</Text>
+            <Text>Date Odered:</Text>
             <Text style={styles.value}>
-              {moment(updated).format("Do MMM YYYY, h:mm a")}
+              {moment(created_at).format("Do MMM YYYY, h:mm a")}
             </Text>
           </View>
           <View style={styles.valuesRow}>
-            <Text>Items: </Text>
-            <Text style={styles.value}>{items.length}</Text>
+            <Text>Date Finished: </Text>
+            <Text style={styles.value}>
+              {moment(date_of_depletion).format("Do MMM YYYY")}
+            </Text>
+          </View>
+          <View style={styles.valuesRow}>
+            <Text>Aprooved Status: </Text>
+            <Text
+              style={[
+                { borderRadius: 5, padding: 2, color: colors.white },
+                is_approved
+                  ? { backgroundColor: colors.success }
+                  : { backgroundColor: colors.danger },
+              ]}
+            >
+              {is_approved ? "aprooved" : "pending"}
+            </Text>
           </View>
         </View>
         {/* Col 2 */}
         <View>
           <View style={styles.valuesRow}>
-            <Text>Cost: </Text>
-            <Text style={styles.value}>Ksh. {total_cost}</Text>
+            <Text>National Id: </Text>
+            <Text style={styles.value}>{national_id}</Text>
           </View>
           <View style={styles.valuesRow}>
-            <Text>Amount Paid: </Text>
-            <Text style={styles.value}>Ksh. {amount_paid}</Text>
+            <Text>Phone Number: </Text>
+            <Text style={styles.value}>{reach_out_phone_number}</Text>
+          </View>
+          <View style={styles.valuesRow}>
+            <Text>Delivery Location: </Text>
+            <Text style={styles.value}>{`(${parseFloat(latitude).toFixed(
+              2
+            )}, ${parseFloat(longitude).toFixed(2)})`}</Text>
           </View>
 
           <View style={styles.valuesRow}>
-            <Text>Status: </Text>
+            <Text>Delivery Status: </Text>
             <Text
               style={[
                 { borderRadius: 5, padding: 2, color: colors.white },
-                completed
+                is_delivered
                   ? { backgroundColor: colors.success }
                   : { backgroundColor: colors.danger },
               ]}
             >
-              {completed ? "paid" : "pending"}
+              {is_delivered ? "delivered" : "pending"}
             </Text>
           </View>
         </View>
       </View>
-      <FlatList
-        data={items}
-        keyExtractor={({ url }) => url}
-        renderItem={({ item }) => {
-          const {
-            product: { name, image, category },
-            total_cost,
-            price,
-            quantity,
-          } = item;
-          return (
-            <Card.Title
-              style={styles.orderCard}
-              title={name}
-              subtitle={`${category} | ${quantity} * ${price}`}
-              subtitleStyle={{ color: colors.medium }}
-              subtitleVariant="bodySmall"
-              left={(props) =>
-                image ? (
-                  <Avatar.Image
-                    source={{ uri: image }}
-                    {...props}
-                    style={{ backgroundColor: colors.light }}
-                  />
-                ) : (
-                  <Avatar.Icon
-                    icon="shopping"
-                    {...props}
-                    style={{ backgroundColor: colors.light }}
-                    color={completed ? colors.success : colors.danger}
-                  />
-                )
-              }
-              right={(props) => (
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    color: colors.medium,
-                    paddingHorizontal: 10,
-                  }}
-                >
-                  Ksh. {total_cost}
-                </Text>
-              )}
-            />
-          );
-        }}
-      />
+      <Delivery is_approved={is_approved} delivery={delivery} />
     </View>
   );
 };
@@ -145,6 +281,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   orderCard: {
+    backgroundColor: colors.white,
+    marginHorizontal: 5,
+    marginTop: 5,
+    borderRadius: 20,
+  },
+  title: {
+    alignItems: "center",
+    padding: 10,
+  },
+  userCard: {
     backgroundColor: colors.white,
     marginHorizontal: 5,
     marginTop: 5,
