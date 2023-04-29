@@ -4,7 +4,7 @@ import colors from "../../utils/colors";
 import IconText from "./IconText";
 
 const ExpandableText = ({
-  threshHold,
+  threshHold = 50,
   text,
   contentStyle,
   color = colors.medium,

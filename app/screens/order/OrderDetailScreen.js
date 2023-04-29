@@ -11,6 +11,8 @@ import {
 import colors from "../../utils/colors";
 import moment from "moment";
 import Logo from "../../components/Logo";
+import ExpandableText from "../../components/display/ExpandableText";
+import { ScrollView } from "react-native";
 
 const Delivery = ({ is_approved, delivery }) => {
   if (!is_approved) {
@@ -26,10 +28,11 @@ const Delivery = ({ is_approved, delivery }) => {
   } = delivery;
   return (
     <>
-    
       <View style={styles.title}>
         <Text variant="titleLarge">Delivery: {delivery_id}</Text>
       </View>
+      <ExpandableText title={"Medicine Delivered"} text={delivery_medicine} />
+      <ExpandableText title={"Instruction"} text={instruction} />
       <Card.Title
         style={styles.userCard}
         title={doctor.name}
@@ -179,10 +182,9 @@ const OrderDetailScreen = ({ navigation, route }) => {
     date_of_depletion,
     national_id,
     delivery,
-    paid: completed,
   } = route.params;
   return (
-    <View>
+    <ScrollView>
       <View style={styles.logo}>
         <Logo variant="black" />
       </View>
@@ -255,7 +257,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
         </View>
       </View>
       <Delivery is_approved={is_approved} delivery={delivery} />
-    </View>
+    </ScrollView>
   );
 };
 
