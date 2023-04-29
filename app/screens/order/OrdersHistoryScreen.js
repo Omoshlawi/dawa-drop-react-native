@@ -15,7 +15,6 @@ import QuanterSizer from "../../components/input/QuanterSizer";
 import routes from "../../navigation/routes";
 import colors from "../../utils/colors";
 
-
 const OrdersHistoryScreen = ({ navigation }) => {
   const { token } = useUserContext();
   const { getOrders } = useUser();
@@ -38,6 +37,7 @@ const OrdersHistoryScreen = ({ navigation }) => {
   useEffect(() => {
     handleFetch();
   }, []);
+
   return (
     <View>
       <FlatList
@@ -48,12 +48,15 @@ const OrdersHistoryScreen = ({ navigation }) => {
         renderItem={({ item }) => {
           const {
             order_id,
-            updated,
-            items,
+            created_at,
             total_cost,
-            amount_paid,
-            balance,
-            paid,
+            is_delivered,
+            is_approved,
+            longitude,
+            latitude,
+            reach_out_phone_number,
+            date_of_depletion,
+            national_id,
           } = item;
           return (
             <TouchableOpacity
@@ -62,9 +65,7 @@ const OrdersHistoryScreen = ({ navigation }) => {
               <Card.Title
                 style={styles.orderCard}
                 title={order_id}
-                subtitle={`${moment(updated).format("Do MMM YYYY, h:mm a")} | ${
-                  items.length
-                } items`}
+                subtitle={`${moment(created_at).format("Do MMM YYYY, h:mm a")}`}
                 subtitleVariant="bodySmall"
                 subtitleStyle={{ color: colors.medium }}
                 left={(props) => (
@@ -72,7 +73,7 @@ const OrdersHistoryScreen = ({ navigation }) => {
                     icon="shopping"
                     {...props}
                     style={{ backgroundColor: colors.light }}
-                    color={paid ? colors.success : colors.danger}
+                    color={is_delivered ? colors.success : colors.danger}
                   />
                 )}
                 right={(props) => (
