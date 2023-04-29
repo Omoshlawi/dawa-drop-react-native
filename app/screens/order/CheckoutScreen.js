@@ -21,6 +21,7 @@ const validationSchemer = Yup.object().shape({
 });
 
 const CheckoutScreen = () => {
+  const [keyboardType, setKeyboardType] = useState(false);
   const { checkoutDelivery } = useUser();
   const [initialFormData, setInitialFormData] = useState({
     code: "",
@@ -32,7 +33,6 @@ const CheckoutScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState();
   const [backCam, setBackCam] = useState(true);
-  const [type, setType] = useState(false);
 
   const handleBarCodeScanned = ({ type, data: code }) => {
     setScanned(true);
@@ -40,6 +40,7 @@ const CheckoutScreen = () => {
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
   const handleSubmit = async (values, { setFieldError }) => {
+    // console.log(values);
     setLoading(true);
     const response = await checkoutDelivery(token, values);
     setLoading(false);
@@ -80,7 +81,7 @@ const CheckoutScreen = () => {
   }
   return (
     <View style={styles.screen}>
-      {!scanned && !type && (
+      {!scanned && !keyboardType && (
         <>
           <View style={styles.titleContainer}>
             <Text style={styles.titleText} variant="titleLarge">
@@ -97,7 +98,7 @@ const CheckoutScreen = () => {
         </>
       )}
       <View style={styles.rescanButton}>
-        {!(!scanned && !type) && (
+        {!(!scanned && !keyboardType) && (
           <IconButton
             icon="data-matrix-scan"
             size={50}
@@ -106,17 +107,17 @@ const CheckoutScreen = () => {
             onPress={() => {
               setScanned(false);
               setInitialFormData({ ...initialFormData, code: "" });
-              setType(false);
+              setKeyboardType(false);
             }}
           />
         )}
-        {!scanned && !type && (
+        {!scanned && !keyboardType && (
           <>
             <IconButton
               icon="keyboard"
               size={50}
               mode="outlined"
-              onPress={() => setType(true)}
+              onPress={() => setKeyboardType(true)}
               iconColor={colors.primary}
             />
             <IconButton
@@ -130,7 +131,7 @@ const CheckoutScreen = () => {
         )}
       </View>
 
-      {(Boolean(initialFormData.code) || type) && (
+      {(Boolean(initialFormData.code) || keyboardType) && (
         <AppForm
           validationSchema={validationSchemer}
           initialValues={initialFormData}
