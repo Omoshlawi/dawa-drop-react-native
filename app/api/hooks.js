@@ -56,7 +56,9 @@ export const useUser = () => {
 
 export const useHospital = (params) => {
   const getAwardPrograms = () => apiClient.get("awards/", params);
-  return { getAwardPrograms };
+  const getAwardRewards = () => apiClient.get("awards/rewards/", params);
+
+  return { getAwardPrograms, getAwardRewards };
 };
 
 export const httpService = {

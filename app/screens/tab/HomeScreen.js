@@ -15,19 +15,36 @@ import routes from "../../navigation/routes";
 import SearchHeader from "../../components/SearchHeader";
 import { screenWidth } from "../../utils/contants";
 import ProgrameCards from "../../components/home/ProgrameCards";
+import RewardsCards from "../../components/home/RewardsCards";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUserContext();
   const { getUser } = useUser();
-  const { getAwardPrograms } = useHospital();
+  const { getAwardPrograms, getAwardRewards } = useHospital();
   const [awardPrograms, setAwardProgrames] = useState([]);
+  const [awardRewards, setAwardRewards] = useState([]);
 
   const handleFetch = async () => {
-    const response = await getAwardPrograms();
-    if (!response.ok) {
-      return console.log("HOME SCREEN", response.problem, response.data);
+    const programeResponse = await getAwardPrograms();
+    const rewardsResponse = await getAwardRewards();
+    if (!programeResponse.ok) {
+      return console.log(
+        "HOME SCREEN",
+        programeResponse.problem,
+        programeResponse.data
+      );
+    } else {
+      setAwardProgrames(programeResponse.data.results);
     }
-    setAwardProgrames(response.data.results);
+    if (!rewardsResponse.ok) {
+      return console.log(
+        "HOME SCREEN",
+        rewardsResponse.problem,
+        rewardsResponse.data
+      );
+    } else {
+      setAwardRewards(rewardsResponse.data.results);
+    }
   };
 
   useEffect(() => {
@@ -67,6 +84,7 @@ const HomeScreen = ({ navigation }) => {
           size={30}
         />
       </View>
+      <RewardsCards rewards={awardRewards} />
       <ProgrameCards awardPrograms={awardPrograms} />
     </AppSafeArea>
   );
