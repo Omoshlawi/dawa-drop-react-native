@@ -13,6 +13,7 @@ import moment from "moment";
 import Logo from "../../components/Logo";
 import ExpandableText from "../../components/display/ExpandableText";
 import { ScrollView } from "react-native";
+import { callNumber } from "../../utils/helpers";
 
 const Delivery = ({ is_approved, delivery }) => {
   if (!is_approved) {
@@ -36,7 +37,7 @@ const Delivery = ({ is_approved, delivery }) => {
       <Card.Title
         style={styles.userCard}
         title={doctor.name}
-        subtitle={doctor.phone_number}
+        subtitle={`${doctor.phone_number} | Doctor`}
         subtitleVariant="bodySmall"
         subtitleStyle={{ color: colors.medium }}
         left={(props) =>
@@ -56,22 +57,20 @@ const Delivery = ({ is_approved, delivery }) => {
           )
         }
         right={(props) => (
-          <Text
+          <IconButton
             {...props}
-            style={{
-              paddingHorizontal: 10,
-              fontWeight: "bold",
-              color: colors.medium,
-            }}
-          >
-            Doctor
-          </Text>
+            icon="phone"
+            mode="outlined"
+            containerColor={colors.primary}
+            iconColor={colors.white}
+            onPress={() => callNumber(doctor.phone_number)}
+          />
         )}
       />
       <Card.Title
         style={styles.userCard}
         title={agent.name}
-        subtitle={agent.phone_number}
+        subtitle={`${agent.phone_number} | Agent`}
         subtitleVariant="bodySmall"
         subtitleStyle={{ color: colors.medium }}
         left={(props) =>
@@ -91,16 +90,13 @@ const Delivery = ({ is_approved, delivery }) => {
           )
         }
         right={(props) => (
-          <Text
+          <IconButton
             {...props}
-            style={{
-              paddingHorizontal: 10,
-              fontWeight: "bold",
-              color: colors.medium,
-            }}
-          >
-            Agent
-          </Text>
+            mode="outlined"
+            icon="phone"
+            iconColor={colors.primary}
+            onPress={() => callNumber(agent.phone_number)}
+          />
         )}
       />
       {/* <View style={styles.detailsRow}>
