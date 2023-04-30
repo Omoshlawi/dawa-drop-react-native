@@ -54,6 +54,11 @@ export const useUser = () => {
   };
 };
 
+export const useHospital = (params) => {
+  const getAwardPrograms = () => apiClient.get("awards/", params);
+  return { getAwardPrograms };
+};
+
 export const httpService = {
   get: apiClient.get,
   post: apiClient.post,

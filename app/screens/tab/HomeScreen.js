@@ -1,19 +1,38 @@
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import AppSafeArea from "../../components/AppSafeArea";
-import { useUser } from "../../api/hooks";
-import { Avatar, IconButton } from "react-native-paper";
+import { useHospital, useUser } from "../../api/hooks";
+import { Avatar, Card, IconButton, Text } from "react-native-paper";
 import { useUserContext } from "../../context/hooks";
 import colors from "../../utils/colors";
 import routes from "../../navigation/routes";
 import SearchHeader from "../../components/SearchHeader";
+import { screenWidth } from "../../utils/contants";
+import ProgrameCards from "../../components/home/ProgrameCards";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUserContext();
   const { getUser } = useUser();
+  const { getAwardPrograms } = useHospital();
+  const [awardPrograms, setAwardProgrames] = useState([]);
+
+  const handleFetch = async () => {
+    const response = await getAwardPrograms();
+    if (!response.ok) {
+      return console.log("HOME SCREEN", response.problem, response.data);
+    }
+    setAwardProgrames(response.data.results);
+  };
 
   useEffect(() => {
     if (!user) getUser();
+    handleFetch();
   }, []);
 
   return (
@@ -48,6 +67,7 @@ const HomeScreen = ({ navigation }) => {
           size={30}
         />
       </View>
+      <ProgrameCards awardPrograms={awardPrograms} />
     </AppSafeArea>
   );
 };

@@ -1,3 +1,4 @@
+import { Dimensions } from "react-native";
 import routes from "../navigation/routes";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -92,3 +93,5 @@ export const chechoutTabs = [
     ),
   },
 ];
+
+export const screenWidth = Dimensions.get("screen").width;
