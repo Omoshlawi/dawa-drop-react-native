@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import AppSafeArea from "../../components/AppSafeArea";
 import { useHospital, useUser } from "../../api/hooks";
-import { Avatar, Card, IconButton, Text } from "react-native-paper";
+import { Avatar, Card, IconButton, List, Text } from "react-native-paper";
 import { useUserContext } from "../../context/hooks";
 import colors from "../../utils/colors";
 import routes from "../../navigation/routes";
@@ -16,6 +16,7 @@ import SearchHeader from "../../components/SearchHeader";
 import { screenWidth } from "../../utils/contants";
 import ProgrameCards from "../../components/home/ProgrameCards";
 import RewardsCards from "../../components/home/RewardsCards";
+import AddsContainer from "../../components/home/AdsContainer";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUserContext();
@@ -86,6 +87,14 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <RewardsCards rewards={awardRewards} />
       <ProgrameCards awardPrograms={awardPrograms} />
+      <List.Item
+        onPress={() => {}}
+        style={styles.listItem}
+        title="View Near by Clinics"
+        left={(props) => <List.Icon icon="hospital-building" {...props} />}
+        right={(props) => <List.Icon icon="chevron-right" {...props} />}
+      />
+      <AddsContainer />
     </AppSafeArea>
   );
 };
@@ -111,5 +120,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
+  },
+  listItem: {
+    backgroundColor: colors.white,
+    margin: 5,
+    padding: 5,
+    height: 80,
+    justifyContent: "center",
   },
 });
