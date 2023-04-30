@@ -42,16 +42,6 @@ const RewardsCards = ({ rewards }) => {
                 >
                   {name}
                 </Text>
-                <View style={styles.row}>
-                  <Text style={styles.text}>Programe:</Text>
-                  <Text style={[styles.text, styles.bold]}>
-                    {programe_name}
-                  </Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.text}>Points:</Text>
-                  <Text style={[styles.text, styles.bold]}>{point_value}</Text>
-                </View>
               </View>
             </View>
           );
@@ -71,8 +61,8 @@ const styles = StyleSheet.create({
     // padding: 10,
   },
   programeCard: {
-    height: screenWidth * 0.35,
-    width: screenWidth * 0.3,
+    // height: screenWidth * 0.35,
+    width: screenWidth * 0.25,
     margin: 5,
     backgroundColor: colors.white,
     borderRadius: 10,
@@ -86,9 +76,11 @@ const styles = StyleSheet.create({
   title: {
     color: colors.medium,
     textAlign: "center",
+    fontWeight: "bold",
   },
   text: {
     color: colors.medium,
+    fontSize: 12,
   },
   header: {
     paddingHorizontal: 10,
