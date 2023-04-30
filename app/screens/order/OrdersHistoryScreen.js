@@ -62,13 +62,13 @@ const OrdersHistoryScreen = ({ navigation }) => {
           } = item;
           return (
             <Card
+              elevation={0}
               style={styles.orderCard}
               onPress={() =>
                 navigation.navigate(routes.ORDERS_DETAIL_SCREEN, item)
               }
             >
               <Card.Title
-                //   style={styles.orderCard}
                 title={order_id}
                 subtitle={`${moment(created_at).format(
                   "Do MMM YYYY, h:mm a"
@@ -89,12 +89,6 @@ const OrdersHistoryScreen = ({ navigation }) => {
                   <IconButton icon="chevron-right" {...props} />
                 )}
               />
-              <Card.Content>
-                <TriStatusBar
-                  status={statusTorange(is_delivered, is_approved)}
-                  barThickness={2}
-                />
-              </Card.Content>
             </Card>
           );
         }}
@@ -108,12 +102,13 @@ export default OrdersHistoryScreen;
 const styles = StyleSheet.create({
   orderCard: {
     backgroundColor: colors.white,
-    marginHorizontal: 5,
-    marginTop: 5,
+    // marginHorizontal: 5,
+    margin: 3,
     borderRadius: 20,
   },
   screen: {
     marginBottom: 20,
     flex: 1,
+    backgroundColor: colors.background,
   },
 });
