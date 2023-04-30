@@ -17,17 +17,22 @@ import { screenWidth } from "../../utils/contants";
 import ProgrameCards from "../../components/home/ProgrameCards";
 import RewardsCards from "../../components/home/RewardsCards";
 import AddsContainer from "../../components/home/AdsContainer";
+import { Modal } from "react-native";
+import NearHopitals from "../../components/home/NearHopitals";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUserContext();
   const { getUser } = useUser();
-  const { getAwardPrograms, getAwardRewards } = useHospital();
+  const { getAwardPrograms, getAwardRewards, getClinics } = useHospital();
   const [awardPrograms, setAwardProgrames] = useState([]);
   const [awardRewards, setAwardRewards] = useState([]);
+  const [clinics, setClinics] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const handleFetch = async () => {
     const programeResponse = await getAwardPrograms();
     const rewardsResponse = await getAwardRewards();
+    const clinicsResponse = await getClinics();
     if (!programeResponse.ok) {
       return console.log(
         "HOME SCREEN",
@@ -45,6 +50,15 @@ const HomeScreen = ({ navigation }) => {
       );
     } else {
       setAwardRewards(rewardsResponse.data.results);
+    }
+    if (!clinicsResponse.ok) {
+      return console.log(
+        "HOME SCREEN",
+        clinicsResponse.problem,
+        clinicsResponse.data
+      );
+    } else {
+      setClinics(clinicsResponse.data.results);
     }
   };
 
@@ -88,13 +102,16 @@ const HomeScreen = ({ navigation }) => {
       <RewardsCards rewards={awardRewards} />
       <ProgrameCards awardPrograms={awardPrograms} />
       <List.Item
-        onPress={() => {}}
+        onPress={() => setShowModal(true)}
         style={styles.listItem}
         title="View Near by Clinics"
         left={(props) => <List.Icon icon="hospital-building" {...props} />}
         right={(props) => <List.Icon icon="chevron-right" {...props} />}
       />
       <AddsContainer />
+      <Modal visible={showModal} animationType="slide">
+        <NearHopitals hospitals={clinics} setVisible={setShowModal} />
+      </Modal>
     </AppSafeArea>
   );
 };

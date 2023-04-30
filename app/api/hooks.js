@@ -54,11 +54,11 @@ export const useUser = () => {
   };
 };
 
-export const useHospital = (params) => {
-  const getAwardPrograms = () => apiClient.get("awards/", params);
-  const getAwardRewards = () => apiClient.get("awards/rewards/", params);
-
-  return { getAwardPrograms, getAwardRewards };
+export const useHospital = () => {
+  const getAwardPrograms = (params) => apiClient.get("awards/", params);
+  const getAwardRewards = (params) => apiClient.get("awards/rewards/", params);
+  const getClinics = (params) => apiClient.get("clinics/");
+  return { getAwardPrograms, getAwardRewards, getClinics };
 };
 
 export const httpService = {
