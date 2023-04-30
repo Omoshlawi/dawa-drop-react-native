@@ -33,6 +33,7 @@ const AccountScreen = ({ navigation }) => {
         />
       )}
       <TouchableOpacity
+        disabled
         onPress={() =>
           navigation.navigate(routes.USER_NAVIGATION, {
             screen: routes.ORDERS_SCREEN,
@@ -41,10 +42,15 @@ const AccountScreen = ({ navigation }) => {
       >
         <Card.Title
           style={styles.listItem}
-          subtitle="Order History"
+          subtitle="Notifications"
           subtitleVariant="bodyLarge"
           left={(props) => (
-            <Avatar.Icon style={styles.icon} {...props} icon="history" />
+            <Avatar.Icon
+              color={colors.primary}
+              style={styles.icon}
+              {...props}
+              icon="bell"
+            />
           )}
           right={(props) => (
             <IconButton {...props} icon="chevron-right" disabled />
@@ -52,6 +58,57 @@ const AccountScreen = ({ navigation }) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
+        disabled
+        onPress={() =>
+          navigation.navigate(routes.USER_NAVIGATION, {
+            screen: routes.ORDERS_SCREEN,
+          })
+        }
+      >
+        <Card.Title
+          style={styles.listItem}
+          subtitle="Change Password"
+          subtitleVariant="bodyLarge"
+          left={(props) => (
+            <Avatar.Icon
+              style={styles.icon}
+              {...props}
+              icon="key"
+              color={colors.primary}
+            />
+          )}
+          right={(props) => (
+            <IconButton {...props} icon="chevron-right" disabled />
+          )}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        disabled
+        onPress={() =>
+          navigation.navigate(routes.USER_NAVIGATION, {
+            screen: routes.ORDERS_SCREEN,
+          })
+        }
+      >
+        <Card.Title
+          style={styles.listItem}
+          subtitle="Settings"
+          subtitleVariant="bodyLarge"
+          left={(props) => (
+            <Avatar.Icon
+              style={styles.icon}
+              {...props}
+              icon="cogs"
+              color={colors.primary}
+            />
+          )}
+          right={(props) => (
+            <IconButton {...props} icon="chevron-right" disabled />
+          )}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        disabled
         onPress={() =>
           navigation.navigate(routes.USER_NAVIGATION, {
             screen: routes.PAYMENTS_SCREEN,
@@ -60,10 +117,15 @@ const AccountScreen = ({ navigation }) => {
       >
         <Card.Title
           style={styles.listItem}
-          subtitle="Payment"
+          subtitle="About"
           subtitleVariant="bodyLarge"
           left={(props) => (
-            <Avatar.Icon style={styles.icon} {...props} icon="wallet" />
+            <Avatar.Icon
+              color={colors.primary}
+              style={styles.icon}
+              {...props}
+              icon="information-variant"
+            />
           )}
           right={(props) => (
             <IconButton {...props} icon="chevron-right" disabled />
@@ -83,7 +145,12 @@ const AccountScreen = ({ navigation }) => {
           subtitle="Logout"
           subtitleVariant="bodyLarge"
           left={(props) => (
-            <Avatar.Icon style={styles.icon} {...props} icon="logout" />
+            <Avatar.Icon
+              style={styles.icon}
+              {...props}
+              icon="logout"
+              color={colors.primary}
+            />
           )}
           right={(props) => (
             <IconButton {...props} icon="chevron-right" disabled />

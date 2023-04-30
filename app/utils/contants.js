@@ -95,3 +95,5 @@ export const chechoutTabs = [
 ];
 
 export const screenWidth = Dimensions.get("screen").width;
+
+export const userAcountOptions = [];

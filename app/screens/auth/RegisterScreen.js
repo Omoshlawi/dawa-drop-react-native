@@ -18,6 +18,7 @@ import { useUser } from "../../api/hooks";
 const validationSchemer = Yup.object().shape({
   username: Yup.string().label("Username").required(),
   email: Yup.string().label("Email").required(),
+  phone_number: Yup.string().label("Phone number").required(),
   password: Yup.string().label("Password").required(),
   confirm_password: Yup.string().label("Confirm Password").required(),
 });
@@ -46,13 +47,13 @@ const RegisterScreen = ({ navigation }) => {
         }
         return console.log("LoginScreen: ", response.problem, response.data);
       }
+    } else {
+      const { data: user } = response;
+      const token = user.token;
+      delete user.token;
+      setUser(user);
+      setToken(token);
     }
-
-    const { data: user } = response;
-    const token = user.token;
-    delete user.token;
-    setUser(user);
-    setToken(token);
   };
   return (
     <View style={styles.container}>
@@ -64,6 +65,7 @@ const RegisterScreen = ({ navigation }) => {
             email: "",
             password: "",
             confirm_password: "",
+            phone_number: "",
           }}
           validationSchema={validationSchemer}
           onSubmit={handleRegister}
@@ -77,6 +79,12 @@ const RegisterScreen = ({ navigation }) => {
             icon="email"
             placeholder="Enter email"
             name="email"
+            keyboardType="email-address"
+          />
+          <AppFormField
+            icon="phone"
+            placeholder="Enter phone number"
+            name="phone_number"
             keyboardType="email-address"
           />
           <AppFormField
