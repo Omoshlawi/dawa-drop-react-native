@@ -2,26 +2,60 @@ import { SectionList, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { toSectionListData } from "../../utils/helpers";
 import colors from "../../utils/colors";
+import { ScrollView } from "react-native";
+import { List } from "react-native-paper";
+import UserTypeProfileInformation from "../../components/user/UserTypeProfileInformation";
 
 const ProfileViewScreen = ({ navigation, route }) => {
   const user = route.params;
-  const data = toSectionListData(user);
-  // console.log(accountAttrs, profileAttrs);
+  const {
+    account_information: { url, email, name },
+    profile_information: { gender, image, phone_number, address, user_type },
+    user_type_information: { [user_type]: userType },
+    account_information_edit_url,
+    profile_information_edit_url,
+    user_type_information_edit_url,
+  } = user;
   return (
-    <View>
-      <SectionList
-        sections={data}
-        keyExtractor={(item, index) => index}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.header}>{title}</Text>
-        )}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.title}>{item.value}</Text>
-          </View>
-        )}
+    <ScrollView>
+      <Text style={styles.title}>account information</Text>
+      <List.Item
+        title="Name"
+        titleStyle={styles.listTitle}
+        description={name ? name : "None"}
+        style={styles.item}
       />
-    </View>
+      <List.Item
+        title="Email"
+        titleStyle={styles.listTitle}
+        description={email ? email : "None"}
+        style={styles.item}
+      />
+      <Text style={styles.title}>profile information</Text>
+      <List.Item
+        title="Gender"
+        titleStyle={styles.listTitle}
+        description={gender ? gender : "None"}
+        style={styles.item}
+      />
+      <List.Item
+        title="Phone Number"
+        titleStyle={styles.listTitle}
+        description={phone_number ? phone_number : "None"}
+        style={styles.item}
+      />
+      <List.Item
+        title="Address"
+        titleStyle={styles.listTitle}
+        description={address ? address : "None"}
+        style={styles.item}
+      />
+      <Text style={styles.title}>{user_type} information</Text>
+      <UserTypeProfileInformation
+        userTypeString={user_type}
+        userTypeObject={userType}
+      />
+    </ScrollView>
   );
 };
 
@@ -33,8 +67,12 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 2,
   },
-  header: {
-    fontSize: 32,
-    backgroundColor: colors.white,
+  title: {
+    textTransform: "capitalize",
+    padding: 10,
+    fontWeight: "bold",
+  },
+  listTitle: {
+    color: colors.medium,
   },
 });
