@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import colors from "../../utils/colors";
-import { List } from "react-native-paper";
+import { IconButton, List } from "react-native-paper";
 import IconText from "../display/IconText";
+import { useNavigation } from "@react-navigation/native";
+import routes from "../../navigation/routes";
 
 const DoctorInformation = ({ doctor }) => {
   return <Text>Doctor</Text>;
@@ -11,11 +13,12 @@ const AgentInformation = ({ agent }) => {
   return <Text>Doctor</Text>;
 };
 const PatientInformation = ({ patient }) => {
+  const navigation = useNavigation();
   const {
     url,
     patient_number,
     base_clinic,
-    next_of_keen: { list },
+    next_of_keen: { list, url: createUrl },
   } = patient;
   return (
     <>
@@ -35,17 +38,42 @@ const PatientInformation = ({ patient }) => {
       />
       <View style={styles.titleRow}>
         <Text style={styles.title}>Next of keen information</Text>
-        <IconText icon="square-edit-outline" size={20} />
-      </View>
-      {list.map(({ full_name, address, phone_number, url }) => (
-        <List.Item
-          key={url}
-          title={full_name}
-          titleStyle={styles.listTitle}
-          description={`${phone_number} | ${address}`}
-          style={styles.item}
+        <IconText
+          icon="plus"
+          size={20}
+          onPress={() =>
+            navigation.navigate(routes.FORMS_NAVIGATION, {
+              screen: routes.FORMS_NEXT_OF_KEEN_FORM,
+              params: { createUrl, next_of_keen: null },
+            })
+          }
         />
-      ))}
+      </View>
+      {list.map((nok) => {
+        const { full_name, address, phone_number, url } = nok;
+        return (
+          <List.Item
+            key={url}
+            title={full_name}
+            titleStyle={styles.listTitle}
+            description={`${phone_number} | ${address}`}
+            style={styles.item}
+            onPress={() =>
+              navigation.navigate(routes.FORMS_NAVIGATION, {
+                screen: routes.FORMS_NEXT_OF_KEEN_FORM,
+                params: { createUrl, next_of_keen: nok },
+              })
+            }
+            right={(props) => (
+              <IconButton
+                icon="trash-can-outline"
+                iconColor={colors.danger}
+                onPress={() => {}}
+              />
+            )}
+          />
+        );
+      })}
     </>
   );
 };

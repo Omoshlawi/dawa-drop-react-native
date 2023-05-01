@@ -46,6 +46,21 @@ export const useUser = () => {
       },
     });
   };
+  const postUserInfo = ({ url, token, data, multipart = false }) => {
+    if (multipart) {
+      return apiClient.post(url, data, {
+        headers: {
+          ...getAuthHeader(token),
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }
+    return apiClient.post(url, data, {
+      headers: {
+        ...getAuthHeader(token),
+      },
+    });
+  };
   const getOrders = (token, params) =>
     apiClient.get("orders/", params, { headers: getAuthHeader(token) });
   const getPendingOrders = (token, params) =>
@@ -57,6 +72,7 @@ export const useUser = () => {
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
   return {
+    postUserInfo,
     putUserInfo,
     login,
     logout,

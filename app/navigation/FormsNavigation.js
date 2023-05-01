@@ -3,6 +3,7 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import routes from "./routes";
 import AccountInfoForm from "../components/user/forms/AccountInfoForm";
 import ProfileInfoForm from "../components/user/forms/ProfileInfoForm";
+import NextOfKeenForm from "../components/user/forms/NextOfKeenForm";
 
 const Stack = createStackNavigator();
 
@@ -23,9 +24,9 @@ const FormsNavigation = () => {
         options={{ headerTitle: "Edit Profile Info" }}
       />
       <Screen
-        name={routes.LOGIN_SCREEN}
-        component={LoginScreen}
-        options={{ headerTitle: "Login" }}
+        name={routes.FORMS_NEXT_OF_KEEN_FORM}
+        component={NextOfKeenForm}
+        options={{ headerTitle: "Update Next of keen" }}
       />
     </Navigator>
   );

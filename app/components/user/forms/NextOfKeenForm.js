@@ -5,24 +5,37 @@ import AppForm from "../../forms/AppForm";
 import AppFormField from "../../forms/AppFormField";
 import AppFormSubmitButton from "../../forms/AppFormSubmitButton";
 import Logo from "../../Logo";
-import { httpService, useUser } from "../../../api/hooks";
+import { useUser } from "../../../api/hooks";
 import { useUserContext } from "../../../context/hooks";
 import * as Yup from "yup";
 const validationSchemer = Yup.object().shape({
-  first_name: Yup.string().label("First Name"),
-  last_name: Yup.string().label("Last Name"),
-  email: Yup.string().label("Email Adress").required(),
+  full_name: Yup.string().label("Full Name"),
+  phone_number: Yup.string().label("Last Name"),
+  address: Yup.string().label("Address").required(),
 });
 
-const AccountInfoForm = ({ navigation, route }) => {
-  const { url, first_name, last_name, email } = route.params;
-  const { token } = useUserContext();
-  const { getUser, putUserInfo } = useUser();
+const NextOfKeenForm = ({ navigation, route }) => {
+  let { next_of_keen, createUrl } = route.params;
+  const update = Boolean(next_of_keen);
   const [loading, setLoading] = useState(false);
-
+  const { token } = useUserContext();
+  const { getUser, putUserInfo, postUserInfo } = useUser();
+  if (!next_of_keen) {
+    next_of_keen = {
+      full_name: "",
+      address: "",
+      phone_number: "",
+      url: createUrl,
+    };
+  }
+  const { full_name, address, phone_number, url } = next_of_keen;
   const handleSubmit = async (values, { setFieldError }) => {
     setLoading(true);
-    const response = await putUserInfo({ url, data: values, token });
+    if (update) {
+      var response = await putUserInfo({ url, data: values, token });
+    } else {
+      var response = await postUserInfo({ url, data: values, token });
+    }
     setLoading(false);
     if (!response.ok) {
       if (response.problem === "CLIENT_ERROR") {
@@ -56,27 +69,34 @@ const AccountInfoForm = ({ navigation, route }) => {
       </View>
       <AppForm
         validationSchema={validationSchemer}
-        initialValues={{ first_name, last_name, email }}
+        initialValues={{ full_name, phone_number, address }}
         onSubmit={handleSubmit}
       >
         <AppFormField
-          name="first_name"
-          placeholder="First name"
+          name="full_name"
+          placeholder="Enter Full name"
           icon="account-edit"
         />
         <AppFormField
-          name="last_name"
-          placeholder="Last name"
-          icon="account-edit"
+          name="phone_number"
+          placeholder="Enter Phone Number"
+          icon="phone"
         />
-        <AppFormField name="email" placeholder="Email Address" icon="email" />
-        <AppFormSubmitButton title="Update" loading={loading} />
+        <AppFormField
+          name="address"
+          placeholder="Enter Address"
+          icon="card-account-details-outline"
+        />
+        <AppFormSubmitButton
+          title={update ? "Update" : "Add"}
+          loading={loading}
+        />
       </AppForm>
     </View>
   );
 };
 
-export default AccountInfoForm;
+export default NextOfKeenForm;
 
 const styles = StyleSheet.create({
   logo: {

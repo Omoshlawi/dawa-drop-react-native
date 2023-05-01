@@ -23,4 +23,5 @@ export default Object.freeze({
   FORMS_NAVIGATION: "Forms Nav",
   FORMS_ACCOUNT_FORM: "Accounts Form",
   FORMS_PROFILE_FORM: "Profile Form",
+  FORMS_NEXT_OF_KEEN_FORM: "NextOfKeen Form",
 });
