@@ -7,8 +7,9 @@ export const useUser = () => {
   const login = (data) => apiClient.post("users/login/", data);
   const register = (data) => apiClient.post("users/register/", data);
   const logout = () => clearToken(true);
-  const getUser = async () => {
-    if (user) {
+  const getUser = async (force) => {
+    console.log(force);
+    if (!force && user) {
       return;
     }
     const resposnse = await apiClient.get(
@@ -65,4 +66,5 @@ export const httpService = {
   get: apiClient.get,
   post: apiClient.post,
   put: apiClient.put,
+  getAuthHeader,
 };

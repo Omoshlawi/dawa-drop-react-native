@@ -7,9 +7,12 @@ import { IconButton, List } from "react-native-paper";
 import UserTypeProfileInformation from "../../components/user/UserTypeProfileInformation";
 import IconText from "../../components/display/IconText";
 import routes from "../../navigation/routes";
+import { useUserContext } from "../../context/hooks";
 
 const ProfileViewScreen = ({ navigation, route }) => {
   const user = route.params;
+  // are similar
+  const { user: contextUser } = useUserContext();
   const {
     account_information,
     profile_information,
@@ -17,7 +20,7 @@ const ProfileViewScreen = ({ navigation, route }) => {
     account_information_edit_url,
     profile_information_edit_url,
     user_type_information_edit_url,
-  } = user;
+  } = contextUser;
   const { url, email, name } = account_information;
   const { gender, image, phone_number, address, user_type } =
     profile_information;
