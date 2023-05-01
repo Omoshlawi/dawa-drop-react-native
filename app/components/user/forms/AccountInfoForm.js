@@ -18,13 +18,11 @@ const AccountInfoForm = ({ navigation, route }) => {
   const { url, first_name, last_name, email } = route.params;
   const { token } = useUserContext();
   const [loading, setLoading] = useState(false);
-  const { getUser } = useUser();
+  const { getUser, putUserInfo } = useUser();
 
   const handleSubmit = async (values, { setFieldError }) => {
     setLoading(true);
-    const response = await httpService.put(url, values, {
-      headers: { ...httpService.getAuthHeader(token) },
-    });
+    const response = await putUserInfo({ url, data: values, token });
     setLoading(false);
     if (!response.ok) {
       if (response.problem === "CLIENT_ERROR") {
@@ -39,7 +37,11 @@ const AccountInfoForm = ({ navigation, route }) => {
             }
           }
         }
-        return console.log("LoginScreen: ", response.problem, response.data);
+        return console.log(
+          "AccountInfo form: ",
+          response.problem,
+          response.data
+        );
       }
     } else {
       await getUser(true);

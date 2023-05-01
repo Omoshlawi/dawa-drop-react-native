@@ -31,6 +31,21 @@ export const useUser = () => {
         "Content-Type": "multipart/form-data",
       },
     });
+  const putUserInfo = ({ url, token, data, multipart = false }) => {
+    if (multipart) {
+      return apiClient.put(url, data, {
+        headers: {
+          ...getAuthHeader(token),
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }
+    return apiClient.put(url, data, {
+      headers: {
+        ...getAuthHeader(token),
+      },
+    });
+  };
   const getOrders = (token, params) =>
     apiClient.get("orders/", params, { headers: getAuthHeader(token) });
   const getPendingOrders = (token, params) =>
@@ -42,6 +57,7 @@ export const useUser = () => {
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
   return {
+    putUserInfo,
     login,
     logout,
     getUser,
