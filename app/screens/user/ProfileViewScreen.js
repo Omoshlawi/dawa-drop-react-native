@@ -86,7 +86,7 @@ const ProfileViewScreen = ({ navigation, route }) => {
       />
       <View style={styles.titleRow}>
         <Text style={styles.title}>{user_type} information</Text>
-        <IconText icon="square-edit-outline" size={20} />
+        {/* <IconText icon="square-edit-outline" size={20} /> */}
       </View>
       <UserTypeProfileInformation
         userTypeString={user_type}
