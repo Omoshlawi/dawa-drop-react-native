@@ -74,3 +74,34 @@ export const callNumber = (phone) => {
     })
     .catch((err) => console.log(err));
 };
+
+export const toSectionListData = (user) => {
+  const account = [];
+  const profile = [];
+  const userType = [];
+  const {
+    account_information,
+    profile_information,
+    user_type_information,
+    account_information_edit_url,
+    profile_information_edit_url,
+    user_type_information_edit_url,
+  } = user;
+  delete account_information.url;
+  const { user_type } = profile_information;
+  for (let key in account_information) {
+    account.push({ key: key, value: account_information[key] });
+  }
+  for (let key in profile_information) {
+    profile.push({ key: key, value: profile_information[key] });
+  }
+  for (let key in user_type_information[user_type]) {
+    userType.push({ key: key, value: user_type_information[user_type][key] });
+  }
+  const sectionData = [
+    { title: "Account Information", data: account },
+    { title: "Profile Information", data: profile },
+    { title: `${user_type.replace("_", " ")} Information`, data: profile },
+  ];
+  return sectionData;
+};
