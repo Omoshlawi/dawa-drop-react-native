@@ -66,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
     if (!user) getUser();
     handleFetch();
   }, []);
-
+  // console.log((user));
   return (
     <AppSafeArea>
       <View style={styles.headecontainer}>
@@ -78,8 +78,11 @@ const HomeScreen = ({ navigation }) => {
             })
           }
         >
-          {user && user.profile.image ? (
-            <Avatar.Image source={{ uri: user.profile.image }} size={45} />
+          {user && user.profile_information.image ? (
+            <Avatar.Image
+              source={{ uri: user.profile_information.image }}
+              size={45}
+            />
           ) : (
             <Avatar.Icon
               icon="account"

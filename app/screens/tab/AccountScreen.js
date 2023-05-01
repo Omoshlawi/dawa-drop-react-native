@@ -20,9 +20,13 @@ const AccountScreen = ({ navigation }) => {
     <AppSafeArea>
       {user && (
         <ListItem
-          image={user.profile.image ? { uri: user.profile.image } : null}
-          title={`${user.first_name} ${user.last_name}`}
-          subTitle={user.email}
+          image={
+            user.profile_information.image
+              ? { uri: user.profile_information.image }
+              : null
+          }
+          title={user.account_information.name}
+          subTitle={user.account_information.email}
           icon="account"
           onPress={() =>
             navigation.navigate(routes.USER_NAVIGATION, {

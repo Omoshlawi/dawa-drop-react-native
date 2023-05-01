@@ -12,14 +12,14 @@ export const useUser = () => {
       return;
     }
     const resposnse = await apiClient.get(
-      "users/profile/",
+      "users/profile-view/",
       {},
       {
         headers: getAuthHeader(token),
       }
     );
     if (!resposnse.ok) {
-      console.log("apiHooks->useUser", resposnse.problem);
+      console.log("apiHooks->useUser", resposnse.problem, resposnse.data);
     }
     setUser(resposnse.data);
   };
