@@ -1,12 +1,15 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { FlatList } from "react-native";
 import { Text } from "react-native-paper";
 import { screenWidth } from "../../utils/contants";
 import colors from "../../utils/colors";
 import { Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import routes from "../../navigation/routes";
 
 const ProgrameCards = ({ awardPrograms }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Award Programs</Text>
@@ -27,35 +30,44 @@ const ProgrameCards = ({ awardPrograms }) => {
             is_default,
           } = item;
           return (
-            <View style={styles.programeCard}>
-              <Image
-                style={styles.programImage}
-                resizeMode="contain"
-                source={{ uri: image }}
-              />
-              <View style={styles.devidor} />
-              <View>
-                <Text variant="headlineMedium" style={styles.title}>
-                  {name}
-                </Text>
-                <View style={styles.row}>
-                  <Text style={styles.text}>Members:</Text>
-                  <Text style={[styles.text, styles.bold]}>
-                    {members_count}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(routes.USER_NAVIGATION, {
+                  screen: routes.PROGRAM_DETAIL_SCREEN,
+                  params: item,
+                })
+              }
+            >
+              <View style={styles.programeCard}>
+                <Image
+                  style={styles.programImage}
+                  resizeMode="contain"
+                  source={{ uri: image }}
+                />
+                <View style={styles.devidor} />
+                <View>
+                  <Text variant="headlineMedium" style={styles.title}>
+                    {name}
                   </Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.text}>Rate:</Text>
-                  <Text style={[styles.text, styles.bold]}>
-                    Ksh.{point_rate}
-                  </Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.text}>Membership award:</Text>
-                  <Text style={[styles.text, styles.bold]}>{unit_point}</Text>
+                  <View style={styles.row}>
+                    <Text style={styles.text}>Members:</Text>
+                    <Text style={[styles.text, styles.bold]}>
+                      {members_count}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.text}>Rate:</Text>
+                    <Text style={[styles.text, styles.bold]}>
+                      Ksh.{point_rate}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.text}>Membership award:</Text>
+                    <Text style={[styles.text, styles.bold]}>{unit_point}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         }}
       />
@@ -74,7 +86,7 @@ const styles = StyleSheet.create({
   },
   programeCard: {
     height: screenWidth * 0.61,
-    width: screenWidth * 0.5,
+    width: screenWidth * 0.4,
     margin: 5,
     backgroundColor: colors.white,
     borderRadius: 10,

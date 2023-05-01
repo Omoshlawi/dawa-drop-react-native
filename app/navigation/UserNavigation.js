@@ -1,8 +1,9 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import routes from "./routes";
-import PaymentDetailScreen from "../screens/user/PaymentDetailScreen";
 import ProfileViewScreen from "../screens/user/ProfileViewScreen";
+import ProgrameDetailScreen from "../screens/user/ProgrameDetailScreen";
+import RewardDetailScreen from "../screens/user/RewardDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -23,10 +24,17 @@ const UserNavigation = () => {
         options={{ title: "Information Center" }}
       />
       <Screen
-        name={routes.PAYMENT_SCREEN}
-        component={PaymentDetailScreen}
+        name={routes.PROGRAM_DETAIL_SCREEN}
+        component={ProgrameDetailScreen}
         options={({ route }) => ({
-          title: route.params.payment_id,
+          title: route.params.name,
+        })}
+      />
+      <Screen
+        name={routes.REWARD_DETAIL_SCREEN}
+        component={RewardDetailScreen}
+        options={({ route }) => ({
+          title: route.params.name,
         })}
       />
     </Navigator>

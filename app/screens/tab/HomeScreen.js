@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate(routes.USER_NAVIGATION, {
-              screen: routes.PROFILE_SCREEN,
+              screen: routes.PROFILE_VIEW_SCREEN,
               params: user,
             })
           }
@@ -82,6 +82,7 @@ const HomeScreen = ({ navigation }) => {
             <Avatar.Image
               source={{ uri: user.profile_information.image }}
               size={45}
+              style={{ backgroundColor: colors.primary }}
             />
           ) : (
             <Avatar.Icon

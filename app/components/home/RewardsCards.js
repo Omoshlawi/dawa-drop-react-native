@@ -1,11 +1,14 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { FlatList } from "react-native";
 import { Text } from "react-native-paper";
 import { screenWidth } from "../../utils/contants";
 import colors from "../../utils/colors";
 import { Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import routes from "../../navigation/routes";
 const RewardsCards = ({ rewards }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Programs Rewards to win</Text>
@@ -27,23 +30,32 @@ const RewardsCards = ({ rewards }) => {
             is_default,
           } = item;
           return (
-            <View style={styles.programeCard}>
-              <Image
-                style={styles.programImage}
-                resizeMode="contain"
-                source={{ uri: image }}
-              />
-              {/* <View style={styles.devidor} /> */}
-              <View>
-                <Text
-                  variant="bodyLarge"
-                  style={styles.title}
-                  numberOfLines={1}
-                >
-                  {name}
-                </Text>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(routes.USER_NAVIGATION, {
+                  screen: routes.REWARD_DETAIL_SCREEN,
+                  params: item,
+                })
+              }
+            >
+              <View style={styles.programeCard}>
+                <Image
+                  style={styles.programImage}
+                  resizeMode="contain"
+                  source={{ uri: image }}
+                />
+                {/* <View style={styles.devidor} /> */}
+                <View>
+                  <Text
+                    variant="bodyLarge"
+                    style={styles.title}
+                    numberOfLines={1}
+                  >
+                    {name}
+                  </Text>
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         }}
       />
