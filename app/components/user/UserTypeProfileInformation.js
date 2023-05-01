@@ -1,10 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import colors from "../../utils/colors";
-import { IconButton, List } from "react-native-paper";
+import { Banner, IconButton, List, Snackbar } from "react-native-paper";
 import IconText from "../display/IconText";
 import { useNavigation } from "@react-navigation/native";
 import routes from "../../navigation/routes";
+import { useUser } from "../../api/hooks";
+import { useUserContext } from "../../context/hooks";
+import { Alert } from "react-native";
 
 const DoctorInformation = ({ doctor }) => {
   return <Text>Doctor</Text>;
@@ -13,13 +16,45 @@ const AgentInformation = ({ agent }) => {
   return <Text>Doctor</Text>;
 };
 const PatientInformation = ({ patient }) => {
+  const [visible, setVisible] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const onToggleSnackBar = () => setVisible(!visible);
+  const onDismissSnackBar = () => setVisible(false);
   const navigation = useNavigation();
+  const { deleteUserInfo, getUser } = useUser();
+  const { token } = useUserContext();
   const {
     url,
     patient_number,
     base_clinic,
     next_of_keen: { list, url: createUrl },
   } = patient;
+
+  const handleDelete = async ({ url: deletUrl, full_name }) => {
+    Alert.alert(
+      "Delete!",
+      `Are you sure you want to delete "${full_name} " ?`,
+      [
+        {
+          text: "Delete",
+          onPress: async () => {
+            const response = await deleteUserInfo({ token, url: deletUrl });
+            if (!response.ok) {
+              setMessage(
+                "Error occured when attempting to delete next of keen!!"
+              );
+              onToggleSnackBar();
+            } else {
+              setMessage("Added next of Keen succesfully!!");
+              await getUser(true);
+              onToggleSnackBar();
+            }
+          },
+        },
+        { text: "Cancel", onPress: () => {} },
+      ]
+    );
+  };
   return (
     <>
       <List.Item
@@ -68,12 +103,26 @@ const PatientInformation = ({ patient }) => {
               <IconButton
                 icon="trash-can-outline"
                 iconColor={colors.danger}
-                onPress={() => {}}
+                onPress={async () => {
+                  await handleDelete(nok);
+                }}
               />
             )}
           />
         );
       })}
+      <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: "Dismiss",
+          onPress: () => {
+            // Do something
+          },
+        }}
+      >
+        {message}
+      </Snackbar>
     </>
   );
 };

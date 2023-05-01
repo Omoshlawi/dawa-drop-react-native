@@ -8,7 +8,6 @@ export const useUser = () => {
   const register = (data) => apiClient.post("users/register/", data);
   const logout = () => clearToken(true);
   const getUser = async (force) => {
-    console.log(force);
     if (!force && user) {
       return;
     }
@@ -61,6 +60,17 @@ export const useUser = () => {
       },
     });
   };
+  const deleteUserInfo = ({ url, token }) => {
+    return apiClient.delete(
+      url,
+      {},
+      {
+        headers: {
+          ...getAuthHeader(token),
+        },
+      }
+    );
+  };
   const getOrders = (token, params) =>
     apiClient.get("orders/", params, { headers: getAuthHeader(token) });
   const getPendingOrders = (token, params) =>
@@ -72,6 +82,7 @@ export const useUser = () => {
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
   return {
+    deleteUserInfo,
     postUserInfo,
     putUserInfo,
     login,
