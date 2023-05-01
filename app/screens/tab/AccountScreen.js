@@ -26,7 +26,7 @@ const AccountScreen = ({ navigation }) => {
           icon="account"
           onPress={() =>
             navigation.navigate(routes.USER_NAVIGATION, {
-              screen: routes.PROFILE_SCREEN,
+              screen: routes.PROFILE_VIEW_SCREEN,
               params: user,
             })
           }
