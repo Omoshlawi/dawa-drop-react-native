@@ -20,4 +20,7 @@ export default Object.freeze({
   PROFILE_VIEW_SCREEN: "Profile view Screen",
   PAYMENT_SCREEN: "Payment Screen",
   ACTION_MENU_SCREEN: "Menu Screen",
+  FORMS_NAVIGATION: "Forms Nav",
+  FORMS_ACCOUNT_FORM: "Accounts Form",
+  FORMS_PROFILE_FORM: "Profile Form",
 });

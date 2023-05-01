@@ -12,8 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import * as Yup from "yup";
 const validationSchemer = Yup.object().shape({
-  first_name: Yup.string().label("First Name"),
-  last_name: Yup.string().label("Last Name"),
+  address: Yup.string().label("Last Name"),
   image: Yup.string().label("Image").required(),
   gender: Yup.string().label("Gender").required(),
   phone_number: Yup.string().label("Phone number").required(),
@@ -22,11 +21,11 @@ const validationSchemer = Yup.object().shape({
 const ProfileForm = ({ initial }) => {
   const { setUser } = useUserContext();
   const { putUser } = useUser();
-  const navigation = useNavigation()
-  const [loading, setLoading] = useState(false)
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (values, { setFieldError }) => {
     // return console.log(values);
-    setLoading(true)
+    setLoading(true);
     const { image, first_name, last_name, gender, phone_number } = values;
     const formData = new FormData();
     formData.append("first_name", first_name);
@@ -35,7 +34,7 @@ const ProfileForm = ({ initial }) => {
     formData.append("profile.phone_number", phone_number);
     formData.append("profile.image", getFormFileFromUri(image));
     const resp = await putUser(formData);
-    setLoading(false)
+    setLoading(false);
     if (!resp.ok) {
       if (resp.problem === "CLIENT_ERROR") {
         for (const key in resp.data) {
@@ -54,7 +53,7 @@ const ProfileForm = ({ initial }) => {
       return console.log(resp.problem);
     }
     setUser(resp.data);
-    navigation.goBack()
+    navigation.goBack();
   };
   const [genderOptions, setGenderOptions] = useState([
     { value: "male", label: "Male" },
@@ -72,16 +71,7 @@ const ProfileForm = ({ initial }) => {
         <View style={{ alignItems: "center" }}>
           <AppFormImagePicker name="image" />
         </View>
-        <AppFormField
-          name="first_name"
-          placeholder="Enter first name"
-          icon="account-edit"
-        />
-        <AppFormField
-          name="last_name"
-          placeholder="Enter last name"
-          icon="account-edit"
-        />
+
         <AppFormField
           name="phone_number"
           placeholder="Enter phone number"
@@ -94,7 +84,12 @@ const ProfileForm = ({ initial }) => {
           data={genderOptions}
           setData={setGenderOptions}
         />
-        <AppFormSubmitButton title="Update" loading={loading}/>
+        <AppFormField
+          name="address"
+          placeholder="Enter Address"
+          icon="card-account-details-outline"
+        />
+        <AppFormSubmitButton title="Update" loading={loading} />
       </AppForm>
     </View>
   );

@@ -6,6 +6,7 @@ import BottomTabNavigation from "./BottomTabNavigation";
 import routes from "./routes";
 import UserNavigation from "./UserNavigation";
 import OrderNavigation from "./OrderNavigation";
+import FormsNavigation from "./FormsNavigation";
 
 const Stack = createStackNavigator();
 
@@ -43,6 +44,11 @@ const MainNavigation = () => {
       <Screen
         name={routes.ORDER_NAVIGATION}
         component={OrderNavigation}
+        options={{ headerShown: false }}
+      />
+      <Screen
+        name={routes.FORMS_NAVIGATION}
+        component={FormsNavigation}
         options={{ headerShown: false }}
       />
     </Navigator>

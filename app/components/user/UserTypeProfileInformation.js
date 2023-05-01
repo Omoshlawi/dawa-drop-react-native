@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import colors from "../../utils/colors";
 import { List } from "react-native-paper";
+import IconText from "../display/IconText";
 
 const DoctorInformation = ({ doctor }) => {
   return <Text>Doctor</Text>;
@@ -32,7 +33,10 @@ const PatientInformation = ({ patient }) => {
         }
         style={styles.item}
       />
-      <Text style={styles.title}>Next of keen information</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>Next of keen information</Text>
+        <IconText icon="square-edit-outline" size={20} />
+      </View>
       {list.map(({ full_name, address, phone_number, url }) => (
         <List.Item
           key={url}
@@ -80,5 +84,11 @@ const styles = StyleSheet.create({
   },
   listTitle: {
     color: colors.medium,
+  },
+  titleRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    alignItems: "center",
   },
 });

@@ -1,24 +1,43 @@
-import { SectionList, StyleSheet, Text, View } from "react-native";
+import { Alert, SectionList, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { toSectionListData } from "../../utils/helpers";
 import colors from "../../utils/colors";
 import { ScrollView } from "react-native";
-import { List } from "react-native-paper";
+import { IconButton, List } from "react-native-paper";
 import UserTypeProfileInformation from "../../components/user/UserTypeProfileInformation";
+import IconText from "../../components/display/IconText";
+import routes from "../../navigation/routes";
 
 const ProfileViewScreen = ({ navigation, route }) => {
   const user = route.params;
   const {
-    account_information: { url, email, name },
-    profile_information: { gender, image, phone_number, address, user_type },
-    user_type_information: { [user_type]: userType },
+    account_information,
+    profile_information,
+    user_type_information,
     account_information_edit_url,
     profile_information_edit_url,
     user_type_information_edit_url,
   } = user;
+  const { url, email, name } = account_information;
+  const { gender, image, phone_number, address, user_type } =
+    profile_information;
+  const { [user_type]: userType } = user_type_information;
+
   return (
     <ScrollView>
-      <Text style={styles.title}>account information</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>account information</Text>
+        <IconText
+          icon="square-edit-outline"
+          size={20}
+          onPress={() =>
+            navigation.navigate(routes.FORMS_NAVIGATION, {
+              screen: routes.FORMS_ACCOUNT_FORM,
+              params: account_information,
+            })
+          }
+        />
+      </View>
       <List.Item
         title="Name"
         titleStyle={styles.listTitle}
@@ -31,7 +50,19 @@ const ProfileViewScreen = ({ navigation, route }) => {
         description={email ? email : "None"}
         style={styles.item}
       />
-      <Text style={styles.title}>profile information</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>profile information</Text>
+        <IconText
+          icon="square-edit-outline"
+          size={20}
+          onPress={() =>
+            navigation.navigate(routes.FORMS_NAVIGATION, {
+              screen: routes.FORMS_PROFILE_FORM,
+              params: profile_information,
+            })
+          }
+        />
+      </View>
       <List.Item
         title="Gender"
         titleStyle={styles.listTitle}
@@ -50,7 +81,10 @@ const ProfileViewScreen = ({ navigation, route }) => {
         description={address ? address : "None"}
         style={styles.item}
       />
-      <Text style={styles.title}>{user_type} information</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>{user_type} information</Text>
+        <IconText icon="square-edit-outline" size={20} />
+      </View>
       <UserTypeProfileInformation
         userTypeString={user_type}
         userTypeObject={userType}
@@ -71,6 +105,12 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     padding: 10,
     fontWeight: "bold",
+  },
+  titleRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    alignItems: "center",
   },
   listTitle: {
     color: colors.medium,

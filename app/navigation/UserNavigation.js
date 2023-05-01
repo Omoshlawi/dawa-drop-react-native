@@ -20,7 +20,7 @@ const UserNavigation = () => {
       <Screen
         name={routes.PROFILE_VIEW_SCREEN}
         component={ProfileViewScreen}
-        options={{ title: "Your profile" }}
+        options={{ title: "Information Center" }}
       />
       <Screen
         name={routes.PAYMENT_SCREEN}
