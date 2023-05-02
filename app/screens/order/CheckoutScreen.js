@@ -20,7 +20,7 @@ const validationSchemer = Yup.object().shape({
   rating: Yup.number().required().label("Rating"),
 });
 
-const CheckoutScreen = () => {
+const CheckoutScreen = ({ navigation }) => {
   const [keyboardType, setKeyboardType] = useState(false);
   const { checkoutDelivery } = useUser();
   const [initialFormData, setInitialFormData] = useState({
@@ -62,6 +62,7 @@ const CheckoutScreen = () => {
       return console.log("ReviewScreen: ", response.problem, response.data);
     }
     Alert.alert("Sucess", "Delivery feedback was a sucess!Thank you");
+    navigation.goBack();
   };
 
   useEffect(() => {

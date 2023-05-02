@@ -4,6 +4,7 @@ import routes from "./routes";
 import ProfileViewScreen from "../screens/user/ProfileViewScreen";
 import ProgrameDetailScreen from "../screens/user/ProgrameDetailScreen";
 import RewardDetailScreen from "../screens/user/RewardDetailScreen";
+import LoyaltyPointsScreen from "../screens/user/LoyaltyPointsScreen";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,13 @@ const UserNavigation = () => {
         component={RewardDetailScreen}
         options={({ route }) => ({
           title: route.params.name,
+        })}
+      />
+      <Screen
+        name={routes.LOYALTY_POINTS_SCREEN}
+        component={LoyaltyPointsScreen}
+        options={({ route }) => ({
+          title: "",
         })}
       />
     </Navigator>

@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     // padding: 10,
   },
   programeCard: {
-    height: screenWidth * 0.61,
+    // height: screenWidth * 0.61,
     width: screenWidth * 0.4,
     margin: 5,
     backgroundColor: colors.white,

@@ -52,9 +52,9 @@ export const menItems = [
     image: require("../assets/box.png"),
     id: 5,
     destination: {
-      parentRoute: routes.ORDER_NAVIGATION,
+      parentRoute: routes.USER_NAVIGATION,
       nestedRoute: {
-        screen: routes.ORDER_NAVIGATION,
+        screen: routes.LOYALTY_POINTS_SCREEN,
       },
     },
   },
