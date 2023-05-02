@@ -6,24 +6,59 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import colors from "../../utils/colors";
 import AppSafeArea from "../../components/AppSafeArea";
 import { Surface, Text } from "react-native-paper";
-import routes from "../../navigation/routes";
 import { menItems } from "../../utils/contants";
+import { useUserContext } from "../../context/hooks";
+import { useUser } from "../../api/hooks";
+import { getPointsFromUserAndSetToPoints } from "../../utils/helpers";
 
 const itemWidth = Dimensions.get("window").width / 2 - 5;
 const ActionMenuScreen = ({ navigation }) => {
+  const { user } = useUserContext();
+  const { getUser } = useUser();
+  const [points, setPoints] = useState({
+    value: 0,
+    show: false,
+  });
+  useEffect(() => {
+    if (!user) {
+      getUser();
+    } else {
+      if (user) {
+        const {
+          profile_information: { user_type },
+        } = user;
+        if (user_type == "patient") {
+          const {
+            user_type_information: { patient },
+          } = user;
+          if (patient) {
+            const {
+              loyalty_points: { redeemable_points: value },
+            } = patient;
+            setPoints({ ...points, value });
+          }
+        }
+      }
+    }
+  }, []);
   return (
     <AppSafeArea>
       <View style={styles.screen}>
         <View>
           <View style={styles.pointsContainer}>
             <Surface style={styles.surface}>
-              <Text style={styles.pointsText}>******</Text>
-              <TouchableOpacity style={styles.pointButton}>
-                <Text>Show points</Text>
+              <Text style={styles.pointsText}>
+                {points.show ? points.value : "******"}
+              </Text>
+              <TouchableOpacity
+                style={styles.pointButton}
+                onPress={() => setPoints({ ...points, show: !points.show })}
+              >
+                <Text>{points.show ? "Hide points" : "Show Points"}</Text>
               </TouchableOpacity>
             </Surface>
           </View>
@@ -85,7 +120,6 @@ const styles = StyleSheet.create({
   },
   item: {
     width: itemWidth - 5,
-    height: 100,
     backgroundColor: colors.background,
     borderRadius: 10,
     marginHorizontal: 5,
@@ -122,6 +156,8 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     verticalAlign: "middle",
+    fontWeight: "bold",
+    color: colors.primary,
   },
   pointButton: {
     backgroundColor: colors.secondary,

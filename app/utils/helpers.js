@@ -105,3 +105,22 @@ export const toSectionListData = (user) => {
   ];
   return sectionData;
 };
+
+export const getPointsFromUserAndSetToPoints = (user, points, setPoints) => {
+  if (user) {
+    const {
+      profile_information: { user_type },
+    } = user;
+    if (user_type == "patient") {
+      const {
+        user_type_information: { patient },
+      } = user;
+      if (patient) {
+        const {
+          loyalty_points: { redeemable_points: value },
+        } = patient;
+        setPoints({ ...points, value });
+      }
+    }
+  }
+};
