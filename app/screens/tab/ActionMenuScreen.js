@@ -13,7 +13,6 @@ import { Surface, Text } from "react-native-paper";
 import { menItems } from "../../utils/contants";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
-import { getPointsFromUserAndSetToPoints } from "../../utils/helpers";
 
 const itemWidth = Dimensions.get("window").width / 2 - 5;
 const ActionMenuScreen = ({ navigation }) => {
@@ -44,7 +43,8 @@ const ActionMenuScreen = ({ navigation }) => {
         }
       }
     }
-  }, []);
+  }, [user]);
+
   return (
     <AppSafeArea>
       <View style={styles.screen}>
