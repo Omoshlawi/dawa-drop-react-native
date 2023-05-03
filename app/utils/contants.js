@@ -59,13 +59,13 @@ export const menItems = [
     },
   },
   {
-    title: "Request Tranfer",
+    title: "Request Transfer",
     image: require("../assets/migration.png"),
     id: 6,
     destination: {
-      parentRoute: routes.ORDER_NAVIGATION,
+      parentRoute: routes.FORMS_NAVIGATION,
       nestedRoute: {
-        screen: routes.ORDER_NAVIGATION,
+        screen: routes.FORMS_REQUEST_TRANFER_FORM,
       },
     },
   },
