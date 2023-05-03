@@ -4,6 +4,7 @@ import routes from "./routes";
 import AccountInfoForm from "../components/user/forms/AccountInfoForm";
 import ProfileInfoForm from "../components/user/forms/ProfileInfoForm";
 import NextOfKeenForm from "../components/user/forms/NextOfKeenForm";
+import RedeemForm from "../components/user/forms/RedeemForm";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,11 @@ const FormsNavigation = () => {
         name={routes.FORMS_NEXT_OF_KEEN_FORM}
         component={NextOfKeenForm}
         options={{ headerTitle: "Update Next of keen" }}
+      />
+      <Screen
+        name={routes.FORMS_REDEEM_FORM}
+        component={RedeemForm}
+        options={{ headerTitle: "Redeem Points" }}
       />
     </Navigator>
   );

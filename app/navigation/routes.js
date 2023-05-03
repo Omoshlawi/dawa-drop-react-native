@@ -26,4 +26,5 @@ export default Object.freeze({
   FORMS_ACCOUNT_FORM: "Accounts Form",
   FORMS_PROFILE_FORM: "Profile Form",
   FORMS_NEXT_OF_KEEN_FORM: "NextOfKeen Form",
+  FORMS_REDEEM_FORM: "Redeem Form",
 });

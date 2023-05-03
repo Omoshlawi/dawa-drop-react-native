@@ -7,6 +7,7 @@ import colors from "../../utils/colors";
 import { FlatList } from "react-native";
 import moment from "moment/moment";
 import IconText from "../../components/display/IconText";
+import routes from "../../navigation/routes";
 
 const LoyaltyPointsScreen = ({ navigation }) => {
   const [data, setData] = useState();
@@ -84,7 +85,17 @@ const LoyaltyPointsScreen = ({ navigation }) => {
       )}
       <View style={styles.titleRow}>
         <Text style={styles.title}> My redemption rewards</Text>
-        <IconText icon="gift-open" size={20} />
+        <IconText
+          icon="gift-open"
+          size={20}
+          disabled={!Boolean(current_program_enrolment)}
+          onPress={() =>
+            navigation.navigate(routes.FORMS_NAVIGATION, {
+              screen: routes.FORMS_REDEEM_FORM,
+              params: data,
+            })
+          }
+        />
       </View>
       <FlatList
         data={redeem_list}

@@ -11,7 +11,10 @@ const IconText = ({
   fontWeight,
   left = true,
   onPress,
+  disabled = false,
+  disabledColor = colors.medium,
 }) => {
+  const disableBtn = !(onPress instanceof Function) || Boolean(disabled); //| Boolean(disabled);
   return (
     <TouchableOpacity
       style={{
@@ -19,9 +22,15 @@ const IconText = ({
         alignItems: "center",
       }}
       onPress={onPress}
-      disabled={!(onPress instanceof Function)}
+      disabled={disableBtn}
     >
-      {icon && <MaterialCommunityIcons name={icon} size={size} color={color} />}
+      {icon && (
+        <MaterialCommunityIcons
+          name={icon}
+          size={size}
+          color={disableBtn ? disabledColor : color}
+        />
+      )}
       {text && (
         <Text
           numberOfLines={1}
