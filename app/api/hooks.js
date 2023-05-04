@@ -71,6 +71,14 @@ export const useUser = () => {
       }
     );
   };
+  const postTransferRequest = (token, data) =>
+    apiClient.post("transfer-requests/my-requests/", data, {
+      headers: getAuthHeader(token),
+    });
+  const getTransferRequest = (token, params) =>
+    apiClient.get("transfer-requests/my-requests/", params, {
+      headers: getAuthHeader(token),
+    });
   const getOrders = (token, params) =>
     apiClient.get("orders/", params, { headers: getAuthHeader(token) });
   const getPendingOrders = (token, params) =>
@@ -82,6 +90,8 @@ export const useUser = () => {
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
   return {
+    postTransferRequest,
+    getTransferRequest,
     deleteUserInfo,
     postUserInfo,
     putUserInfo,
