@@ -21,6 +21,7 @@ export default Object.freeze({
   PROGRAM_DETAIL_SCREEN: "Programe Screen",
   REWARD_DETAIL_SCREEN: "Reward Screen",
   LOYALTY_POINTS_SCREEN: "LoyaltyPoints Screen",
+  USER_TRANSFER_REQUESTS_SCREEN: "UserTransfer Screen",
   ACTION_MENU_SCREEN: "Menu Screen",
   FORMS_NAVIGATION: "Forms Nav",
   FORMS_ACCOUNT_FORM: "Accounts Form",

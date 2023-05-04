@@ -63,9 +63,9 @@ export const menItems = [
     image: require("../assets/migration.png"),
     id: 6,
     destination: {
-      parentRoute: routes.FORMS_NAVIGATION,
+      parentRoute: routes.USER_NAVIGATION,
       nestedRoute: {
-        screen: routes.FORMS_REQUEST_TRANFER_FORM,
+        screen: routes.USER_TRANSFER_REQUESTS_SCREEN,
       },
     },
   },
@@ -95,5 +95,3 @@ export const chechoutTabs = [
 ];
 
 export const screenWidth = Dimensions.get("screen").width;
-
-
