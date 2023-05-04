@@ -61,35 +61,28 @@ const OrdersHistoryScreen = ({ navigation }) => {
             national_id,
           } = item;
           return (
-            <Card
-              elevation={0}
-              style={styles.orderCard}
+            <List.Item
+              style={styles.listItem}
               onPress={() =>
                 navigation.navigate(routes.ORDERS_DETAIL_SCREEN, item)
               }
-            >
-              <Card.Title
-                title={order_id}
-                subtitle={`${moment(created_at).format(
-                  "Do MMM YYYY, h:mm a"
-                )} ${is_approved ? "| Aprooved" : ""} ${
-                  is_delivered ? "| Delivered" : ""
-                } `}
-                subtitleVariant="bodySmall"
-                subtitleStyle={{ color: colors.medium }}
-                left={(props) => (
-                  <Avatar.Icon
-                    icon="shopping"
-                    {...props}
-                    style={{ backgroundColor: colors.light }}
-                    color={is_delivered ? colors.success : colors.danger}
-                  />
-                )}
-                right={(props) => (
-                  <IconButton icon="chevron-right" {...props} />
-                )}
-              />
-            </Card>
+              title={order_id}
+              description={`${moment(created_at).format(
+                "Do MMM YYYY, h:mm a"
+              )} ${is_approved ? "| Aprooved" : ""} ${
+                is_delivered ? "| Delivered" : ""
+              } `}
+              descriptionStyle={{ color: colors.medium }}
+              left={(props) => (
+                <Avatar.Icon
+                  icon="shopping"
+                  {...props}
+                  style={{ backgroundColor: colors.light }}
+                  color={is_delivered ? colors.success : colors.danger}
+                />
+              )}
+              right={(props) => <IconButton icon="chevron-right" {...props} />}
+            />
           );
         }}
       />
@@ -100,15 +93,13 @@ const OrdersHistoryScreen = ({ navigation }) => {
 export default OrdersHistoryScreen;
 
 const styles = StyleSheet.create({
-  orderCard: {
+  listItem: {
     backgroundColor: colors.white,
-    // marginHorizontal: 5,
-    margin: 3,
-    borderRadius: 20,
+    marginTop: 5,
   },
   screen: {
     marginBottom: 20,
     flex: 1,
-    backgroundColor: colors.background,
+    // backgroundColor: colors.background,
   },
 });
