@@ -6,6 +6,7 @@ import ProgrameDetailScreen from "../screens/user/ProgrameDetailScreen";
 import RewardDetailScreen from "../screens/user/RewardDetailScreen";
 import LoyaltyPointsScreen from "../screens/user/LoyaltyPointsScreen";
 import UserTransferRequestsScreen from "../screens/user/UserTransferRequestsScreen";
+import TransferDetailScreen from "../screens/user/TransferDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,13 @@ const UserNavigation = () => {
         component={UserTransferRequestsScreen}
         options={({ route }) => ({
           title: "Facility Transfer Requests",
+        })}
+      />
+      <Screen
+        name={routes.TRANSFER_DETAIL_SCREEN}
+        component={TransferDetailScreen}
+        options={({ route }) => ({
+          title: "",
         })}
       />
     </Navigator>

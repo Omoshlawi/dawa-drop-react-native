@@ -3,18 +3,33 @@ import React, { useEffect, useState } from "react";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
 import { FlatList } from "react-native";
-import { List } from "react-native-paper";
+import { FAB, IconButton, List } from "react-native-paper";
 import colors from "../../utils/colors";
 import moment from "moment";
 import { Text } from "react-native-paper";
 import IconText from "../../components/display/IconText";
 import routes from "../../navigation/routes";
+import { SectionList } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const UserTransferRequestsScreen = ({ navigation }) => {
   const { token } = useUserContext();
   const { getTransferRequest } = useUser();
   const [transferRequest, setTransferRequest] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const toSectionData = (request) => {
+    const aprrovedList = request.filter(
+      ({ is_approved }) => is_approved === true
+    );
+    const pendingList = request.filter(
+      ({ is_approved }) => is_approved === false
+    );
+    return [
+      { title: "Aprooved Requests", data: aprrovedList },
+      { title: "Pending Requests", data: pendingList },
+    ];
+  };
 
   const handleFetch = async () => {
     setLoading(true);
@@ -27,28 +42,22 @@ const UserTransferRequestsScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    handleFetch();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      handleFetch();
+    }, [])
+  );
+
   return (
-    <View>
-      <View style={styles.titleRow}>
-        <Text style={styles.title}>Requests History</Text>
-        <IconText
-          icon="plus"
-          size={20}
-          onPress={() =>
-            navigation.navigate(routes.FORMS_NAVIGATION, {
-              screen: routes.FORMS_REQUEST_TRANFER_FORM,
-            })
-          }
-        />
-      </View>
-      <FlatList
-        data={transferRequest}
+    <View style={styles.screen}>
+      <SectionList
+        sections={toSectionData(transferRequest)}
         refreshing={loading}
         onRefresh={handleFetch}
         keyExtractor={({ url }) => url}
+        renderSectionHeader={({ section: { title, data } }) =>
+          data.length ? <Text style={styles.title}>{title}</Text> : null
+        }
         renderItem={({ item }) => {
           const {
             patient,
@@ -61,14 +70,16 @@ const UserTransferRequestsScreen = ({ navigation }) => {
           } = item;
           return (
             <List.Item
-              style={styles.listIte}
+              style={styles.listItem}
               title={name}
               description={reason}
+              onPress={() =>
+                navigation.navigate(routes.TRANSFER_DETAIL_SCREEN, item)
+              }
+              //   description={moment(created_at).format("ddd Do MMMM YYYY")}
               descriptionStyle={styles.text}
               right={(props) => (
-                <Text style={styles.text}>
-                  {moment(created_at).format("ddd Do MMMM YYYY")}
-                </Text>
+                <IconButton icon="chevron-right" iconColor={colors.primary} />
               )}
               left={(props) => (
                 <List.Image
@@ -80,6 +91,15 @@ const UserTransferRequestsScreen = ({ navigation }) => {
           );
         }}
       />
+      <FAB
+        icon="plus"
+        style={styles.fab}
+        onPress={() =>
+          navigation.navigate(routes.FORMS_NAVIGATION, {
+            screen: routes.FORMS_REQUEST_TRANFER_FORM,
+          })
+        }
+      />
     </View>
   );
 };
@@ -87,7 +107,14 @@ const UserTransferRequestsScreen = ({ navigation }) => {
 export default UserTransferRequestsScreen;
 
 const styles = StyleSheet.create({
-  listIte: {
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.medium,
+  },
+  listItem: {
     backgroundColor: colors.white,
     marginTop: 5,
   },
@@ -99,10 +126,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: "bold",
   },
-  titleRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-    alignItems: "center",
+  screen: {
+    flex: 1,
   },
 });
