@@ -9,6 +9,7 @@ import { useHospital, useUser } from "../../../api/hooks";
 import { useUserContext } from "../../../context/hooks";
 import * as Yup from "yup";
 import AppFormPicker from "../../forms/AppFormPicker";
+import HospitalPicker from "./HospitalPicker";
 const validationSchemer = Yup.object().shape({
   hospital: Yup.string().label("Hospital"),
   reason: Yup.string().label("Reason"),
@@ -77,12 +78,13 @@ const RequestTransferForm = ({ navigation, route }) => {
         initialValues={{ reason: "", hospital: "" }}
         onSubmit={handleSubmit}
       >
+        <HospitalPicker hospitals={clinics} />
         <AppFormField
           name="reason"
           placeholder="Reason for requesting transfer"
-          icon="account-edit"
+          icon="information-variant"
           multiline
-          numberOfLines={5}
+          numberOfLines={3}
         />
         <AppFormSubmitButton title="Update" loading={loading} />
       </AppForm>

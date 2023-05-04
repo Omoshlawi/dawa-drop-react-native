@@ -40,24 +40,6 @@ const LoyaltyPointsScreen = ({ navigation }) => {
   } = data;
   return (
     <View>
-      <List.Item
-        style={styles.listItem}
-        title="Total Points"
-        description={total}
-        descriptionStyle={styles.listDescription}
-      />
-      <List.Item
-        style={styles.listItem}
-        title="Total Redeemed Points"
-        description={total_redeemed_points}
-        descriptionStyle={styles.listDescription}
-      />
-      <List.Item
-        style={styles.listItem}
-        title="Total Redeemable Points"
-        description={redeemable_points}
-        descriptionStyle={styles.listDescription}
-      />
       {current_program_enrolment ? (
         <List.Item
           style={styles.listItem}
@@ -83,6 +65,25 @@ const LoyaltyPointsScreen = ({ navigation }) => {
           descriptionStyle={styles.listDescription}
         />
       )}
+      <List.Item
+        style={styles.listItem}
+        title="Total Points"
+        description={total}
+        descriptionStyle={styles.listDescription}
+      />
+      <List.Item
+        style={styles.listItem}
+        title="Total Redeemed Points"
+        description={total_redeemed_points}
+        descriptionStyle={styles.listDescription}
+      />
+      <List.Item
+        style={styles.listItem}
+        title="Total Redeemable Points"
+        description={redeemable_points}
+        descriptionStyle={styles.listDescription}
+      />
+
       <View style={styles.titleRow}>
         <Text style={styles.title}> My redemption rewards</Text>
         <IconText
