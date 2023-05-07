@@ -6,6 +6,7 @@ import MapView, { Marker, Polyline, Geojson } from "react-native-maps";
 import colors from "../../utils/colors";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
+import { date } from "yup";
 
 /**
  * Client tract delivery
@@ -16,6 +17,7 @@ import { useUser } from "../../api/hooks";
 const TrackDeliveryScreen = ({ navigation, route }) => {
   const order = route.params;
   const [geoJson, setGeoJson] = useState(null);
+  const [realTimeLocation, setRealTimeLocation] = useState(null);
   const { token } = useUserContext();
   const { getUserInfo } = useUser();
   const webSocket = useRef(
@@ -33,25 +35,30 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
     handleGetDirection();
     // initials
     webSocket.onopen = () => {
-      webSocket.send(JSON.stringify({ name: "Omosh here" }));
+      // webSocket.send(JSON.stringify({ name: "Omosh here" }));
     };
     webSocket.onmessage = (e) => {
       // a message was received
-      console.log(e.data);
-      alert(e.data);
+      let data = e.data;
+      const { info } = JSON.parse(data);
+      console.log(info);
+      // setRealTimeLocation({
+      //   latitude: info.latitude + 5,
+      //   longitude: info.longitude + 5,
+      // });
     };
     webSocket.onerror = (e) => {
       // an error occurred
-      console.log(e.message);
+      // console.log(e.message);
     };
     webSocket.onclose = (e) => {
       // connection closed
-      console.log(e.code, e.reason);
+      // console.log(e.code, e.reason);
     };
   }, []);
 
   const handleAgentWebSocket = async () => {
-    webSocket.send(JSON.stringify(trip));
+    webSocket.send(JSON.stringify(current_location));
   };
   const handleGetDirection = async () => {
     const response = await getUserInfo({ url: route_url, token, params: {} });
@@ -78,6 +85,14 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
               style={{ width: 60, height: 60 }}
             />
           </Marker>
+          {realTimeLocation && (
+            <Marker coordinate={realTimeLocation}>
+              <Image
+                source={require("../../assets/hospitalmarker.png")}
+                style={{ width: 60, height: 60 }}
+              />
+            </Marker>
+          )}
           <Marker coordinate={destination}>
             <Image
               source={require("../../assets/hospitalmarker.png")}
