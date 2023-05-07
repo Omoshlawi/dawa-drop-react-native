@@ -1,8 +1,8 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, IconButton } from "react-native-paper";
 import useLocation from "../../hooks/useLocation";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import colors from "../../utils/colors";
 
 /**
@@ -13,14 +13,43 @@ import colors from "../../utils/colors";
 
 const TrackDeliveryScreen = ({ navigation, route }) => {
   const order = route.params;
+  const webSocket = useRef(
+    new WebSocket("ws://192.168.100.5:8000/ws/trip/1/")
+  ).current;
   const {
-    delivery: {
-      trip: { current_location, destination },
-    },
+    delivery: { trip },
   } = order;
+
+  if (!trip) {
+    return <Text>Not started</Text>;
+  }
+  const { current_location, destination } = trip;
+  useEffect(() => {
+    // initials
+    webSocket.onopen = () => {
+      webSocket.send(JSON.stringify({ name: "Omosh here" }));
+    };
+    webSocket.onmessage = (e) => {
+      // a message was received
+      console.log(e.data);
+    };
+    webSocket.onerror = (e) => {
+      // an error occurred
+      console.log(e.message);
+    };
+    webSocket.onclose = (e) => {
+      // connection closed
+      console.log(e.code, e.reason);
+    };
+  }, []);
+
+  const handleAgentWebSocket = async () => {
+    while (true) webSocket.send(JSON.stringify(trip));
+  };
 
   return (
     <View style={styles.screen}>
+      <IconButton icon="refresh" onPress={handleAgentWebSocket} />
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
@@ -36,7 +65,7 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
             title="Long press and drag to your desired location"
           >
             <Image
-              source={require("../../assets/hospitalmarker.png")}
+              source={require("../../assets/deliverycycle.png")}
               style={{ width: 60, height: 60 }}
             />
           </Marker>
@@ -49,6 +78,19 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
               style={{ width: 60, height: 60 }}
             />
           </Marker>
+          <Polyline
+            coordinates={[current_location, destination]}
+            strokeColor={colors.primary} // fallback for when `strokeColors` is not supported by the map-provider
+            strokeColors={[
+              "#7F0000",
+              "#00000000", // no color, creates a "long" gradient between the previous and next coordinate
+              "#B24112",
+              "#E5845C",
+              "#238C23",
+              "#7F0000",
+            ]}
+            strokeWidth={6}
+          />
         </MapView>
       </View>
     </View>
