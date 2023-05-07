@@ -2,8 +2,10 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, IconButton } from "react-native-paper";
 import useLocation from "../../hooks/useLocation";
-import MapView, { Marker, Polyline } from "react-native-maps";
+import MapView, { Marker, Polyline, Geojson } from "react-native-maps";
 import colors from "../../utils/colors";
+import { useUserContext } from "../../context/hooks";
+import { useUser } from "../../api/hooks";
 
 /**
  * Client tract delivery
@@ -13,8 +15,11 @@ import colors from "../../utils/colors";
 
 const TrackDeliveryScreen = ({ navigation, route }) => {
   const order = route.params;
+  const [geoJson, setGeoJson] = useState(null);
+  const { token } = useUserContext();
+  const { getUserInfo } = useUser();
   const webSocket = useRef(
-    new WebSocket("ws://192.168.100.5:8000/ws/trip/1/")
+    new WebSocket(`ws://192.168.100.5:8000/ws/trip/1/?token=${token}`)
   ).current;
   const {
     delivery: { trip },
@@ -23,8 +28,9 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   if (!trip) {
     return <Text>Not started</Text>;
   }
-  const { current_location, destination } = trip;
+  const { current_location, destination, route_url } = trip;
   useEffect(() => {
+    handleGetDirection();
     // initials
     webSocket.onopen = () => {
       webSocket.send(JSON.stringify({ name: "Omosh here" }));
@@ -32,6 +38,7 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
     webSocket.onmessage = (e) => {
       // a message was received
       console.log(e.data);
+      alert(e.data);
     };
     webSocket.onerror = (e) => {
       // an error occurred
@@ -44,9 +51,14 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   }, []);
 
   const handleAgentWebSocket = async () => {
-    while (true) webSocket.send(JSON.stringify(trip));
+    webSocket.send(JSON.stringify(trip));
   };
-
+  const handleGetDirection = async () => {
+    const response = await getUserInfo({ url: route_url, token, params: {} });
+    if (response.ok) {
+      setGeoJson(response.data);
+    }
+  };
   return (
     <View style={styles.screen}>
       <IconButton icon="refresh" onPress={handleAgentWebSocket} />
@@ -60,37 +72,26 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
             longitudeDelta: 0.0421,
           }}
         >
-          <Marker
-            coordinate={current_location}
-            title="Long press and drag to your desired location"
-          >
-            <Image
-              source={require("../../assets/deliverycycle.png")}
-              style={{ width: 60, height: 60 }}
-            />
-          </Marker>
-          <Marker
-            coordinate={destination}
-            title="Long press and drag to your desired location"
-          >
+          <Marker coordinate={current_location}>
             <Image
               source={require("../../assets/hospitalmarker.png")}
               style={{ width: 60, height: 60 }}
             />
           </Marker>
-          <Polyline
-            coordinates={[current_location, destination]}
-            strokeColor={colors.primary} // fallback for when `strokeColors` is not supported by the map-provider
-            strokeColors={[
-              "#7F0000",
-              "#00000000", // no color, creates a "long" gradient between the previous and next coordinate
-              "#B24112",
-              "#E5845C",
-              "#238C23",
-              "#7F0000",
-            ]}
-            strokeWidth={6}
-          />
+          <Marker coordinate={destination}>
+            <Image
+              source={require("../../assets/hospitalmarker.png")}
+              style={{ width: 60, height: 60 }}
+            />
+          </Marker>
+          {geoJson && (
+            <Geojson
+              geojson={geoJson}
+              strokeColor={colors.danger}
+              fillColor="red"
+              strokeWidth={4}
+            />
+          )}
         </MapView>
       </View>
     </View>

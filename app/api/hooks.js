@@ -45,6 +45,13 @@ export const useUser = () => {
       },
     });
   };
+  const getUserInfo = ({ url, token, params }) => {
+    return apiClient.get(url, params, {
+      headers: {
+        ...getAuthHeader(token),
+      },
+    });
+  };
   const postUserInfo = ({ url, token, data, multipart = false }) => {
     if (multipart) {
       return apiClient.post(url, data, {
@@ -90,6 +97,7 @@ export const useUser = () => {
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
   return {
+    getUserInfo,
     postTransferRequest,
     getTransferRequest,
     deleteUserInfo,
@@ -120,4 +128,12 @@ export const httpService = {
   post: apiClient.post,
   put: apiClient.put,
   getAuthHeader,
+};
+
+export const useDelivery = () => {
+  const getDirection = (token, params) =>
+    apiClient.get("orders/trip/1/route/", params, {
+      headers: getAuthHeader(token),
+    });
+  return { getDirection };
 };
