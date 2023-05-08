@@ -49,22 +49,15 @@ const ProgrameCards = ({ awardPrograms }) => {
                   <Text variant="headlineMedium" style={styles.title}>
                     {name}
                   </Text>
-                  <View style={styles.row}>
-                    <Text style={styles.text}>Members:</Text>
-                    <Text style={[styles.text, styles.bold]}>
-                      {members_count}
-                    </Text>
-                  </View>
-                  <View style={styles.row}>
-                    <Text style={styles.text}>Rate:</Text>
-                    <Text style={[styles.text, styles.bold]}>
-                      Ksh.{point_rate}
-                    </Text>
-                  </View>
-                  <View style={styles.row}>
-                    <Text style={styles.text}>Membership award:</Text>
-                    <Text style={[styles.text, styles.bold]}>{unit_point}</Text>
-                  </View>
+                  <Text style={styles.text}>
+                    {members_count} Members
+                  </Text>
+                  <Text style={styles.text}>
+                    Ksh.{point_rate} Rate
+                  </Text>
+                  <Text style={styles.text}>
+                    {unit_point} points award per order
+                  </Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -103,6 +96,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.medium,
+    textAlign: "center",
   },
   header: {
     paddingHorizontal: 10,
