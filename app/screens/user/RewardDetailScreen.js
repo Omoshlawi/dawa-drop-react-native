@@ -1,28 +1,73 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import React from "react";
 import colors from "../../utils/colors";
-import { Avatar, Card } from "react-native-paper";
+import { Avatar, Card, List } from "react-native-paper";
+import moment from "moment/moment";
+import ExpandableText from "../../components/display/ExpandableText";
 
 const RewardDetailScreen = ({ navigation, route }) => {
   const reward = route.params;
   const {
     url,
     name,
-    unit_point,
     image,
     description,
-    point_rate,
-    members_count,
-    is_default,
+    point_value,
     created_at,
+    program,
+    max_redemptions,
   } = reward;
   return (
-    <View>
-      <Card.Title
-        left={(props) => <Avatar.Image {...props} source={{ uri: image }} />}
+    <ScrollView>
+      <List.Item
+        style={styles.listIntem}
+        left={(props) => (
+          <Avatar.Image
+            {...props}
+            source={{ uri: image }}
+            style={styles.image}
+          />
+        )}
         title={name}
+        description={program.name}
+        descriptionStyle={styles.description}
       />
-    </View>
+      <List.Item
+        style={styles.listIntem}
+        // left={(props) => <Avatar.Image {...props} source={{ uri: image }} />}
+        title="Awarded from"
+        description={moment(created_at).format("Do MMMM YYYY")}
+        descriptionStyle={styles.description}
+      />
+      <List.Item
+        style={styles.listIntem}
+        // left={(props) => <Avatar.Image {...props} source={{ uri: image }} />}
+        title="Points Value"
+        description={point_value}
+        descriptionStyle={styles.description}
+      />
+      <List.Item
+        style={styles.listIntem}
+        // left={(props) => <Avatar.Image {...props} source={{ uri: image }} />}
+        title="Total allowed redemtion"
+        description={max_redemptions}
+        descriptionStyle={styles.description}
+      />
+      <List.Item
+        style={styles.listIntem}
+        // left={(props) => <Avatar.Image {...props} source={{ uri: image }} />}
+        title="Description"
+        description={() => (
+          <ExpandableText
+            color={colors.primary}
+            text={description ? description : "None"}
+            threshHold={200}
+            contentStyle={styles.description}
+          />
+        )}
+        descriptionStyle={styles.description}
+      />
+    </ScrollView>
   );
 };
 
@@ -39,5 +84,16 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: "row",
+  },
+  listIntem: {
+    backgroundColor: colors.white,
+    marginTop: 5,
+  },
+  description: {
+    color: colors.medium,
+  },
+  image: {
+    backgroundColor: colors.background,
+    margin:5
   },
 });

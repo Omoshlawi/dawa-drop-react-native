@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   scroll: {
-    marginVertical: 20,
+    marginTop: 20,
     borderTopRightRadius: 40,
     overflow: "hidden",
   },
