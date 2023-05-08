@@ -7,7 +7,7 @@ import colors from "../../utils/colors";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import routes from "../../navigation/routes";
-const RewardsCards = ({ rewards }) => {
+const RewardsCards = ({ rewards, backgroundColor = colors.light }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -38,7 +38,7 @@ const RewardsCards = ({ rewards }) => {
                 })
               }
             >
-              <View style={styles.programeCard}>
+              <View style={[styles.programeCard, { backgroundColor }]}>
                 <Image
                   style={styles.programImage}
                   resizeMode="contain"
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     // height: screenWidth * 0.35,
     width: screenWidth * 0.25,
     margin: 5,
-    backgroundColor: colors.light,
+
     borderRadius: 10,
     padding: 5,
   },
