@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import AppSafeArea from "../../components/AppSafeArea";
@@ -113,15 +114,19 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.bodycontainer}>
           <View style={styles.radiusContainer} />
           <View style={styles.radiusContainer1} />
-          <RewardsCards rewards={awardRewards} />
-          <ProgrameCards awardPrograms={awardPrograms} />
-          <List.Item
-            onPress={() => setShowModal(true)}
-            style={styles.listItem}
-            title="View Near by Clinics"
-            left={(props) => <List.Icon icon="hospital-building" {...props} />}
-            right={(props) => <List.Icon icon="chevron-right" {...props} />}
-          />
+          <ScrollView style={styles.scroll}>
+            <RewardsCards rewards={awardRewards} />
+            <ProgrameCards awardPrograms={awardPrograms} />
+            <List.Item
+              onPress={() => setShowModal(true)}
+              style={styles.listItem}
+              title="View Near by Clinics"
+              left={(props) => (
+                <List.Icon icon="hospital-building" {...props} />
+              )}
+              right={(props) => <List.Icon icon="chevron-right" {...props} />}
+            />
+          </ScrollView>
 
           <Modal visible={showModal} animationType="slide">
             <NearHopitals hospitals={clinics} setVisible={setShowModal} />
@@ -160,12 +165,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     flex: 1,
     borderBottomLeftRadius: 40,
-    maxHeight: screenWidth *2,
+    // maxHeight: screenWidth * 2,
+    // minHeight: screenWidth,
     padding: 10,
   },
   bodycontainer: {
     backgroundColor: colors.white,
-    padding: 5,
+    // padding: 5,
+    flex: 2,
   },
   title: {
     fontWeight: "bold",
@@ -182,5 +189,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 2,
+  },
+  scroll: {
+    marginVertical: 20,
+    borderTopRightRadius: 40,
+    overflow: "hidden",
   },
 });
