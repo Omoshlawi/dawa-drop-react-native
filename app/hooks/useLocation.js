@@ -33,3 +33,6 @@ export default useLocation = () => {
   }, []);
   return location;
 };
+export const useLocationSubscription = ()=>{
+  
+}

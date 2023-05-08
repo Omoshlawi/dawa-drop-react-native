@@ -6,7 +6,12 @@ import MapView, { Marker, Polyline, Geojson } from "react-native-maps";
 import colors from "../../utils/colors";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
-import { date } from "yup";
+import { date, string } from "yup";
+import {
+  LocationAccuracy,
+  watchHeadingAsync,
+  watchPositionAsync,
+} from "expo-location";
 
 /**
  * Client tract delivery
@@ -20,9 +25,8 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   const [realTimeLocation, setRealTimeLocation] = useState(null);
   const { token } = useUserContext();
   const { getUserInfo } = useUser();
-  const webSocket = useRef(
-    new WebSocket(`ws://192.168.100.5:8000/ws/trip/1/?token=${token}`)
-  ).current;
+  const subscriptionRef = useRef(null);
+  const webSocketRef = useRef(null);
   const {
     delivery: { trip },
   } = order;
@@ -32,20 +36,28 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   }
   const { current_location, destination, route_url } = trip;
   useEffect(() => {
+    const webSocket = new WebSocket(
+      `ws://192.168.100.5:8000/ws/trip/1/?token=${token}`
+    );
+    webSocketRef.current = webSocket;
     handleGetDirection();
+    handleAgentWebSocket();
     // initials
     webSocket.onopen = () => {
       // webSocket.send(JSON.stringify({ name: "Omosh here" }));
     };
     webSocket.onmessage = (e) => {
       // a message was received
+      // listen for location and update in reall time
       let data = e.data;
       const { info } = JSON.parse(data);
-      console.log(info);
-      // setRealTimeLocation({
-      //   latitude: info.latitude + 5,
-      //   longitude: info.longitude + 5,
-      // });
+      const { latitude, longitude } = JSON.parse(info);
+      console.log(data + "\n", info + "\n", latitude, longitude);
+      // console.log(latitude, longitude);
+      setRealTimeLocation({
+        latitude,
+        longitude,
+      });
     };
     webSocket.onerror = (e) => {
       // an error occurred
@@ -55,10 +67,26 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
       // connection closed
       // console.log(e.code, e.reason);
     };
+    return () => {
+      webSocketRef.current.close();
+      if (subscriptionRef.current) {
+        subscriptionRef.current.remove();
+      }
+    };
   }, []);
 
   const handleAgentWebSocket = async () => {
-    webSocket.send(JSON.stringify(current_location));
+    const subscription = await watchPositionAsync(
+      {
+        accuracy: LocationAccuracy.Balanced,
+        distanceInterval: 1,
+      },
+      ({ coords }) => {
+        const { latitude, longitude } = coords;
+        webSocketRef.current.send(JSON.stringify({ latitude, longitude }));
+      }
+    );
+    subscriptionRef.current = subscription;
   };
   const handleGetDirection = async () => {
     const response = await getUserInfo({ url: route_url, token, params: {} });
@@ -68,7 +96,6 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   };
   return (
     <View style={styles.screen}>
-      <IconButton icon="refresh" onPress={handleAgentWebSocket} />
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
@@ -79,6 +106,7 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
             longitudeDelta: 0.0421,
           }}
         >
+          {console.log("RTL:", realTimeLocation)}
           <Marker coordinate={current_location}>
             <Image
               source={require("../../assets/hospitalmarker.png")}
