@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     // height: screenWidth * 0.35,
     width: screenWidth * 0.25,
     margin: 5,
-    backgroundColor: colors.white,
+    backgroundColor: colors.light,
     borderRadius: 10,
     padding: 5,
   },

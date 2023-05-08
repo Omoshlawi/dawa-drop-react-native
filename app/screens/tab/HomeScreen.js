@@ -16,7 +16,7 @@ import SearchHeader from "../../components/SearchHeader";
 import { screenWidth } from "../../utils/contants";
 import ProgrameCards from "../../components/home/ProgrameCards";
 import RewardsCards from "../../components/home/RewardsCards";
-import AddsContainer from "../../components/home/AdsContainer";
+import AdsConttainer from "../../components/home/AdsContainer";
 import { Modal } from "react-native";
 import NearHopitals from "../../components/home/NearHopitals";
 
@@ -69,53 +69,65 @@ const HomeScreen = ({ navigation }) => {
   // console.log((user));
   return (
     <AppSafeArea>
-      <View style={styles.headecontainer}>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate(routes.USER_NAVIGATION, {
-              screen: routes.PROFILE_VIEW_SCREEN,
-              params: user,
-            })
-          }
-        >
-          {user && user.profile_information.image ? (
-            <Avatar.Image
-              source={{ uri: user.profile_information.image }}
-              size={45}
-              style={{ backgroundColor: colors.primary }}
-            />
-          ) : (
-            <Avatar.Icon
-              icon="account"
-              size={45}
-              style={{ backgroundColor: colors.primary }}
-            />
-          )}
-        </TouchableOpacity>
-        <IconButton
-          icon="magnify"
-          style={styles.searchButn}
-          iconColor={colors.white}
-          mode="outlined"
-          onPress={() => {
-            navigation.navigate(routes.SEARCH_SCREEN);
-          }}
-          size={30}
-        />
+      <View style={styles.screen}>
+        <View style={styles.headecontainer}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(routes.USER_NAVIGATION, {
+                screen: routes.PROFILE_VIEW_SCREEN,
+                params: user,
+              })
+            }
+          >
+            {user && user.profile_information.image ? (
+              <Avatar.Image
+                source={{ uri: user.profile_information.image }}
+                size={45}
+                style={{ backgroundColor: colors.primary }}
+              />
+            ) : (
+              <Avatar.Icon
+                icon="account"
+                size={45}
+                style={{ backgroundColor: colors.primary }}
+              />
+            )}
+          </TouchableOpacity>
+          <View style={styles.headerTextContainer}>
+            {user && (
+              <Text variant="titleLarge" style={{ fontSize: 30 }}>
+                Welcome {user.account_information.username}
+              </Text>
+            )}
+          </View>
+          <AdsConttainer />
+          <View style={styles.headerTextContainer}>
+            <Text
+              variant="bodyLarge"
+              style={{ color: colors.white, fontWeight: "bold" }}
+            >
+              Dawa drop, delivering medicine to oyu door step.
+            </Text>
+          </View>
+        </View>
+        <View style={styles.bodycontainer}>
+          <View style={styles.radiusContainer} />
+          <View style={styles.radiusContainer1} />
+          <RewardsCards rewards={awardRewards} />
+          <ProgrameCards awardPrograms={awardPrograms} />
+          <List.Item
+            onPress={() => setShowModal(true)}
+            style={styles.listItem}
+            title="View Near by Clinics"
+            left={(props) => <List.Icon icon="hospital-building" {...props} />}
+            right={(props) => <List.Icon icon="chevron-right" {...props} />}
+          />
+
+          <Modal visible={showModal} animationType="slide">
+            <NearHopitals hospitals={clinics} setVisible={setShowModal} />
+          </Modal>
+        </View>
       </View>
-      <RewardsCards rewards={awardRewards} />
-      <ProgrameCards awardPrograms={awardPrograms} />
-      <List.Item
-        onPress={() => setShowModal(true)}
-        style={styles.listItem}
-        title="View Near by Clinics"
-        left={(props) => <List.Icon icon="hospital-building" {...props} />}
-        right={(props) => <List.Icon icon="chevron-right" {...props} />}
-      />
-      <AddsContainer />
-      <Modal visible={showModal} animationType="slide">
-        <NearHopitals hospitals={clinics} setVisible={setShowModal} />
-      </Modal>
     </AppSafeArea>
   );
 };
@@ -123,30 +135,52 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  headecontainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-  },
-  searchButn: {
+  radiusContainer: {
+    position: "absolute",
+    right: 0,
+    top: 0,
     backgroundColor: colors.primary,
-    borderRadius: 15,
+    height: 60,
+    width: 60,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderRadius: 5,
-    paddingHorizontal: 10,
+  radiusContainer1: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    backgroundColor: colors.white,
+    height: 60,
+    width: 60,
+    borderTopRightRadius: 40,
+  },
+  screen: {
+    backgroundColor: colors.white,
+    flex: 1,
+  },
+  headecontainer: {
+    backgroundColor: colors.primary,
+    flex: 1,
+    borderBottomLeftRadius: 40,
+    maxHeight: screenWidth *2,
+    padding: 10,
+  },
+  bodycontainer: {
+    backgroundColor: colors.white,
+    padding: 5,
   },
   title: {
     fontWeight: "bold",
   },
   listItem: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.light,
     margin: 5,
     padding: 5,
     height: 80,
     justifyContent: "center",
+  },
+  headerTextContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 2,
   },
 });

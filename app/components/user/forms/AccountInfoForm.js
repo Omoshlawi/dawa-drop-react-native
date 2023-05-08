@@ -9,13 +9,14 @@ import { useUser } from "../../../api/hooks";
 import { useUserContext } from "../../../context/hooks";
 import * as Yup from "yup";
 const validationSchemer = Yup.object().shape({
+  username: Yup.string().label("Username"),
   first_name: Yup.string().label("First Name"),
   last_name: Yup.string().label("Last Name"),
   email: Yup.string().label("Email Adress").required(),
 });
 
 const AccountInfoForm = ({ navigation, route }) => {
-  const { url, first_name, last_name, email } = route.params;
+  const { url, first_name, last_name, email, username } = route.params;
   const { token } = useUserContext();
   const { getUser, putUserInfo } = useUser();
   const [loading, setLoading] = useState(false);
@@ -56,9 +57,14 @@ const AccountInfoForm = ({ navigation, route }) => {
       </View>
       <AppForm
         validationSchema={validationSchemer}
-        initialValues={{ first_name, last_name, email }}
+        initialValues={{ first_name, last_name, email, username }}
         onSubmit={handleSubmit}
       >
+        <AppFormField
+          name="username"
+          placeholder="Enter username"
+          icon="account"
+        />
         <AppFormField
           name="first_name"
           placeholder="First name"
