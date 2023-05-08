@@ -29,11 +29,53 @@ const Delivery = ({ is_approved, delivery }) => {
   } = delivery;
   return (
     <>
-      <View style={styles.title}>
-        <Text variant="titleLarge">Delivery: {delivery_id}</Text>
-      </View>
-      <ExpandableText title={"Medicine Delivered"} text={delivery_medicine} />
-      <ExpandableText title={"Instruction"} text={instruction} />
+      <List.Item
+        title="Delivery id"
+        description={delivery_id}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon
+            {...props}
+            icon="truck-delivery-outline"
+            color={colors.primary}
+          />
+        )}
+      />
+      <List.Item
+        style={styles.listItem}
+        title="Medication"
+        left={(props) => (
+          <List.Icon {...props} icon="medical-bag" color={colors.primary} />
+        )}
+        description={() => (
+          <ExpandableText
+            color={colors.primary}
+            text={delivery_medicine ? delivery_medicine : "None"}
+            threshHold={200}
+            contentStyle={styles.listItemDescription}
+          />
+        )}
+      />
+      <List.Item
+        style={styles.listItem}
+        title="Instruction"
+        left={(props) => (
+          <List.Icon
+            {...props}
+            icon="head-check-outline"
+            color={colors.primary}
+          />
+        )}
+        description={() => (
+          <ExpandableText
+            color={colors.primary}
+            text={instruction ? instruction : "None"}
+            threshHold={200}
+            contentStyle={styles.listItemDescription}
+          />
+        )}
+      />
       <Card.Title
         style={styles.userCard}
         title={doctor.name}
@@ -62,6 +104,7 @@ const Delivery = ({ is_approved, delivery }) => {
             icon="phone"
             mode="outlined"
             containerColor={colors.primary}
+            disabled={!Boolean(doctor.phone_number)}
             iconColor={colors.white}
             onPress={() => callNumber(doctor.phone_number)}
           />
@@ -82,7 +125,7 @@ const Delivery = ({ is_approved, delivery }) => {
             />
           ) : (
             <Avatar.Icon
-              icon="account"
+              icon="account-outline"
               {...props}
               style={{ backgroundColor: colors.light }}
               color={colors.primary}
@@ -93,7 +136,8 @@ const Delivery = ({ is_approved, delivery }) => {
           <IconButton
             {...props}
             mode="outlined"
-            icon="phone"
+            icon="phone-outline"
+            disabled={!Boolean(agent.phone_number)}
             iconColor={colors.primary}
             onPress={() => callNumber(agent.phone_number)}
           />
@@ -181,77 +225,80 @@ const OrderDetailScreen = ({ navigation, route }) => {
   } = route.params;
   return (
     <ScrollView>
-      <View style={styles.logo}>
-        <Logo variant="black" />
-      </View>
-      <View style={styles.title}>
-        <Text variant="titleLarge">Order: {order_id}</Text>
-      </View>
-      <View style={styles.detailsRow}>
-        {/* col1 */}
-        <View>
-          <View style={styles.valuesRow}>
-            <Text>Order Id: </Text>
-            <Text style={styles.value}>{order_id}</Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Date Odered:</Text>
-            <Text style={styles.value}>
-              {moment(created_at).format("Do MMM YYYY, h:mm a")}
-            </Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Date Finished: </Text>
-            <Text style={styles.value}>
-              {moment(date_of_depletion).format("Do MMM YYYY")}
-            </Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Aprooved Status: </Text>
-            <Text
-              style={[
-                { borderRadius: 5, padding: 2, color: colors.white },
-                is_approved
-                  ? { backgroundColor: colors.success }
-                  : { backgroundColor: colors.danger },
-              ]}
-            >
-              {is_approved ? "aprooved" : "pending"}
-            </Text>
-          </View>
-        </View>
-        {/* Col 2 */}
-        <View>
-          <View style={styles.valuesRow}>
-            <Text>National Id: </Text>
-            <Text style={styles.value}>{national_id}</Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Phone Number: </Text>
-            <Text style={styles.value}>{reach_out_phone_number}</Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Delivery Location: </Text>
-            <Text style={styles.value}>{`(${parseFloat(latitude).toFixed(
-              2
-            )}, ${parseFloat(longitude).toFixed(2)})`}</Text>
-          </View>
-
-          <View style={styles.valuesRow}>
-            <Text>Delivery Status: </Text>
-            <Text
-              style={[
-                { borderRadius: 5, padding: 2, color: colors.white },
-                is_delivered
-                  ? { backgroundColor: colors.success }
-                  : { backgroundColor: colors.danger },
-              ]}
-            >
-              {is_delivered ? "delivered" : "pending"}
-            </Text>
-          </View>
-        </View>
-      </View>
+      <List.Item
+        title="OrderId"
+        description={order_id}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="shopping" color={colors.primary} />
+        )}
+      />
+      <List.Item
+        title="Date Odered"
+        description={moment(created_at).format("Do MMM YYYY, h:mm a")}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="calendar" color={colors.primary} />
+        )}
+      />
+      <List.Item
+        title="Date Finished"
+        description={moment(date_of_depletion).format("Do MMM YYYY")}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="calendar" color={colors.primary} />
+        )}
+      />
+      <List.Item
+        title="Approval Status"
+        description={is_approved ? "aprooved" : "pending"}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="progress-clock" color={colors.primary} />
+        )}
+      />
+      <List.Item
+        title="Delivery Status"
+        description={is_delivered ? "delivered" : "pending"}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="progress-clock" color={colors.primary} />
+        )}
+      />
+      <List.Item
+        title="National Id"
+        description={national_id}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="account" color={colors.primary} />
+        )}
+      />
+      <List.Item
+        title="Phone Number"
+        description={reach_out_phone_number}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="phone" color={colors.primary} />
+        )}
+      />
+      <List.Item
+        title="Delivery Location"
+        description={`(${parseFloat(latitude).toFixed(2)}, ${parseFloat(
+          longitude
+        ).toFixed(2)})`}
+        style={styles.listItem}
+        descriptionStyle={styles.listItemDescription}
+        left={(props) => (
+          <List.Icon {...props} icon="google-maps" color={colors.primary} />
+        )}
+      />
       <Delivery is_approved={is_approved} delivery={delivery} />
     </ScrollView>
   );
@@ -260,9 +307,6 @@ const OrderDetailScreen = ({ navigation, route }) => {
 export default OrderDetailScreen;
 
 const styles = StyleSheet.create({
-  logo: {
-    alignItems: "center",
-  },
   detailsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -284,14 +328,17 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 20,
   },
-  title: {
-    alignItems: "center",
-    padding: 10,
-  },
   userCard: {
     backgroundColor: colors.white,
     marginHorizontal: 5,
     marginTop: 5,
     borderRadius: 20,
+  },
+  listItem: {
+    backgroundColor: colors.white,
+    marginTop: 5,
+  },
+  listItemDescription: {
+    color: colors.medium,
   },
 });
