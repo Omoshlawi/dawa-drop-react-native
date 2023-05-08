@@ -68,19 +68,19 @@ const LoyaltyPointsScreen = ({ navigation }) => {
       <List.Item
         style={styles.listItem}
         title="Total Points"
-        description={total}
+        description={`${total}`}
         descriptionStyle={styles.listDescription}
       />
       <List.Item
         style={styles.listItem}
         title="Total Redeemed Points"
-        description={total_redeemed_points}
+        description={`${total_redeemed_points}`}
         descriptionStyle={styles.listDescription}
       />
       <List.Item
         style={styles.listItem}
         title="Total Redeemable Points"
-        description={redeemable_points}
+        description={`${redeemable_points}`}
         descriptionStyle={styles.listDescription}
       />
 

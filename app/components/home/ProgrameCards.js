@@ -49,12 +49,8 @@ const ProgrameCards = ({ awardPrograms }) => {
                   <Text variant="headlineMedium" style={styles.title}>
                     {name}
                   </Text>
-                  <Text style={styles.text}>
-                    {members_count} Members
-                  </Text>
-                  <Text style={styles.text}>
-                    Ksh.{point_rate} Rate
-                  </Text>
+                  <Text style={styles.text}>{members_count} Members</Text>
+                  <Text style={styles.text}>Ksh.{point_rate} Rate</Text>
                   <Text style={styles.text}>
                     {unit_point} points award per order
                   </Text>
