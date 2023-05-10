@@ -18,6 +18,8 @@ import routes from "../../navigation/routes";
 import colors from "../../utils/colors";
 import StatusBar from "../../components/display/TriStatusBar";
 import { callNumber, statusTorange } from "../../utils/helpers";
+import Logo from "./../../components/Logo";
+import { screenWidth } from "../../utils/contants";
 
 const PendingOrdersScreen = ({ navigation }) => {
   const { token } = useUserContext();
@@ -42,7 +44,7 @@ const PendingOrdersScreen = ({ navigation }) => {
     handleFetch();
   }, []);
   return (
-    <View>
+    <View style={styles.screen}>
       <FlatList
         data={orders}
         refreshing={refreshing}
@@ -124,6 +126,11 @@ const PendingOrdersScreen = ({ navigation }) => {
           );
         }}
       />
+      {refreshing == false && orders.length == 0 && (
+        <Text variant="titleLarge" style={styles.text}>
+          No pending orders ....
+        </Text>
+      )}
     </View>
   );
 };
@@ -136,5 +143,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     marginTop: 5,
     borderRadius: 20,
+  },
+  text: {
+    textAlign: "center",
+    position: "absolute",
+    // backgroundColor: "red",
+    width: screenWidth,
+    color: colors.medium,
+    padding: 30,
+  },
+  screen: {
+    flex: 1,
+    zIndex: 0,
   },
 });

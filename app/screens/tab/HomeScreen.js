@@ -20,6 +20,7 @@ import RewardsCards from "../../components/home/RewardsCards";
 import AdsConttainer from "../../components/home/AdsContainer";
 import { Modal } from "react-native";
 import NearHopitals from "../../components/home/NearHopitals";
+import { StatusBar } from "expo-status-bar";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUserContext();
@@ -70,6 +71,7 @@ const HomeScreen = ({ navigation }) => {
   // console.log((user));
   return (
     <AppSafeArea>
+      <StatusBar backgroundColor={colors.primary} />
       <View style={styles.screen}>
         <View style={styles.headecontainer}>
           <TouchableOpacity
@@ -96,7 +98,10 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
           <View style={styles.headerTextContainer}>
             {user && (
-              <Text variant="titleLarge" style={{ fontSize: 30 }}>
+              <Text
+                variant="titleLarge"
+                style={{ fontSize: 30, color: colors.light1 }}
+              >
                 Welcome {user.account_information.username}
               </Text>
             )}
@@ -115,8 +120,14 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.radiusContainer} />
           <View style={styles.radiusContainer1} />
           <ScrollView style={styles.scroll}>
-            <RewardsCards rewards={awardRewards} />
-            <ProgrameCards awardPrograms={awardPrograms} />
+            <RewardsCards
+              rewards={awardRewards}
+              backgroundColor={colors.white}
+            />
+            <ProgrameCards
+              awardPrograms={awardPrograms}
+              backgroundColor={colors.white}
+            />
             <List.Item
               onPress={() => setShowModal(true)}
               style={styles.listItem}
@@ -152,13 +163,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     top: 0,
-    backgroundColor: colors.white,
+    backgroundColor: colors.light1,
     height: 60,
     width: 60,
     borderTopRightRadius: 40,
   },
   screen: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.light1,
     flex: 1,
   },
   headecontainer: {
@@ -170,7 +181,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   bodycontainer: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.light1,
     // padding: 5,
     flex: 2,
   },
@@ -178,7 +189,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   listItem: {
-    backgroundColor: colors.light,
+    backgroundColor: colors.white,
     margin: 5,
     padding: 5,
     height: 80,

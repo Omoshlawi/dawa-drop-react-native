@@ -17,6 +17,7 @@ import routes from "../../navigation/routes";
 import colors from "../../utils/colors";
 import TriStatusBar from "../../components/display/TriStatusBar";
 import { statusTorange } from "../../utils/helpers";
+import { screenWidth } from "../../utils/contants";
 
 const OrdersHistoryScreen = ({ navigation }) => {
   const { token } = useUserContext();
@@ -86,6 +87,11 @@ const OrdersHistoryScreen = ({ navigation }) => {
           );
         }}
       />
+      {refreshing == false && orders.length == 0 && (
+        <Text variant="titleLarge" style={styles.text}>
+          No orders ....
+        </Text>
+      )}
     </View>
   );
 };
@@ -101,5 +107,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     flex: 1,
     // backgroundColor: colors.background,
+  },
+  text: {
+    textAlign: "center",
+    position: "absolute",
+    // backgroundColor: "red",
+    width: screenWidth,
+    color: colors.medium,
+    padding: 30,
   },
 });

@@ -8,7 +8,7 @@ import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import routes from "../../navigation/routes";
 
-const ProgrameCards = ({ awardPrograms }) => {
+const ProgrameCards = ({ awardPrograms, backgroundColor = colors.light }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -38,7 +38,7 @@ const ProgrameCards = ({ awardPrograms }) => {
                 })
               }
             >
-              <View style={styles.programeCard}>
+              <View style={[styles.programeCard, { backgroundColor }]}>
                 <Image
                   style={styles.programImage}
                   resizeMode="contain"
@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
     // height: screenWidth * 0.61,
     width: screenWidth * 0.4,
     margin: 5,
-    backgroundColor: colors.light,
     borderRadius: 10,
     padding: 10,
   },
