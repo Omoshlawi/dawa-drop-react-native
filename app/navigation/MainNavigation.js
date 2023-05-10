@@ -7,6 +7,7 @@ import routes from "./routes";
 import UserNavigation from "./UserNavigation";
 import OrderNavigation from "./OrderNavigation";
 import FormsNavigation from "./FormsNavigation";
+import DashboardNavigation from "./DashboardNavigation";
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,11 @@ const MainNavigation = () => {
       <Screen
         name={routes.FORMS_NAVIGATION}
         component={FormsNavigation}
+        options={{ headerShown: false }}
+      />
+      <Screen
+        name={routes.DASHBOARD_NAVIGATION}
+        component={DashboardNavigation}
         options={{ headerShown: false }}
       />
     </Navigator>

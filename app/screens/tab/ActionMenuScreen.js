@@ -13,6 +13,7 @@ import { Surface, Text } from "react-native-paper";
 import { menItems } from "../../utils/contants";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
+import routes from "../../navigation/routes";
 
 const itemWidth = Dimensions.get("window").width / 2 - 5;
 const ActionMenuScreen = ({ navigation }) => {
@@ -94,7 +95,13 @@ const ActionMenuScreen = ({ navigation }) => {
             }}
           />
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate(routes.DASHBOARD_NAVIGATION, {
+              screen: routes.DASHBOARD_SCREEN,
+            });
+          }}
+        >
           <View style={styles.dashBoard}>
             <Image
               resizeMode="contain"
