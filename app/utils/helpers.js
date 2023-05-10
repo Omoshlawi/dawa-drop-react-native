@@ -1,3 +1,4 @@
+import moment from "moment/moment";
 import { Linking, Alert, Platform } from "react-native";
 
 export const zip = (ar1, ar2) => {
@@ -106,3 +107,56 @@ export const toSectionListData = (user) => {
   return sectionData;
 };
 
+month_dictionary = {};
+
+const getMonthlyTriads = (triads) => {
+  const data = {
+    0: { height: [], weight: [], blood_pressure: [] },
+    1: { height: [], weight: [], blood_pressure: [] },
+    2: { height: [], weight: [], blood_pressure: [] },
+    3: { height: [], weight: [], blood_pressure: [] },
+    4: { height: [], weight: [], blood_pressure: [] },
+    5: { height: [], weight: [], blood_pressure: [] },
+    6: { height: [], weight: [], blood_pressure: [] },
+    7: { height: [], weight: [], blood_pressure: [] },
+    8: { height: [], weight: [], blood_pressure: [] },
+    9: { height: [], weight: [], blood_pressure: [] },
+    10: { height: [], weight: [], blood_pressure: [] },
+    11: { height: [], weight: [], blood_pressure: [] },
+  };
+  triads.forEach(({ created_at, blood_pressure, height, weight }) => {
+    const month = new Date(created_at).getMonth();
+    data[month].height.push(parseFloat(height));
+    data[month].weight.push(parseFloat(weight));
+    data[month].blood_pressure.push(parseFloat(blood_pressure));
+  });
+  return data;
+};
+
+const mean = (list = []) => {
+  if (list.length === 0) {
+    return 0;
+  }
+  const sum = list.reduce((accumulated, current) => accumulated + current, 0);
+  return sum / list.length;
+};
+
+export const getMonthlyMeans = (triads) => {
+  const data = getMonthlyTriads(triads);
+  const monthlyHeights = [];
+  const monthlyWeights = [];
+  const monthlypressure = [];
+  const months = moment.monthsShort();
+  const currentMonth = moment().month();
+  for (const month in data) {
+    monthlyHeights.push(mean(data[month].height));
+    monthlyWeights.push(mean(data[month].weight));
+    monthlypressure.push(mean(data[month].blood_pressure));
+  }
+  return {
+    monthlyHeights: monthlyHeights.slice(0, currentMonth + 1),
+    monthlyWeights: monthlyWeights.slice(0, currentMonth + 1),
+    monthlypressure: monthlypressure.slice(0, currentMonth + 1),
+    months: months.slice(0, currentMonth + 1),
+  };
+};
