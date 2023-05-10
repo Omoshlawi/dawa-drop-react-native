@@ -59,6 +59,7 @@ const PendingOrdersScreen = ({ navigation }) => {
             delivery: {
               agent: { phone_number: agent_phone },
               doctor: { phone_number: doctor_phone },
+              trip,
             },
             longitude,
             latitude,
@@ -96,6 +97,7 @@ const PendingOrdersScreen = ({ navigation }) => {
                     icon="truck-delivery"
                     iconColor={colors.primary}
                     {...props}
+                    disabled={!Boolean(trip)}
                     onPress={() =>
                       navigation.navigate(routes.TRACK_DELIVERY_SCREEN, item)
                     }

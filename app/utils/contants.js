@@ -96,9 +96,42 @@ export const chechoutTabs = [
 ];
 
 export const screenWidth = Dimensions.get("screen").width;
+export const screenHeight = Dimensions.get("screen").height;
 
 // https://github.com/indiespirit/react-native-chart-kit
 export const weightChartConfig = {
+  backgroundColor: colors.secondary,
+  backgroundGradientFrom: colors.secondary,
+  backgroundGradientTo: colors.primary,
+  decimalPlaces: 2, // optional, defaults to 2dp
+  color: (opacity = 1) => `rgba(6, 253, 28,${opacity})`,
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  style: {
+    borderRadius: 16,
+  },
+  propsForDots: {
+    r: "6",
+    strokeWidth: "2",
+    stroke: "#ffa726",
+  },
+};
+export const heightChartConfig = {
+  backgroundColor: colors.secondary,
+  backgroundGradientFrom: colors.secondary,
+  backgroundGradientTo: colors.primary,
+  decimalPlaces: 2, // optional, defaults to 2dp
+  color: (opacity = 1) => `rgba(6, 253, 28,${opacity})`,
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  style: {
+    borderRadius: 16,
+  },
+  propsForDots: {
+    r: "6",
+    strokeWidth: "2",
+    stroke: "#ffa726",
+  },
+};
+export const pressureChartConfig = {
   backgroundColor: colors.secondary,
   backgroundGradientFrom: colors.secondary,
   backgroundGradientTo: colors.primary,

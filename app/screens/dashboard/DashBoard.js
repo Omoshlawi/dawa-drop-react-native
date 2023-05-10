@@ -5,12 +5,26 @@ import { useUser } from "../../api/hooks";
 import { LineChart } from "react-native-chart-kit";
 import { getMonthlyMeans } from "../../utils/helpers";
 import moment from "moment";
-import { weightChartConfig } from "../../utils/contants";
+import {
+  screenHeight,
+  screenWidth,
+  weightChartConfig,
+} from "../../utils/contants";
+import { FlatList } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
+import colors from "../../utils/colors";
 
 const DashBoard = ({ navigation }) => {
   const [triads, setTriads] = useState([]);
   const { getUser, getUserInfo } = useUser();
   const { user, token } = useUserContext();
+  const [dropDownItems, setDropDownItems] = useState([
+    { label: "Weight", value: "weight" },
+    { label: "Height", value: "height" },
+    { label: "Pressure", value: "pressure" },
+  ]);
+  const [openDropDown, setOpenDropDown] = useState(false);
+  const [dropDownValue, setdropDownValue] = useState("weight");
 
   const handleFetchTriads = async (url) => {
     const response = await getUserInfo({ url, token, params: {} });
@@ -47,25 +61,87 @@ const DashBoard = ({ navigation }) => {
     getMonthlyMeans(triads);
   return (
     <View>
-      <LineChart
-        data={{
-          labels: months,
-          datasets: [
-            {
-              data: monthlyWeights,
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            },
-          ],
-        }}
-        width={Dimensions.get("window").width} // from react-native
-        height={220}
-        // yAxisLabel="$"
-        yAxisSuffix="Kg"
-        yAxisInterval={1} // optional, defaults to 1
-        chartConfig={weightChartConfig}
-        bezier
-        style={styles.weights}
-      />
+      <View style={styles.triad}>
+        <View style={styles.dropDow}>
+          <DropDownPicker
+            open={openDropDown}
+            value={dropDownValue}
+            items={dropDownItems}
+            setOpen={setOpenDropDown}
+            setValue={setdropDownValue}
+            setItems={setDropDownItems}
+            style={{ width: screenWidth * 0.3 }}
+          />
+        </View>
+        <>
+          {dropDownValue === "weight" && (
+            <LineChart
+              data={{
+                labels: months,
+                legend: ["Weight Kilograms"],
+                datasets: [
+                  {
+                    data: monthlyWeights,
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  },
+                ],
+              }}
+              width={screenWidth * 0.95} // from react-native
+              height={screenHeight * 0.2}
+              // yAxisLabel="$"
+              yAxisSuffix="Kg"
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={weightChartConfig}
+              bezier
+              style={styles.weights}
+            />
+          )}
+          {dropDownValue === "height" && (
+            <LineChart
+              data={{
+                labels: months,
+                legend: ["Height in Inches"],
+                datasets: [
+                  {
+                    data: monthlyHeights,
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  },
+                ],
+              }}
+              width={screenWidth * 0.95}
+              height={screenHeight * 0.2}
+              // yAxisLabel="$"
+              yAxisSuffix="'"
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={weightChartConfig}
+              bezier
+              style={styles.weights}
+            />
+          )}
+          {dropDownValue === "pressure" && (
+            <LineChart
+              data={{
+                labels: months,
+                legend: ["Pressure in mm/Hg"],
+                datasets: [
+                  {
+                    data: monthlypressure,
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  },
+                ],
+              }}
+              width={screenWidth * 0.95} // from react-native
+              height={screenHeight * 0.2}
+              // yAxisLabel="$"
+              yAxisSuffix=""
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={weightChartConfig}
+              bezier
+              style={styles.weights}
+            />
+          )}
+        </>
+      </View>
     </View>
   );
 };
@@ -74,7 +150,19 @@ export default DashBoard;
 
 const styles = StyleSheet.create({
   weights: {
-    marginVertical: 8,
     borderRadius: 16,
+  },
+
+  screen: {
+    flex: 1,
+  },
+  dropDow: {
+    zIndex: 1,
+    alignSelf: "center",
+  },
+  triad: {
+    padding: 10,
+    alignItems: "center",
+    backgroundColor: colors.light,
   },
 });
