@@ -15,6 +15,7 @@ import {
 
 /**
  * Client tract delivery
+ * https://openrouteservice.org/dev/#/home
  * @param {*} param0
  * @returns
  */
@@ -23,6 +24,7 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   const order = route.params;
   const [geoJson, setGeoJson] = useState(null);
   const [realTimeLocation, setRealTimeLocation] = useState(null);
+  const [polylineCoords, setPolylineCoords] = useState([]);
   const { token } = useUserContext();
   const { getUserInfo } = useUser();
   const subscriptionRef = useRef(null);
@@ -37,7 +39,7 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   const { current_location, destination, route_url } = trip;
   useEffect(() => {
     const webSocket = new WebSocket(
-      `ws://192.168.100.5:8000/ws/trip/1/?token=${token}`
+      `ws://192.168.100.5:8000/ws/trip/2/?token=${token}`
     );
     webSocketRef.current = webSocket;
     handleGetDirection();
@@ -52,7 +54,6 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
       let data = e.data;
       const { info } = JSON.parse(data);
       const { latitude, longitude } = JSON.parse(info);
-      console.log(data + "\n", info + "\n", latitude, longitude);
       // console.log(latitude, longitude);
       setRealTimeLocation({
         latitude,
@@ -75,6 +76,14 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (
+      realTimeLocation &&
+      realTimeLocation.latitude !== destination.latitude &&
+      realTimeLocation.longitude !== destination.longitude
+    )
+      setPolylineCoords([...polylineCoords, realTimeLocation]);
+  }, [realTimeLocation]);
   const handleAgentWebSocket = async () => {
     const subscription = await watchPositionAsync(
       {
@@ -83,7 +92,9 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
       },
       ({ coords }) => {
         const { latitude, longitude } = coords;
-        webSocketRef.current.send(JSON.stringify({ latitude, longitude }));
+        if (webSocketRef.current.readyState !== WebSocket.CONNECTING) {
+          // webSocketRef.current.send(JSON.stringify({ latitude, longitude }));
+        }
       }
     );
     subscriptionRef.current = subscription;
@@ -94,8 +105,23 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
       setGeoJson(response.data);
     }
   };
+
+  const simulateAgentMovemant = async () => {
+    if (geoJson) {
+      let _routes = geoJson["features"][0]["geometry"]["coordinates"];
+      for (const _route of _routes) {
+        if (webSocketRef.current.readyState !== WebSocket.CONNECTING) {
+          webSocketRef.current.send(
+            JSON.stringify({ latitude: _route[1], longitude: _route[0] })
+          );
+          // await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+      }
+    }
+  };
   return (
     <View style={styles.screen}>
+      <Button onPress={simulateAgentMovemant}>Simulate agent movement</Button>
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
@@ -106,7 +132,6 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
             longitudeDelta: 0.0421,
           }}
         >
-          {console.log("RTL:", realTimeLocation)}
           <Marker coordinate={current_location}>
             <Image
               source={require("../../assets/hospitalmarker.png")}
@@ -135,6 +160,12 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
               strokeWidth={4}
             />
           )}
+          <Polyline
+            coordinates={polylineCoords}
+            strokeColor="blue" // fallback for when `strokeColors` is not supported by the map-provider
+            strokeWidth={6}
+            zIndex={1}
+          />
         </MapView>
       </View>
     </View>
