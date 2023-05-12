@@ -30,6 +30,7 @@ const HomeScreen = ({ navigation }) => {
   const [awardRewards, setAwardRewards] = useState([]);
   const [clinics, setClinics] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showCreateProfile, setShowCreateProfile] = useState(true);
 
   const handleFetch = async () => {
     const programeResponse = await getAwardPrograms();
@@ -65,9 +66,21 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (!user) getUser();
+    if (!user) {
+      getUser();
+    } else {
+      const {
+        user_type_information: { patient },
+      } = user;
+      if (patient) {
+        const { patient_number } = patient;
+        if (patient) {
+          setShowCreateProfile(false);
+        }
+      }
+    }
     handleFetch();
-  }, []);
+  }, [user]);
   // console.log((user));
   return (
     <AppSafeArea>
@@ -86,13 +99,13 @@ const HomeScreen = ({ navigation }) => {
               <Avatar.Image
                 source={{ uri: user.profile_information.image }}
                 size={45}
-                style={{ backgroundColor: colors.primary }}
+                style={{ backgroundColor: colors.light }}
               />
             ) : (
               <Avatar.Icon
                 icon="account"
                 size={45}
-                style={{ backgroundColor: colors.primary }}
+                style={{ backgroundColor: colors.light }}
               />
             )}
           </TouchableOpacity>
@@ -128,17 +141,19 @@ const HomeScreen = ({ navigation }) => {
               awardPrograms={awardPrograms}
               backgroundColor={colors.white}
             />
-            <List.Item
-              onPress={() => {
-                navigation.navigate(routes.USER_NAVIGATION, {
-                  screen: routes.USER_FIND_ACCOUNT_SCREEN,
-                });
-              }}
-              style={styles.listItem}
-              title="Create your profile"
-              left={(props) => <List.Icon icon="magnify" {...props} />}
-              right={(props) => <List.Icon icon="chevron-right" {...props} />}
-            />
+            {showCreateProfile && (
+              <List.Item
+                onPress={() => {
+                  navigation.navigate(routes.USER_NAVIGATION, {
+                    screen: routes.USER_FIND_ACCOUNT_SCREEN,
+                  });
+                }}
+                style={styles.listItem}
+                title="Create your profile"
+                left={(props) => <List.Icon icon="magnify" {...props} />}
+                right={(props) => <List.Icon icon="chevron-right" {...props} />}
+              />
+            )}
             <List.Item
               onPress={() => setShowModal(true)}
               style={styles.listItem}
