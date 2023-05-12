@@ -3,25 +3,31 @@ import React from "react";
 import colors from "../utils/colors";
 import { IconButton } from "react-native-paper";
 
-const SearchHeader = () => {
+const SearchHeader = ({ text, onTextChange, onSearch }) => {
   return (
     <View style={styles.header}>
       <View style={styles.search}>
-        <TextInput style={styles.input} placeholder="Search..." />
+        <TextInput
+          style={styles.input}
+          value={text}
+          onChangeText={onTextChange}
+          placeholder="Search..."
+        />
         <IconButton
           style={styles.searchButton}
           icon="magnify"
           mode="outlined"
           iconColor={colors.white}
+          onPress={onSearch}
         />
       </View>
-      <IconButton
+      {/* <IconButton
         style={styles.filterButton}
         icon="filter"
         mode="outlined"
         iconColor={colors.white}
         size={27}
-      />
+      /> */}
     </View>
   );
 };

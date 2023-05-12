@@ -23,6 +23,11 @@ export const useUser = () => {
     }
     setUser(resposnse.data);
   };
+  const findAccount = (token, params, data) =>
+    apiClient.post("users/find-account/", data, {
+      headers: getAuthHeader(token),
+      params: params,
+    });
   const putUser = async (userData) =>
     await apiClient.put("users/profile/", userData, {
       headers: {
@@ -97,6 +102,7 @@ export const useUser = () => {
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
   return {
+    findAccount,
     getUserInfo,
     postTransferRequest,
     getTransferRequest,
@@ -119,7 +125,7 @@ export const useUser = () => {
 export const useHospital = () => {
   const getAwardPrograms = (params) => apiClient.get("awards/", params);
   const getAwardRewards = (params) => apiClient.get("awards/rewards/", params);
-  const getClinics = (params) => apiClient.get("clinics/");
+  const getClinics = (params) => apiClient.get("facilities/");
   return { getAwardPrograms, getAwardRewards, getClinics };
 };
 
