@@ -37,7 +37,14 @@ const IconText = ({
       {text && (
         <Text
           numberOfLines={1}
-          style={[styles.text, { fontSize: size, color, fontWeight }]}
+          style={[
+            styles.text,
+            {
+              fontSize: size*0.9,
+              fontWeight,
+              color: disableBtn ? disabledColor : color,
+            },
+          ]}
         >
           {text}
         </Text>

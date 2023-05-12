@@ -6,6 +6,7 @@ import ProfileInfoForm from "../components/user/forms/ProfileInfoForm";
 import NextOfKeenForm from "../components/user/forms/NextOfKeenForm";
 import RedeemForm from "../components/user/forms/RedeemForm";
 import RequestTransferForm from "../components/user/forms/RequestTransferForm";
+import AccountVerificationForm from "../components/user/forms/AccountVerificationForm";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,11 @@ const FormsNavigation = () => {
         name={routes.FORMS_REQUEST_TRANFER_FORM}
         component={RequestTransferForm}
         options={{ headerTitle: "Request Facility Transfer" }}
+      />
+      <Screen
+        name={routes.FORMS_ACCOUNT_VERIFICATION_FORM}
+        component={AccountVerificationForm}
+        options={{ headerTitle: "Verify Account" }}
       />
     </Navigator>
   );

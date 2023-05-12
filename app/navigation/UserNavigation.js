@@ -66,7 +66,7 @@ const UserNavigation = () => {
         name={routes.USER_FIND_ACCOUNT_SCREEN}
         component={FindAccountScreen}
         options={({ route }) => ({
-          title: "Find account",
+          title: "Enter CCC number",
         })}
       />
     </Navigator>

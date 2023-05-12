@@ -29,6 +29,7 @@ export default Object.freeze({
   FORMS_PROFILE_FORM: "Profile Form",
   FORMS_NEXT_OF_KEEN_FORM: "NextOfKeen Form",
   FORMS_REDEEM_FORM: "Redeem Form",
+  FORMS_ACCOUNT_VERIFICATION_FORM: "Verification Form",
   FORMS_REQUEST_TRANFER_FORM: "RequestTransfer Form",
   DASHBOARD_NAVIGATION: "Dashboard Nav",
   DASHBOARD_SCREEN: "Dashboard Screen",

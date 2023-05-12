@@ -135,7 +135,7 @@ const HomeScreen = ({ navigation }) => {
                 });
               }}
               style={styles.listItem}
-              title="Find my account"
+              title="Create your profile"
               left={(props) => <List.Icon icon="magnify" {...props} />}
               right={(props) => <List.Icon icon="chevron-right" {...props} />}
             />
