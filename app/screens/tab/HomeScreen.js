@@ -129,6 +129,17 @@ const HomeScreen = ({ navigation }) => {
               backgroundColor={colors.white}
             />
             <List.Item
+              onPress={() => {
+                navigation.navigate(routes.USER_NAVIGATION, {
+                  screen: routes.USER_FIND_ACCOUNT_SCREEN,
+                });
+              }}
+              style={styles.listItem}
+              title="Find my account"
+              left={(props) => <List.Icon icon="magnify" {...props} />}
+              right={(props) => <List.Icon icon="chevron-right" {...props} />}
+            />
+            <List.Item
               onPress={() => setShowModal(true)}
               style={styles.listItem}
               title="View Near by Clinics"

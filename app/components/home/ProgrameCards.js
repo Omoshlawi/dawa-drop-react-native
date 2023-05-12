@@ -68,7 +68,7 @@ export default ProgrameCards;
 
 const styles = StyleSheet.create({
   programImage: {
-    height: screenWidth * 0.35,
+    height: screenWidth * 0.25,
   },
   programesContainer: {
     // padding: 10,

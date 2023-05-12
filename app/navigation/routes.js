@@ -32,4 +32,5 @@ export default Object.freeze({
   FORMS_REQUEST_TRANFER_FORM: "RequestTransfer Form",
   DASHBOARD_NAVIGATION: "Dashboard Nav",
   DASHBOARD_SCREEN: "Dashboard Screen",
+  USER_FIND_ACCOUNT_SCREEN: "Find Account Screen",
 });

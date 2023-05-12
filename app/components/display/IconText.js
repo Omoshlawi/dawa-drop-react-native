@@ -16,7 +16,8 @@ const IconText = ({
   forceEnable = false,
 }) => {
   const disableBtn =
-    !(!(onPress instanceof Function) || disabled) && forceEnable;
+    (!(onPress instanceof Function) || disabled) &&
+    Boolean(forceEnable) == false;
   return (
     <TouchableOpacity
       style={{
