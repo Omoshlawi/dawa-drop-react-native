@@ -33,56 +33,62 @@ const FindAccountScreen = ({ navigation }) => {
     handleSearch();
   }, [search]);
   return (
-    <View>
+    <View style={styles.screen}>
       <SearchHeader
         text={search}
         onTextChange={setSearch}
         onSearch={handleSearch}
       />
       <Text style={styles.title}>Search Results</Text>
-      <FlatList
-        data={searchResults}
-        renderItem={({ item, index }) => {
-          const { email, phone_number, request_verification_url, first_name } =
-            item;
-          return (
-            <Card style={styles.listItem} elevation={0} key={index}>
-              <Card.Title
-                left={(props) => (
-                  <Avatar.Icon
-                    icon="account"
-                    {...props}
-                    color={colors.primary}
-                    style={styles.icon}
-                  />
-                )}
-                title={first_name}
-                right={(props) => (
-                  <>
-                    <IconText
+      <View style={styles.results}>
+        <FlatList
+          data={searchResults}
+          renderItem={({ item, index }) => {
+            const {
+              email,
+              phone_number,
+              request_verification_url,
+              patient_number,
+            } = item;
+            return (
+              <Card style={styles.listItem} elevation={0} key={index}>
+                <Card.Title
+                  left={(props) => (
+                    <Avatar.Icon
+                      icon="account"
                       {...props}
-                      icon="chevron-right"
-                      text="Verify"
-                      left={false}
-                      onPress={async () =>
-                        await handleInitVerification(request_verification_url)
-                      }
+                      color={colors.primary}
+                      style={styles.icon}
                     />
-                  </>
-                )}
-              />
-              <Card.Actions>
-                <Button icon="phone" textColor={colors.primary}>
-                  {phone_number}
-                </Button>
-                <Button icon="email" buttonColor={colors.primary}>
-                  {email}
-                </Button>
-              </Card.Actions>
-            </Card>
-          );
-        }}
-      />
+                  )}
+                  title={`CCC: ${patient_number}`}
+                  right={(props) => (
+                    <>
+                      <IconText
+                        {...props}
+                        icon="chevron-right"
+                        text="Verify"
+                        left={false}
+                        onPress={async () =>
+                          await handleInitVerification(request_verification_url)
+                        }
+                      />
+                    </>
+                  )}
+                />
+                <Card.Actions>
+                  <Button icon="phone" textColor={colors.primary}>
+                    {phone_number}
+                  </Button>
+                  <Button icon="email" buttonColor={colors.primary}>
+                    {email}
+                  </Button>
+                </Card.Actions>
+              </Card>
+            );
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -103,5 +109,12 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     padding: 10,
+  },
+  screen: {
+    flex: 1,
+  },
+  results: {
+    flex: 1,
+    marginVertical: 10,
   },
 });
