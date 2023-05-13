@@ -70,6 +70,28 @@ export const menItems = [
       },
     },
   },
+  {
+    title: "My Appointments",
+    image: require("../assets/medical-appointment.png"),
+    id: 6,
+    destination: {
+      parentRoute: routes.USER_NAVIGATION,
+      nestedRoute: {
+        screen: routes.USER_PRESCRIPTIONS_SCREEN,
+      },
+    },
+  },
+  {
+    title: "My Prescriptions",
+    image: require("../assets/prescription.png"),
+    id: 6,
+    destination: {
+      parentRoute: routes.USER_NAVIGATION,
+      nestedRoute: {
+        screen: routes.USER_APPOINTMENTS_SCREEN,
+      },
+    },
+  },
 ];
 
 export const chechoutTabs = [

@@ -34,4 +34,6 @@ export default Object.freeze({
   DASHBOARD_NAVIGATION: "Dashboard Nav",
   DASHBOARD_SCREEN: "Dashboard Screen",
   USER_FIND_ACCOUNT_SCREEN: "Find Account Screen",
+  USER_APPOINTMENTS_SCREEN: "Appointments Screen",
+  USER_PRESCRIPTIONS_SCREEN: "Prescriptions Screen",
 });

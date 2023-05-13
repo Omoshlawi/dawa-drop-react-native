@@ -8,6 +8,8 @@ import LoyaltyPointsScreen from "../screens/user/LoyaltyPointsScreen";
 import UserTransferRequestsScreen from "../screens/user/UserTransferRequestsScreen";
 import TransferDetailScreen from "../screens/user/TransferDetailScreen";
 import FindAccountScreen from "../screens/user/FindAccountScreen";
+import AppointMentsScreen from "../screens/user/AppointMentsScreen";
+import PrescriptionsScreen from "../screens/user/PrescriptionsScreen";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +69,20 @@ const UserNavigation = () => {
         component={FindAccountScreen}
         options={({ route }) => ({
           title: "Enter CCC number",
+        })}
+      />
+      <Screen
+        name={routes.USER_APPOINTMENTS_SCREEN}
+        component={AppointMentsScreen}
+        options={({ route }) => ({
+          title: "My appointments",
+        })}
+      />
+      <Screen
+        name={routes.USER_PRESCRIPTIONS_SCREEN}
+        component={PrescriptionsScreen}
+        options={({ route }) => ({
+          title: "My Prescriptions",
         })}
       />
     </Navigator>
