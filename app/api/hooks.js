@@ -101,7 +101,15 @@ export const useUser = () => {
     apiClient.post("orders/feedback/", data, { headers: getAuthHeader(token) });
   const getPayments = (token, params) =>
     apiClient.get("payments/", params, { headers: getAuthHeader(token) });
+  const getAppointments = (token, params) =>
+    apiClient.get("medication/appointments/", params, {
+      headers: getAuthHeader(token),
+    });
+  const getPrescriptions = (token, params) =>
+    apiClient.get("medication/", params, { headers: getAuthHeader(token) });
   return {
+    getAppointments,
+    getPrescriptions,
     findAccount,
     getUserInfo,
     postTransferRequest,
@@ -126,7 +134,8 @@ export const useHospital = () => {
   const getAwardPrograms = (params) => apiClient.get("awards/", params);
   const getAwardRewards = (params) => apiClient.get("awards/rewards/", params);
   const getClinics = (params) => apiClient.get("facilities/");
-  return { getAwardPrograms, getAwardRewards, getClinics };
+  const getAppointmentTypes = (params) => apiClient.get("appointment-types/");
+  return { getAwardPrograms, getAwardRewards, getClinics, getAppointmentTypes };
 };
 
 export const httpService = {

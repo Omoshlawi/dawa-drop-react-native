@@ -77,7 +77,7 @@ export const menItems = [
     destination: {
       parentRoute: routes.USER_NAVIGATION,
       nestedRoute: {
-        screen: routes.USER_PRESCRIPTIONS_SCREEN,
+        screen: routes.USER_APPOINTMENTS_SCREEN,
       },
     },
   },
@@ -88,7 +88,7 @@ export const menItems = [
     destination: {
       parentRoute: routes.USER_NAVIGATION,
       nestedRoute: {
-        screen: routes.USER_APPOINTMENTS_SCREEN,
+        screen: routes.USER_PRESCRIPTIONS_SCREEN,
       },
     },
   },
