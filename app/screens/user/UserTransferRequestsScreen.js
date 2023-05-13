@@ -18,7 +18,7 @@ const UserTransferRequestsScreen = ({ navigation }) => {
   const [transferRequest, setTransferRequest] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const toSectionData = (request) => {
+  const transferRequestDataToSectionData = (request) => {
     const aprrovedList = request.filter(
       ({ is_approved }) => is_approved === true
     );
@@ -30,7 +30,7 @@ const UserTransferRequestsScreen = ({ navigation }) => {
       { title: "Pending Requests", data: pendingList },
     ];
   };
-
+ 
   const handleFetch = async () => {
     setLoading(true);
     const response = await getTransferRequest(token);
@@ -51,7 +51,7 @@ const UserTransferRequestsScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       <SectionList
-        sections={toSectionData(transferRequest)}
+        sections={transferRequestDataToSectionData(transferRequest)}
         refreshing={loading}
         onRefresh={handleFetch}
         keyExtractor={({ url }) => url}

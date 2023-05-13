@@ -8,13 +8,26 @@ import colors from "../../utils/colors";
 import moment from "moment/moment";
 import { screenWidth } from "../../utils/contants";
 import IconText from "../../components/display/IconText";
+import { SectionList } from "react-native";
 
 const PrescriptionsScreen = () => {
   const [filterParams, setFilterParams] = useState({ search: "" });
   const [prescriptions, setPrescriptions] = useState([]);
   const { getPrescriptions } = useUser();
   const { token } = useUserContext();
-  const [] = useState();
+  const prescriptionDataToSectionData = (prescriptionsData) => {
+    const isCurrentList = prescriptionsData.filter(
+      ({ is_current }) => is_current === true
+    );
+    const notCurrentList = prescriptionsData.filter(
+      ({ is_current }) => is_current === false
+    );
+    return [
+      { title: "Current Regimen", data: isCurrentList },
+      { title: "Previous Prescriptions", data: notCurrentList },
+    ];
+  };
+
   const handleFetch = async () => {
     const response = await getPrescriptions(token, filterParams);
     if (response.ok) {
@@ -30,10 +43,11 @@ const PrescriptionsScreen = () => {
         text={filterParams.search}
         onTextChange={(search) => setFilterParams({ ...filterParams, search })}
       />
-      <Text style={styles.title}>My Prescriptions</Text>
-      <FlatList
-        horizontal
-        data={prescriptions}
+      <SectionList
+        sections={prescriptionDataToSectionData(prescriptions)}
+        renderSectionHeader={({ section: { title, data } }) =>
+          data.length ? <Text style={styles.title}>{title}</Text> : null
+        }
         renderItem={({ item, index }) => {
           const {
             created_at,
