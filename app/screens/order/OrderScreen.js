@@ -1,5 +1,5 @@
 import { StyleSheet, View, Platform, Modal } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppForm,
   AppFormField,
@@ -12,24 +12,28 @@ import AppFormDateTimePicker from "../../components/forms/AppFormDateTimePicker"
 import Logo from "../../components/Logo";
 import LocationChoice from "../../components/order/LocationChoice";
 import colors from "../../utils/colors";
-import { useUser } from "../../api/hooks";
+import { useHospital, useUser } from "../../api/hooks";
 import { useUserContext } from "../../context/hooks";
 import routes from "../../navigation/routes";
 
 import * as Yup from "yup";
+import AppPicker from "../../components/input/AppPicker";
+import AppFormItemListPicker from "../../components/forms/AppFormItemListPicker";
 const validationSchemer = Yup.object().shape({
-  national_id: Yup.string().label("National Id").required(),
-  date_of_depletion: Yup.string().label("Date of depletion"),
+  delivery_mode: Yup.string().label("Delivery Mode").required(),
+  time_slot: Yup.string().label("Delivery Time Slot"),
   reach_out_phone_number: Yup.string().label("Phone Number").required(),
 });
 
 const initialValues = {
-  national_id: "",
-  date_of_depletion: new Date(Date.now()).toISOString(),
+  delivery_mode: "",
   reach_out_phone_number: "",
+  time_slot: "",
 };
 
 const OrderScreen = ({ navigation }) => {
+  const { getDeliverModes } = useHospital();
+  const [deliveryModes, setDeliveryModes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deliverLocation, setDeliveryLocation] = useState();
@@ -37,11 +41,6 @@ const OrderScreen = ({ navigation }) => {
   const { postOrder } = useUser();
   const { token } = useUserContext();
   const handleSubmit = async (values, { setFieldError, setFieldValue }) => {
-    // convert date time to date SURPOTED BY ENDPOINT
-    setFieldValue(
-      "date_of_depletion",
-      moment(values["date_of_depletion"]).format("YYYY-MM-DD")
-    );
     // validate location
     if (!deliverLocation) {
       return setShowLocError(true);
@@ -67,15 +66,24 @@ const OrderScreen = ({ navigation }) => {
             }
           }
         }
-        return console.log("LoginScreen: ", response.problem, response.data);
+        return console.log("OrderScreen: ", response.problem, response.data);
       }
     }
-    navigation.navigate(routes.ORDER_NAVIGATION, {
-      screen: routes.ORDERS_DETAIL_SCREEN,
+    navigation.navigate(routes.TAB_NAVIGATION, {
+      screen: routes.ACTION_MENU_SCREEN,
       params: response.data,
     });
     console.log(response.data);
   };
+  const handleFetch = async () => {
+    const response = await getDeliverModes({});
+    if (response.ok) {
+      setDeliveryModes(response.data.results);
+    }
+  };
+  useEffect(() => {
+    handleFetch();
+  }, []);
 
   return (
     <View>
@@ -90,18 +98,29 @@ const OrderScreen = ({ navigation }) => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
-        <AppFormField
-          keyboardType="numeric"
-          icon="account"
-          name="national_id"
-          placeholder="National Id"
+        <AppFormItemListPicker
+          title="Delivery Modes"
+          icon="apps"
+          name="delivery_mode"
+          labelExtractor={({ mode }) => mode}
+          placeHolder="Choose Delivery Mode"
+          data={deliveryModes}
+          valueExtractor={({ url }) => url}
+          renderItem={({ item }) => {
+            const { mode, url } = item;
+            return (
+              <List.Item
+                title={mode}
+                style={{ marginTop: 10, backgroundColor: colors.white }}
+              />
+            );
+          }}
         />
         <AppFormField
           icon="phone"
           name="reach_out_phone_number"
           placeholder="Phone Number"
         />
-        <AppFormDateTimePicker icon="timetable" name="date_of_depletion" />
         <View>
           <List.Item
             onPress={() => {
