@@ -135,8 +135,17 @@ export const useHospital = () => {
   const getAwardRewards = (params) => apiClient.get("awards/rewards/", params);
   const getClinics = (params) => apiClient.get("facilities/");
   const getAppointmentTypes = (params) => apiClient.get("appointment-types/");
-  const getDeliverModes = (params) => apiClient.get("deliver-mode/");
-  return { getAwardPrograms, getAwardRewards, getClinics, getAppointmentTypes, getDeliverModes };
+  const getDeliveryModes = (params) => apiClient.get("deliver-mode/");
+  const getDeliveryTimeSlots = (params) =>
+    apiClient.get("delivery-time-slots/");
+  return {
+    getAwardPrograms,
+    getAwardRewards,
+    getClinics,
+    getAppointmentTypes,
+    getDeliveryModes,
+    getDeliveryTimeSlots,
+  };
 };
 
 export const httpService = {

@@ -21,7 +21,7 @@ import AppPicker from "../../components/input/AppPicker";
 import AppFormItemListPicker from "../../components/forms/AppFormItemListPicker";
 const validationSchemer = Yup.object().shape({
   delivery_mode: Yup.string().label("Delivery Mode").required(),
-  time_slot: Yup.string().label("Delivery Time Slot"),
+  time_slot: Yup.string().label("Delivery Time Slot").required(),
   reach_out_phone_number: Yup.string().label("Phone Number").required(),
 });
 
@@ -32,8 +32,9 @@ const initialValues = {
 };
 
 const OrderScreen = ({ navigation }) => {
-  const { getDeliverModes } = useHospital();
+  const { getDeliveryModes, getDeliveryTimeSlots } = useHospital();
   const [deliveryModes, setDeliveryModes] = useState([]);
+  const [deliveryTimeSlots, setDeliveryTimeSlots] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deliverLocation, setDeliveryLocation] = useState();
@@ -76,9 +77,13 @@ const OrderScreen = ({ navigation }) => {
     console.log(response.data);
   };
   const handleFetch = async () => {
-    const response = await getDeliverModes({});
+    const response = await getDeliveryModes({});
     if (response.ok) {
       setDeliveryModes(response.data.results);
+    }
+    const slotsResponse = await getDeliveryTimeSlots({});
+    if (slotsResponse.ok) {
+      setDeliveryTimeSlots(slotsResponse.data.results);
     }
   };
   useEffect(() => {
@@ -100,7 +105,7 @@ const OrderScreen = ({ navigation }) => {
       >
         <AppFormItemListPicker
           title="Delivery Modes"
-          icon="apps"
+          icon="truck-outline"
           name="delivery_mode"
           labelExtractor={({ mode }) => mode}
           placeHolder="Choose Delivery Mode"
@@ -111,7 +116,35 @@ const OrderScreen = ({ navigation }) => {
             return (
               <List.Item
                 title={mode}
-                style={{ marginTop: 10, backgroundColor: colors.white }}
+                style={styles.listItem}
+                left={(props) => (
+                  <List.Icon {...props} icon="truck" color={colors.medium} />
+                )}
+              />
+            );
+          }}
+        />
+        <AppFormItemListPicker
+          title="Delivery Time Slots"
+          icon="clock-outline"
+          name="time_slot"
+          labelExtractor={({ slot }) => slot}
+          placeHolder="Choose Time Slot"
+          data={deliveryTimeSlots}
+          valueExtractor={({ url }) => url}
+          renderItem={({ item }) => {
+            const { slot, url } = item;
+            return (
+              <List.Item
+                title={slot}
+                style={styles.listItem}
+                left={(props) => (
+                  <List.Icon
+                    {...props}
+                    icon="clock-outline"
+                    color={colors.medium}
+                  />
+                )}
               />
             );
           }}
@@ -171,5 +204,9 @@ const styles = StyleSheet.create({
   error: {
     color: colors.danger,
     paddingHorizontal: 10,
+  },
+  listItem: {
+    marginTop: 5,
+    backgroundColor: colors.white,
   },
 });

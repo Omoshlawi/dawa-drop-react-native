@@ -18,6 +18,8 @@ const AppPicker = ({
   onSelectItem,
   numColumns,
   horozontal,
+  titleStyle,
+  contentContainerStyle,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const current = data.find((item) => valueExtractor(item) === value);
@@ -25,7 +27,7 @@ const AppPicker = ({
     <>
       <View style={styles.inputContainer}>
         {icon && (
-          <MaterialCommunityIcons name={icon} size={30} color={colors.medium} />
+          <MaterialCommunityIcons name={icon} size={25  } color={colors.medium} />
         )}
 
         <Text style={styles.input}>
@@ -46,10 +48,11 @@ const AppPicker = ({
             iconColor={colors.danger}
             mode="outlined"
           />
-          <Text style={styles.title} variant="titleLarge">
+          <Text style={[styles.title, titleStyle]} variant="titleLarge">
             {title}
           </Text>
           <FlatList
+            contentContainerStyle={contentContainerStyle}
             numColumns={numColumns}
             horizontal={horozontal}
             data={data}
