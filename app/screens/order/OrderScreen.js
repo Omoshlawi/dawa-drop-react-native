@@ -19,37 +19,36 @@ import routes from "../../navigation/routes";
 import * as Yup from "yup";
 import AppPicker from "../../components/input/AppPicker";
 import AppFormItemListPicker from "../../components/forms/AppFormItemListPicker";
+import TextInputField from "../../components/input/TextInputField";
+import { screenWidth } from "../../utils/contants";
+import LocationPicker from "../../components/order/LocationPicker";
 const validationSchemer = Yup.object().shape({
   delivery_mode: Yup.string().label("Delivery Mode").required(),
   time_slot: Yup.string().label("Delivery Time Slot").required(),
   reach_out_phone_number: Yup.string().label("Phone Number").required(),
+  latitude: Yup.number().label("Latitude").required(),
+  longitude: Yup.number().label("Longitude").required(),
 });
 
 const initialValues = {
   delivery_mode: "",
   reach_out_phone_number: "",
   time_slot: "",
+  latitude: undefined,
+  longitude: undefined,
 };
 
 const OrderScreen = ({ navigation }) => {
   const { getDeliveryModes, getDeliveryTimeSlots } = useHospital();
   const [deliveryModes, setDeliveryModes] = useState([]);
   const [deliveryTimeSlots, setDeliveryTimeSlots] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [futureAppointments, setFutureAppointments] = useState(null);
+  const [prescription, setPrescription] = useState();
   const [loading, setLoading] = useState(false);
-  const [deliverLocation, setDeliveryLocation] = useState();
-  const [showLocError, setShowLocError] = useState(false);
-  const { postOrder } = useUser();
+  const { postOrder, getPrescriptions, getAppointments } = useUser();
   const { token } = useUserContext();
   const handleSubmit = async (values, { setFieldError, setFieldValue }) => {
-    // validate location
-    if (!deliverLocation) {
-      return setShowLocError(true);
-    }
-    setShowLocError(false);
-    // set location params
-    setFieldValue("longitude", deliverLocation.longitude);
-    setFieldValue("latitude", deliverLocation.latitude);
+    return console.log(values);
     // post to server
     setLoading(true);
     const response = await postOrder(token, values);
@@ -85,6 +84,18 @@ const OrderScreen = ({ navigation }) => {
     if (slotsResponse.ok) {
       setDeliveryTimeSlots(slotsResponse.data.results);
     }
+    const prescResponse = await getPrescriptions(token, {});
+    if (prescResponse.ok) {
+      setPrescription(
+        prescResponse.data.results.find(({ is_current }) => is_current === true)
+      );
+    }
+    const appResponse = await getAppointments(token, {
+      next_appointment_date: moment().format("YYYY-MM-DD"),
+    });
+    if (appResponse.ok) {
+      setFutureAppointments(appResponse.data.results);
+    }
   };
   useEffect(() => {
     handleFetch();
@@ -94,9 +105,26 @@ const OrderScreen = ({ navigation }) => {
     <View>
       <View style={styles.header}>
         <Logo />
-        <Text style={styles.headerText} variant="titleLarge">
-          Order Medicine
-        </Text>
+        {console.log(futureAppointments)}
+        {prescription && (
+          <View style={styles.prefilled}>
+            <List.Item
+              title="Current Prescription"
+              style={styles.prefiledItem}
+              description={prescription.regimen.regimen}
+              titleStyle={styles.listTitle}
+              descriptionStyle={styles.listDescription}
+            />
+            <List.Item
+              title="Current Prescription"
+              style={styles.prefiledItem}
+              description={prescription.regimen.regimen}
+              titleStyle={styles.listTitle}
+              descriptionStyle={styles.listDescription}
+            />
+          </View>
+        )}
+        <Text style={styles.headerText}>Fill Order Details</Text>
       </View>
       <AppForm
         validationSchema={validationSchemer}
@@ -154,39 +182,9 @@ const OrderScreen = ({ navigation }) => {
           name="reach_out_phone_number"
           placeholder="Phone Number"
         />
-        <View>
-          <List.Item
-            onPress={() => {
-              setShowModal(true);
-            }}
-            title={
-              deliverLocation
-                ? `Change Location (${deliverLocation.latitude},${deliverLocation.longitude})`
-                : `Select Delivery Location`
-            }
-            titleStyle={{ color: colors.primary }}
-            left={(props) => (
-              <List.Icon {...props} icon="google-maps" color={colors.medium} />
-            )}
-          />
-          {showLocError && (
-            <Text style={styles.error}>
-              Delivery Location must be specified
-            </Text>
-          )}
-        </View>
+        <LocationPicker />
         <AppFormSubmitButton title="Order Now" loading={loading} />
       </AppForm>
-      <Modal
-        visible={showModal}
-        onDismiss={() => setShowModal(false)}
-        animationType="slide"
-      >
-        <LocationChoice
-          setVisible={setShowModal}
-          onLocationChosen={setDeliveryLocation}
-        />
-      </Modal>
     </View>
   );
 };
@@ -207,6 +205,18 @@ const styles = StyleSheet.create({
   },
   listItem: {
     marginTop: 5,
+    backgroundColor: colors.white,
+  },
+  listTitle: { color: colors.primary },
+  listDescription: { color: colors.medium },
+  prefilled: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 10,
+  },
+  prefiledItem: {
+    width: screenWidth * 0.47,
+    marginHorizontal: 2,
     backgroundColor: colors.white,
   },
 });
