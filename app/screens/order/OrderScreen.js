@@ -47,8 +47,7 @@ const OrderScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const { postOrder, getPrescriptions, getAppointments } = useUser();
   const { token } = useUserContext();
-  const handleSubmit = async (values, { setFieldError, setFieldValue }) => {
-    return console.log(values);
+  const handleSubmit = async (values, { setFieldError }) => {
     // post to server
     setLoading(true);
     const response = await postOrder(token, values);
