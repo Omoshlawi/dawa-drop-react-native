@@ -27,7 +27,12 @@ const LocationPicker = () => {
           size={30}
           color={colors.medium}
         />
-        <Text style={styles.input}>
+        <Text
+          style={[
+            styles.input,
+            deliverLocation ? {} : { color: colors.medium },
+          ]}
+        >
           {deliverLocation
             ? `(${values.latitude}, ${values.longitude})`
             : "Choose Delivery Location"}
@@ -74,7 +79,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     padding: 5,
-    color: colors.medium,
   },
   listItem: {
     backgroundColor: colors.white,

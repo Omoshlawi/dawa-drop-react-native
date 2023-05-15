@@ -27,10 +27,10 @@ const AppPicker = ({
     <>
       <View style={styles.inputContainer}>
         {icon && (
-          <MaterialCommunityIcons name={icon} size={25  } color={colors.medium} />
+          <MaterialCommunityIcons name={icon} size={25} color={colors.medium} />
         )}
 
-        <Text style={styles.input}>
+        <Text style={[styles.input, current ? {} : { color: colors.medium }]}>
           {current ? labelExtractor(current) : placeHolder}
         </Text>
         <IconButton
@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     padding: 5,
-    color: colors.medium,
   },
   mordal: {
     backgroundColor: colors.light1,

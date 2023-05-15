@@ -1,4 +1,4 @@
-import { StyleSheet, View, Platform, Modal } from "react-native";
+import { StyleSheet, View, Platform, Modal, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   AppForm,
@@ -65,8 +65,9 @@ const OrderScreen = ({ navigation }) => {
             }
           }
         }
-        return console.log("OrderScreen: ", response.problem, response.data);
       }
+      Alert.alert("Error", response.data.detail);
+      return console.log("OrderScreen: ", response.problem, response.data);
     }
     navigation.navigate(routes.TAB_NAVIGATION, {
       screen: routes.ACTION_MENU_SCREEN,
@@ -90,10 +91,14 @@ const OrderScreen = ({ navigation }) => {
       );
     }
     const appResponse = await getAppointments(token, {
-      next_appointment_date: moment().format("YYYY-MM-DD"),
+      next_appointment_date_from: moment().format("YYYY-MM-DD"),
+      next_appointment_date_to: moment().add(1, "days").format("YYYY-MM-DD"),
+      type: "Refill",
     });
     if (appResponse.ok) {
-      setFutureAppointments(appResponse.data.results);
+      setFutureAppointments(
+        appResponse.data.count > 0 ? appResponse.data.results[0] : null
+      );
     }
   };
   useEffect(() => {
@@ -104,7 +109,6 @@ const OrderScreen = ({ navigation }) => {
     <View>
       <View style={styles.header}>
         <Logo />
-        {console.log(futureAppointments)}
         {prescription && (
           <View style={styles.prefilled}>
             <List.Item
@@ -115,9 +119,19 @@ const OrderScreen = ({ navigation }) => {
               descriptionStyle={styles.listDescription}
             />
             <List.Item
-              title="Current Prescription"
+              title={
+                futureAppointments
+                  ? `${futureAppointments.type.type} Appointment`
+                  : ""
+              }
               style={styles.prefiledItem}
-              description={prescription.regimen.regimen}
+              description={
+                futureAppointments
+                  ? moment(futureAppointments.next_appointment_date).format(
+                      "dddd Do MMMM YYYY"
+                    )
+                  : "Not Eligibe"
+              }
               titleStyle={styles.listTitle}
               descriptionStyle={styles.listDescription}
             />
@@ -182,7 +196,11 @@ const OrderScreen = ({ navigation }) => {
           placeholder="Phone Number"
         />
         <LocationPicker />
-        <AppFormSubmitButton title="Order Now" loading={loading} />
+        <AppFormSubmitButton
+          title="Order Now"
+          loading={loading}
+          disabled={Boolean(futureAppointments) === false}
+        />
       </AppForm>
     </View>
   );

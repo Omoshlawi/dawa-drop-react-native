@@ -9,10 +9,16 @@ const AppButton = ({
   backgroundColor = colors.primary,
   color = colors.white,
   loading = false,
+  disabled = false,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} disabled={loading}>
-      <View style={[styles.container, { backgroundColor }]}>
+    <TouchableOpacity onPress={onPress} disabled={loading || disabled}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: disabled ? colors.medium : backgroundColor },
+        ]}
+      >
         {loading ? (
           <ActivityIndicator color={color} />
         ) : (
