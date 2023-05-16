@@ -53,13 +53,14 @@ const OrdersHistoryScreen = ({ navigation }) => {
           const {
             order_id,
             created_at,
+            delivery_mode,
+            time_slot,
             is_delivered,
-            is_approved,
+            is_allocated,
             longitude,
             latitude,
+            delivery,
             reach_out_phone_number,
-            date_of_depletion,
-            national_id,
           } = item;
           return (
             <List.Item
@@ -70,7 +71,7 @@ const OrdersHistoryScreen = ({ navigation }) => {
               title={order_id}
               description={`${moment(created_at).format(
                 "Do MMM YYYY, h:mm a"
-              )} ${is_approved ? "| Aprooved" : ""} ${
+              )} ${is_allocated ? "| Allocated" : ""} ${
                 is_delivered ? "| Delivered" : ""
               } `}
               descriptionStyle={{ color: colors.medium }}

@@ -65,8 +65,10 @@ const OrderScreen = ({ navigation }) => {
             }
           }
         }
+        if (response.status === 403) {
+          Alert.alert("Error", response.data.detail);
+        }
       }
-      Alert.alert("Error", response.data.detail);
       return console.log("OrderScreen: ", response.problem, response.data);
     }
     navigation.navigate(routes.TAB_NAVIGATION, {

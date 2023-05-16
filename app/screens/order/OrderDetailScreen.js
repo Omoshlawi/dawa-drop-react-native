@@ -15,15 +15,15 @@ import ExpandableText from "../../components/display/ExpandableText";
 import { ScrollView } from "react-native";
 import { callNumber } from "../../utils/helpers";
 
-const Delivery = ({ is_approved, delivery }) => {
-  if (!is_approved) {
+const Delivery = ({ is_allocated, delivery }) => {
+  if (!is_allocated) {
     return null;
   }
   const {
     delivery_id,
     created_at,
     delivery_medicine,
-    instruction,
+    prescription: { regimen, regimen_line },
     agent,
     doctor,
   } = delivery;
@@ -44,37 +44,12 @@ const Delivery = ({ is_approved, delivery }) => {
       />
       <List.Item
         style={styles.listItem}
-        title="Medication"
+        title={regimen}
         left={(props) => (
           <List.Icon {...props} icon="medical-bag" color={colors.primary} />
         )}
-        description={() => (
-          <ExpandableText
-            color={colors.primary}
-            text={delivery_medicine ? delivery_medicine : "None"}
-            threshHold={200}
-            contentStyle={styles.listItemDescription}
-          />
-        )}
-      />
-      <List.Item
-        style={styles.listItem}
-        title="Instruction"
-        left={(props) => (
-          <List.Icon
-            {...props}
-            icon="head-check-outline"
-            color={colors.primary}
-          />
-        )}
-        description={() => (
-          <ExpandableText
-            color={colors.primary}
-            text={instruction ? instruction : "None"}
-            threshHold={200}
-            contentStyle={styles.listItemDescription}
-          />
-        )}
+        descriptionStyle={styles.listItemDescription}
+        description={regimen_line}
       />
       <Card.Title
         style={styles.userCard}
@@ -143,69 +118,6 @@ const Delivery = ({ is_approved, delivery }) => {
           />
         )}
       />
-      {/* <View style={styles.detailsRow}>
-        <View>
-          <View style={styles.valuesRow}>
-            <Text>Deliver Id: </Text>
-            <Text style={styles.value}>{delivery_id}</Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Date Odered:</Text>
-            <Text style={styles.value}>
-              {moment(created_at).format("Do MMM YYYY, h:mm a")}
-            </Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Date Finished: </Text>
-            <Text style={styles.value}>
-              {moment(date_of_depletion).format("Do MMM YYYY")}
-            </Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Aprooved Status: </Text>
-            <Text
-              style={[
-                { borderRadius: 5, padding: 2, color: colors.white },
-                is_approved
-                  ? { backgroundColor: colors.success }
-                  : { backgroundColor: colors.danger },
-              ]}
-            >
-              {is_approved ? "aprooved" : "pending"}
-            </Text>
-          </View>
-        </View>
-        <View>
-          <View style={styles.valuesRow}>
-            <Text>National Id: </Text>
-            <Text style={styles.value}>{national_id}</Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Phone Number: </Text>
-            <Text style={styles.value}>{reach_out_phone_number}</Text>
-          </View>
-          <View style={styles.valuesRow}>
-            <Text>Delivery Location: </Text>
-            <Text style={styles.value}>{`(${parseFloat(latitude).toFixed(
-              2
-            )}, ${parseFloat(longitude).toFixed(2)})`}</Text>
-          </View>
-
-          <View style={styles.valuesRow}>
-            <Text>Delivery Status: </Text>
-            <Text
-              style={[
-                { borderRadius: 5, padding: 2, color: colors.white },
-                is_delivered
-                  ? { backgroundColor: colors.success }
-                  : { backgroundColor: colors.danger },
-              ]}
-            >
-              {is_delivered ? "delivered" : "pending"}
-            </Text>
-          </View>
-        </View>
-      </View> */}
     </>
   );
 };
@@ -215,13 +127,15 @@ const OrderDetailScreen = ({ navigation, route }) => {
     order_id,
     created_at,
     is_delivered,
-    is_approved,
+    is_allocated,
     longitude,
     latitude,
     reach_out_phone_number,
     date_of_depletion,
     national_id,
     delivery,
+    time_slot,
+    delivery_mode,
   } = route.params;
   return (
     <ScrollView>
@@ -244,17 +158,17 @@ const OrderDetailScreen = ({ navigation, route }) => {
         )}
       />
       <List.Item
-        title="Date Finished"
-        description={moment(date_of_depletion).format("Do MMM YYYY")}
+        title="Time Slot"
+        description={time_slot ? time_slot.slot : "Any"}
         style={styles.listItem}
         descriptionStyle={styles.listItemDescription}
         left={(props) => (
-          <List.Icon {...props} icon="calendar" color={colors.primary} />
+          <List.Icon {...props} icon="clock" color={colors.primary} />
         )}
       />
       <List.Item
-        title="Approval Status"
-        description={is_approved ? "aprooved" : "pending"}
+        title="Allocation Status"
+        description={is_allocated ? "Allocated" : "pending"}
         style={styles.listItem}
         descriptionStyle={styles.listItemDescription}
         left={(props) => (
@@ -271,12 +185,12 @@ const OrderDetailScreen = ({ navigation, route }) => {
         )}
       />
       <List.Item
-        title="National Id"
-        description={national_id}
+        title="Delivery Mode"
+        description={delivery_mode ? delivery_mode.mode : "Any"}
         style={styles.listItem}
         descriptionStyle={styles.listItemDescription}
         left={(props) => (
-          <List.Icon {...props} icon="account" color={colors.primary} />
+          <List.Icon {...props} icon="truck" color={colors.primary} />
         )}
       />
       <List.Item
@@ -299,7 +213,7 @@ const OrderDetailScreen = ({ navigation, route }) => {
           <List.Icon {...props} icon="google-maps" color={colors.primary} />
         )}
       />
-      <Delivery is_approved={is_approved} delivery={delivery} />
+      <Delivery is_allocated={is_allocated} delivery={delivery} />
     </ScrollView>
   );
 };

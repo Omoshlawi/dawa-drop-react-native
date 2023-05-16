@@ -55,17 +55,13 @@ const PendingOrdersScreen = ({ navigation }) => {
             order_id,
             created_at,
             is_delivered,
-            is_approved,
+            is_allocated,
+
             delivery: {
               agent: { phone_number: agent_phone },
               doctor: { phone_number: doctor_phone },
-              trip,
+              status,
             },
-            longitude,
-            latitude,
-            reach_out_phone_number,
-            date_of_depletion,
-            national_id,
           } = item;
           return (
             <Card
@@ -79,7 +75,7 @@ const PendingOrdersScreen = ({ navigation }) => {
                 title={order_id}
                 subtitle={`${moment(created_at).format(
                   "Do MMM YYYY, h:mm a"
-                )} ${is_approved ? "| Aprooved" : ""} ${
+                )} ${is_allocated ? "| Allocated" : ""} ${
                   is_delivered ? "| Delivered" : ""
                 } `}
                 subtitleVariant="bodySmall"
@@ -97,7 +93,7 @@ const PendingOrdersScreen = ({ navigation }) => {
                     icon="truck-delivery"
                     iconColor={colors.primary}
                     {...props}
-                    disabled={!Boolean(trip)}
+                    disabled={status !== "in_progress"}
                     onPress={() =>
                       navigation.navigate(routes.TRACK_DELIVERY_SCREEN, item)
                     }

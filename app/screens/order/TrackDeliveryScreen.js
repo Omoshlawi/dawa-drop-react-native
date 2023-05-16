@@ -30,17 +30,20 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   const subscriptionRef = useRef(null);
   const webSocketRef = useRef(null);
   const {
-    delivery: { trip },
+    delivery: {
+      destination,
+      start_location: current_location,
+      route_url,
+      status,
+      location_stream_url,
+    },
   } = order;
 
-  if (!trip) {
-    return <Text>Not started</Text>;
+  if (status !== "in_progress") {
+    return <Text>Either trip cancelled or not started</Text>;
   }
-  const { current_location, destination, route_url } = trip;
   useEffect(() => {
-    const webSocket = new WebSocket(
-      `ws://192.168.100.5:8000/ws/trip/2/?token=${token}`
-    );
+    const webSocket = new WebSocket(`${location_stream_url}?token=${token}`);
     webSocketRef.current = webSocket;
     handleGetDirection();
     handleAgentWebSocket();

@@ -74,7 +74,7 @@ const AppointMentsScreen = ({ navigation }) => {
         renderItem={({ item, index }) => {
           const {
             created_at,
-            type,
+            type: {type},
             doctor: { name },
           } = item;
           return (
@@ -83,7 +83,7 @@ const AppointMentsScreen = ({ navigation }) => {
               title={`With Doctor ${name}`}
               description={`${moment(created_at).format(
                 "ddd Do MMMM YYYY"
-              )} | ${appointmentTypes.find(({ url }) => url === type).type}`}
+              )} | ${type}`}
               descriptionStyle={styles.listDescription}
               left={(props) => (
                 <List.Image
