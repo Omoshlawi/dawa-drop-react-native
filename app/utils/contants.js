@@ -122,9 +122,9 @@ export const screenHeight = Dimensions.get("screen").height;
 
 // https://github.com/indiespirit/react-native-chart-kit
 export const weightChartConfig = {
-  backgroundColor: colors.secondary,
-  backgroundGradientFrom: colors.secondary,
-  backgroundGradientTo: colors.primary,
+  backgroundColor: colors.light,
+  backgroundGradientFrom: colors.light,
+  backgroundGradientTo: colors.light1,
   decimalPlaces: 2, // optional, defaults to 2dp
   color: (opacity = 1) => `rgba(6, 253, 28,${opacity})`,
   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,

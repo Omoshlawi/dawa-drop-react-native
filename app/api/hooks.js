@@ -109,7 +109,17 @@ export const useUser = () => {
     apiClient.get("patients/prescriptions/", params, {
       headers: getAuthHeader(token),
     });
+  const getTriads = (token, params) =>
+    apiClient.get("patients/triads/", params, {
+      headers: getAuthHeader(token),
+    });
+  const getTestResults = (token, params) =>
+    apiClient.get("patients/test-results/", params, {
+      headers: getAuthHeader(token),
+    });
   return {
+    getTestResults,
+    getTriads,
     getAppointments,
     getPrescriptions,
     findAccount,

@@ -2,8 +2,11 @@ import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
-import { LineChart } from "react-native-chart-kit";
-import { getMonthlyMeans } from "../../utils/helpers";
+import { LineChart, BarChart } from "react-native-chart-kit";
+import {
+  getTestResultsMonthlyMeans,
+  getTriadsMonthlyMeans,
+} from "../../utils/helpers";
 import moment from "moment";
 import {
   screenHeight,
@@ -16,7 +19,8 @@ import colors from "../../utils/colors";
 
 const DashBoard = ({ navigation }) => {
   const [triads, setTriads] = useState([]);
-  const { getUser, getUserInfo } = useUser();
+  const [testResults, setTestResults] = useState([]);
+  const { getUser, getTriads, getTestResults } = useUser();
   const { user, token } = useUserContext();
   const [dropDownItems, setDropDownItems] = useState([
     { label: "Weight", value: "weight" },
@@ -27,40 +31,34 @@ const DashBoard = ({ navigation }) => {
   const [dropDownValue, setdropDownValue] = useState("weight");
 
   const handleFetchTriads = async (url) => {
-    const response = await getUserInfo({ url, token, params: {} });
+    let response = await getTriads(token, {});
     if (response.ok) {
       setTriads(response.data.results);
+    } else {
+      console.log("Dashboard: ", response.problem, response.data);
+    }
+
+    response = await getTestResults(token, {});
+    if (response.ok) {
+      setTestResults(response.data.results);
     } else {
       console.log("Dashboard: ", response.problem, response.data);
     }
   };
 
   useEffect(() => {
-    if (!user) {
-      getUser();
-    } else {
-      if (user) {
-        const {
-          profile_information: { user_type },
-        } = user;
-        if (user_type == "patient") {
-          const {
-            user_type_information: { patient },
-          } = user;
-          if (patient) {
-            const {
-              triads: { count, url, url_list },
-            } = patient;
-            handleFetchTriads(url);
-          }
-        }
-      }
-    }
-  }, [user]);
+    if (!user) getUser();
+    handleFetchTriads();
+  }, []);
   const { monthlyHeights, monthlyWeights, monthlypressure, months } =
-    getMonthlyMeans(triads);
+    getTriadsMonthlyMeans(triads);
+  const {
+    monthlyCD4Count,
+    monthlyViralLoads,
+    months: testMonths,
+  } = getTestResultsMonthlyMeans(testResults);
   return (
-    <View>
+    <View style={styles.screen}>
       <View style={styles.triad}>
         <View style={styles.dropDow}>
           <DropDownPicker
@@ -141,7 +139,49 @@ const DashBoard = ({ navigation }) => {
             />
           )}
         </>
-        
+        <>
+          <BarChart
+            data={{
+              labels: testMonths,
+              legend: ["Pressure in mm/Hg"],
+              datasets: [
+                {
+                  data: monthlyCD4Count,
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                },
+              ],
+            }}
+            width={screenWidth * 0.95} // from react-native
+            height={screenHeight * 0.2}
+            // yAxisLabel="$"
+            verticalLabelRotation={-45}
+            yAxisSuffix=""
+            yAxisInterval={1} // optional, defaults to 1
+            chartConfig={weightChartConfig}
+            bezier
+            style={styles.weights}
+          />
+          <BarChart
+            data={{
+              labels: testMonths,
+              legend: ["Pressure in mm/Hg"],
+              datasets: [
+                {
+                  data: monthlyViralLoads,
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                },
+              ],
+            }}
+            width={screenWidth * 0.95} // from react-native
+            height={screenHeight * 0.2}
+            // yAxisLabel="$"
+            yAxisSuffix=""
+            yAxisInterval={1} // optional, defaults to 1
+            chartConfig={weightChartConfig}
+            bezier
+            style={styles.weights}
+          />
+        </>
       </View>
     </View>
   );

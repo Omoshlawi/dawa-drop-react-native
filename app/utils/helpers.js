@@ -133,6 +133,29 @@ const getMonthlyTriads = (triads) => {
   return data;
 };
 
+const getMonthlyTestResults = (test) => {
+  const data = {
+    0: { cd4_count: [], viral_load: [] },
+    1: { cd4_count: [], viral_load: [] },
+    2: { cd4_count: [], viral_load: [] },
+    3: { cd4_count: [], viral_load: [] },
+    4: { cd4_count: [], viral_load: [] },
+    5: { cd4_count: [], viral_load: [] },
+    6: { cd4_count: [], viral_load: [] },
+    7: { cd4_count: [], viral_load: [] },
+    8: { cd4_count: [], viral_load: [] },
+    9: { cd4_count: [], viral_load: [] },
+    10: { cd4_count: [], viral_load: [] },
+    11: { cd4_count: [], viral_load: [] },
+  };
+  test.forEach(({ created_at, cd4_count, viral_load }) => {
+    const month = new Date(created_at).getMonth();
+    data[month].cd4_count.push(parseFloat(cd4_count));
+    data[month].viral_load.push(parseFloat(viral_load));
+  });
+  return data;
+};
+
 const mean = (list = []) => {
   if (list.length === 0) {
     return 0;
@@ -141,7 +164,7 @@ const mean = (list = []) => {
   return sum / list.length;
 };
 
-export const getMonthlyMeans = (triads) => {
+export const getTriadsMonthlyMeans = (triads) => {
   const data = getMonthlyTriads(triads);
   const monthlyHeights = [];
   const monthlyWeights = [];
@@ -161,12 +184,30 @@ export const getMonthlyMeans = (triads) => {
   };
 };
 
+export const getTestResultsMonthlyMeans = (tests) => {
+  const data = getMonthlyTestResults(tests);
+  const monthlyCD4Count = [];
+  const monthlyViralLoads = [];
+  const months = moment.monthsShort();
+  const currentMonth = moment().month();
+  for (const month in data) {
+    monthlyCD4Count.push(mean(data[month].cd4_count));
+    monthlyViralLoads.push(mean(data[month].viral_load));
+  }
+  return {
+    monthlyCD4Count: monthlyCD4Count.slice(0, currentMonth + 1),
+    monthlyViralLoads: monthlyViralLoads.slice(0, currentMonth + 1),
+    months: months.slice(0, currentMonth + 1),
+  };
+};
+
 // Bard
 function getDistanceBetweenCoordinates(lat1, lng1, lat2, lng2) {
   const R = 6371; // Earth's radius in kilometers
   const dLat = lat2 - lat1;
   const dLng = lng2 - lng1;
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
@@ -176,17 +217,18 @@ function getDistanceBetweenCoordinates(lat1, lng1, lat2, lng2) {
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Radius of the earth in km
   const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1); 
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c; // Distance in km
   return d;
 }
 
 function deg2rad(deg) {
-  return deg * (Math.PI/180)
+  return deg * (Math.PI / 180);
 }

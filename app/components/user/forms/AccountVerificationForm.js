@@ -12,14 +12,17 @@ const AccountVerificationForm = ({ navigation, route }) => {
   const { token } = useUserContext();
   const { postUserInfo, getUser } = useUser();
   const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleVerify = async () => {
+    setLoading(true);
     const response = await postUserInfo({
       url,
       token,
       multipart: false,
       data: { code },
     });
+    setLoading(false);
     if (response.ok) {
       Alert.alert(
         "Success",
@@ -45,6 +48,7 @@ const AccountVerificationForm = ({ navigation, route }) => {
           onPress={handleVerify}
           style={styles.btn}
           mode="outlined"
+          loading={loading}
           textColor={colors.primary}
         >
           Verify
