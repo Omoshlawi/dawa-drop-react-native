@@ -11,7 +11,7 @@ import IconText from "../../components/display/IconText";
 import { SectionList } from "react-native";
 
 const PrescriptionsScreen = () => {
-  const [filterParams, setFilterParams] = useState({ search: "" });
+  const [loading, setloading] = useState(false);
   const [prescriptions, setPrescriptions] = useState([]);
   const { getPrescriptions } = useUser();
   const { token } = useUserContext();
@@ -29,21 +29,21 @@ const PrescriptionsScreen = () => {
   };
 
   const handleFetch = async () => {
-    const response = await getPrescriptions(token, filterParams);
+    setloading(true);
+    const response = await getPrescriptions(token, {});
+    setloading(false);
     if (response.ok) {
       setPrescriptions(response.data.results);
     }
   };
   useEffect(() => {
     handleFetch();
-  }, [filterParams]);
+  }, []);
   return (
-    <View>
-      <SearchHeader
-        text={filterParams.search}
-        onTextChange={(search) => setFilterParams({ ...filterParams, search })}
-      />
+    <View style={styles.screen}>
       <SectionList
+        refreshing={loading}
+        onRefresh={handleFetch}
         sections={prescriptionDataToSectionData(prescriptions)}
         renderSectionHeader={({ section: { title, data } }) =>
           data.length ? <Text style={styles.title}>{title}</Text> : null
@@ -98,5 +98,8 @@ const styles = StyleSheet.create({
   },
   listDescription: {
     color: colors.medium,
+  },
+  screen: {
+    flex: 1,
   },
 });

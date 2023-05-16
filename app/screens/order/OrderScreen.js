@@ -111,34 +111,32 @@ const OrderScreen = ({ navigation }) => {
     <View>
       <View style={styles.header}>
         <Logo />
-        {prescription && (
-          <View style={styles.prefilled}>
-            <List.Item
-              title="Current Prescription"
-              style={styles.prefiledItem}
-              description={prescription.regimen.regimen}
-              titleStyle={styles.listTitle}
-              descriptionStyle={styles.listDescription}
-            />
-            <List.Item
-              title={
-                futureAppointments
-                  ? `${futureAppointments.type.type} Appointment`
-                  : ""
-              }
-              style={styles.prefiledItem}
-              description={
-                futureAppointments
-                  ? moment(futureAppointments.next_appointment_date).format(
-                      "dddd Do MMMM YYYY"
-                    )
-                  : "Not Eligibe"
-              }
-              titleStyle={styles.listTitle}
-              descriptionStyle={styles.listDescription}
-            />
-          </View>
-        )}
+        <View style={styles.prefilled}>
+          <List.Item
+            title="Current Prescription"
+            style={styles.prefiledItem}
+            description={prescription ? prescription.regimen.regimen : "None"}
+            titleStyle={styles.listTitle}
+            descriptionStyle={styles.listDescription}
+          />
+          <List.Item
+            title={
+              futureAppointments
+                ? `${futureAppointments.type.type} Appointment`
+                : ""
+            }
+            style={styles.prefiledItem}
+            description={
+              futureAppointments
+                ? moment(futureAppointments.next_appointment_date).format(
+                    "dddd Do MMMM YYYY"
+                  )
+                : "Not Eligibe"
+            }
+            titleStyle={styles.listTitle}
+            descriptionStyle={styles.listDescription}
+          />
+        </View>
         <Text style={styles.headerText}>Fill Order Details</Text>
       </View>
       <AppForm
@@ -201,7 +199,10 @@ const OrderScreen = ({ navigation }) => {
         <AppFormSubmitButton
           title="Order Now"
           loading={loading}
-          disabled={Boolean(futureAppointments) === false}
+          disabled={
+            Boolean(futureAppointments) === false ||
+            Boolean(prescription) == false
+          }
         />
       </AppForm>
     </View>

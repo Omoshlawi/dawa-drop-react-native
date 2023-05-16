@@ -22,8 +22,9 @@ const Delivery = ({ is_allocated, delivery }) => {
   const {
     delivery_id,
     created_at,
-    delivery_medicine,
-    prescription: { regimen, regimen_line },
+    prescription: {
+      regimen: { regimen, regimen_line },
+    },
     agent,
     doctor,
   } = delivery;
