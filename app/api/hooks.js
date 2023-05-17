@@ -170,9 +170,9 @@ export const httpService = {
 };
 
 export const useDelivery = () => {
-  const getDirection = (token, params) =>
-    apiClient.get("orders/trip/1/route/", params, {
+  const getDeliveryRequests = (token, params) =>
+    apiClient.get("orders/delivery-requests/", params, {
       headers: getAuthHeader(token),
     });
-  return { getDirection };
+  return { getDeliveryRequests };
 };
