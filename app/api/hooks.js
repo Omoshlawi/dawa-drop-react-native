@@ -150,7 +150,9 @@ export const useHospital = () => {
   const getDeliveryModes = (params) => apiClient.get("deliver-mode/");
   const getDeliveryTimeSlots = (params) =>
     apiClient.get("delivery-time-slots/");
+  const getSummaryStats = (params) => apiClient.get("patients/summary/");
   return {
+    getSummaryStats,
     getAwardPrograms,
     getAwardRewards,
     getClinics,

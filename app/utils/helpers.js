@@ -111,25 +111,108 @@ month_dictionary = {};
 
 const getMonthlyTriads = (triads) => {
   const data = {
-    0: { height: [], weight: [], blood_pressure: [] },
-    1: { height: [], weight: [], blood_pressure: [] },
-    2: { height: [], weight: [], blood_pressure: [] },
-    3: { height: [], weight: [], blood_pressure: [] },
-    4: { height: [], weight: [], blood_pressure: [] },
-    5: { height: [], weight: [], blood_pressure: [] },
-    6: { height: [], weight: [], blood_pressure: [] },
-    7: { height: [], weight: [], blood_pressure: [] },
-    8: { height: [], weight: [], blood_pressure: [] },
-    9: { height: [], weight: [], blood_pressure: [] },
-    10: { height: [], weight: [], blood_pressure: [] },
-    11: { height: [], weight: [], blood_pressure: [] },
+    0: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    1: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    2: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    3: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    4: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    5: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    6: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    7: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    8: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    9: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    10: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
+    11: {
+      height: [],
+      weight: [],
+      blood_pressure: [],
+      temperature: [],
+      heart_rate: [],
+    },
   };
-  triads.forEach(({ created_at, blood_pressure, height, weight }) => {
-    const month = new Date(created_at).getMonth();
-    data[month].height.push(parseFloat(height));
-    data[month].weight.push(parseFloat(weight));
-    data[month].blood_pressure.push(parseFloat(blood_pressure));
-  });
+  triads.forEach(
+    ({
+      created_at,
+      blood_pressure,
+      height,
+      weight,
+      temperature,
+      heart_rate,
+    }) => {
+      const month = new Date(created_at).getMonth();
+      data[month].height.push(parseFloat(height));
+      data[month].weight.push(parseFloat(weight));
+      data[month].blood_pressure.push(parseFloat(blood_pressure));
+      data[month].temperature.push(parseFloat(temperature));
+      data[month].heart_rate.push(parseFloat(heart_rate));
+    }
+  );
   return data;
 };
 
@@ -169,17 +252,23 @@ export const getTriadsMonthlyMeans = (triads) => {
   const monthlyHeights = [];
   const monthlyWeights = [];
   const monthlypressure = [];
+  const monthlyTemperature = [];
+  const monthlyHeartRate = [];
   const months = moment.monthsShort();
   const currentMonth = moment().month();
   for (const month in data) {
     monthlyHeights.push(mean(data[month].height));
     monthlyWeights.push(mean(data[month].weight));
     monthlypressure.push(mean(data[month].blood_pressure));
+    monthlyTemperature.push(mean(data[month].temperature));
+    monthlyHeartRate.push(mean(data[month].heart_rate));
   }
   return {
     monthlyHeights: monthlyHeights.slice(0, currentMonth + 1),
     monthlyWeights: monthlyWeights.slice(0, currentMonth + 1),
     monthlypressure: monthlypressure.slice(0, currentMonth + 1),
+    monthlyTemperature: monthlyTemperature.slice(0, currentMonth + 1),
+    monthlyHeartRate: monthlyHeartRate.slice(0, currentMonth + 1),
     months: months.slice(0, currentMonth + 1),
   };
 };
@@ -200,6 +289,8 @@ export const getTestResultsMonthlyMeans = (tests) => {
     months: months.slice(0, currentMonth + 1),
   };
 };
+
+export const toPercentage = (list) => {};
 
 // Bard
 function getDistanceBetweenCoordinates(lat1, lng1, lat2, lng2) {
