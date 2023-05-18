@@ -7,10 +7,13 @@ import {
   BarChart,
   ProgressChart,
   PieChart,
+  ContributionGraph,
 } from "react-native-chart-kit";
 import { Text } from "react-native-paper";
 import {
   calculateBMI,
+  getNutrientRecommendations,
+  getPieChartChartDataFromRecomendation,
   getTestResultsMonthlyMeans,
   getTriadsMonthlyMeans,
 } from "../../utils/helpers";
@@ -29,13 +32,15 @@ import ViralLoadChart from "../../components/charts/ViralLoadChart";
 import CD4Chart from "../../components/charts/CD4Chart";
 import TempratureChart from "../../components/charts/TempratureChart";
 import HeartRateChart from "../../components/charts/HeartRateChart";
+import BMIStatusChart from "../../components/charts/BMIStatusChart";
+import AppointmentsFrequencyChart from "../../components/charts/AppointmentsFrequencyChart";
 
 const DashBoard = ({ navigation }) => {
   const [triads, setTriads] = useState([]);
   const [testResults, setTestResults] = useState([]);
-  const { getUser, getTriads, getTestResults } = useUser();
+  const { getUser, getTriads, getTestResults, getAppointments } = useUser();
   const { getSummaryStats } = useHospital();
-  const [summary, setSummary] = useState(null);
+  const [appointments, setAppointments] = useState([]);
 
   const { user, token } = useUserContext();
 
@@ -53,9 +58,9 @@ const DashBoard = ({ navigation }) => {
     } else {
       console.log("Dashboard: ", response.problem, response.data);
     }
-    response = await getSummaryStats();
+    response = await getAppointments(token, {});
     if (response.ok) {
-      setSummary(response.data);
+      setAppointments(response.data.results);
     } else {
       console.log("Dashboard: ", response.problem, response.data);
     }
@@ -84,19 +89,26 @@ const DashBoard = ({ navigation }) => {
   });
 
   return (
-    <ScrollView style={styles.screen}>
-      <View style={styles.triad}>
-        <>
-          <WeightChart x={months} y={monthlyWeights} />
-          <HeightChart x={months} y={monthlyHeights} />
-          <PressureChart x={months} y={monthlypressure} />
-          <BMIChart x={months} y={monthlyBMI} />
-          <ViralLoadChart x={months} y={monthlyViralLoads} />
-          <CD4Chart x={months} y={monthlyCD4Count} />
-          <TempratureChart x={months} y={monthlyTemperature} />
-          <HeartRateChart x={months} y={monthlyHeartRate} />
-        </>
-      </View>
+    <ScrollView
+      contentContainerStyle={styles.contentStyle}
+      style={styles.screen}
+    >
+      <AppointmentsFrequencyChart
+        attendanceData={appointments.map(({ created_at }) => ({
+          date: created_at,
+          count: 1,
+        }))}
+      />
+      <WeightChart x={months} y={monthlyWeights} />
+      <HeightChart x={months} y={monthlyHeights} />
+      <PressureChart x={months} y={monthlypressure} />
+      <BMIStatusChart />
+      <BMIChart x={months} y={monthlyBMI} />
+      <ViralLoadChart x={months} y={monthlyViralLoads} />
+      <CD4Chart x={months} y={monthlyCD4Count} />
+      <TempratureChart x={months} y={monthlyTemperature} />
+      <HeartRateChart x={months} y={monthlyHeartRate} />
+
     </ScrollView>
   );
 };
@@ -110,10 +122,10 @@ const styles = StyleSheet.create({
 
   screen: {
     backgroundColor: colors.white,
-  },
-  triad: {
+
     padding: 10,
+  },
+  contentStyle: {
     alignItems: "center",
-    // backgroundColor: colors.light,
   },
 });

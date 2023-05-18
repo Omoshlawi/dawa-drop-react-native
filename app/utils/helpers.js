@@ -292,14 +292,14 @@ export const getTestResultsMonthlyMeans = (tests) => {
 
 export const toPercentage = (list) => {};
 
-export const calculateBMI = (weight, height) =>{
+export const calculateBMI = (weight, height) => {
   // Convert height to meters
   height = height / 100;
 
   // Calculate BMI
   const bmi = weight / (height * height);
   return bmi;
-}
+};
 
 export function getBMIStatus(bmi) {
   if (bmi < 18.5) {
@@ -323,4 +323,162 @@ function getNutritionRecommendation(bmi) {
   } else {
     return "You are obese. It is important to consult with a healthcare professional or registered dietitian for personalized nutrition advice and a comprehensive weight management plan.";
   }
+}
+
+export function getNutrientRecommendations(bmi) {
+  let recommendations = {
+    protein: {
+      level: "",
+      percentage: 0,
+      foods: [],
+    },
+    carbohydrates: {
+      level: "",
+      percentage: 0,
+      foods: [],
+    },
+    fats: {
+      level: "",
+      percentage: 0,
+      foods: [],
+    },
+    vitamins: {
+      level: "",
+      percentage: 0,
+      foods: [],
+    },
+  };
+
+  if (bmi < 18.5) {
+    // Underweight
+    recommendations.protein.level = "Increase";
+    recommendations.protein.percentage = 0.2;
+    recommendations.protein.foods = [
+      "Lean meats, poultry, fish",
+      "Eggs",
+      "Legumes",
+      "Nuts and seeds",
+    ];
+
+    recommendations.carbohydrates.level = "Increase";
+    recommendations.carbohydrates.percentage = 0.5;
+    recommendations.carbohydrates.foods = [
+      "Whole grains",
+      "Fruits",
+      "Vegetables",
+      "Legumes",
+    ];
+
+    recommendations.fats.level = "Increase";
+    recommendations.fats.percentage = 0.2;
+    recommendations.fats.foods = [
+      "Healthy oils (olive oil, avocado oil)",
+      "Nuts and seeds",
+      "Fatty fish",
+    ];
+
+    recommendations.vitamins.level = "Increase";
+    recommendations.vitamins.percentage = 0;
+    recommendations.vitamins.foods = [
+      "Colorful fruits and vegetables",
+      "Leafy greens",
+      "Citrus fruits",
+    ];
+  } else if (bmi >= 18.5 && bmi < 25) {
+    // Normal weight
+    recommendations.protein.level = "Maintain";
+    recommendations.protein.percentage = 0.15;
+    recommendations.protein.foods = [
+      "Lean meats, poultry, fish",
+      "Eggs",
+      "Legumes",
+      "Nuts and seeds",
+    ];
+
+    recommendations.carbohydrates.level = "Maintain";
+    recommendations.carbohydrates.percentage = 0.5;
+    recommendations.carbohydrates.foods = [
+      "Whole grains",
+      "Fruits",
+      "Vegetables",
+      "Legumes",
+    ];
+
+    recommendations.fats.level = "Maintain";
+    recommendations.fats.percentage = 0.2;
+    recommendations.fats.foods = [
+      "Healthy oils (olive oil, avocado oil)",
+      "Nuts and seeds",
+      "Fatty fish",
+    ];
+
+    recommendations.vitamins.level = "Maintain";
+    recommendations.vitamins.percentage = 0;
+    recommendations.vitamins.foods = [
+      "Colorful fruits and vegetables",
+      "Leafy greens",
+      "Citrus fruits",
+    ];
+  } else {
+    // Overweight or obese
+    recommendations.protein.level = "Maintain";
+    recommendations.protein.percentage = 0.15;
+    recommendations.protein.foods = [
+      "Lean meats, poultry, fish",
+      "Eggs",
+      "Legumes",
+      "Nuts and seeds",
+    ];
+
+    recommendations.carbohydrates.level = "Reduce";
+    recommendations.carbohydrates.percentage = 0.4;
+    recommendations.carbohydrates.foods = [
+      "Whole grains in moderation",
+      "Fruits in moderation",
+      "Vegetables in moderation",
+    ];
+
+    recommendations.fats.level = "Reduce";
+    recommendations.fats.percentage = 0.25;
+    recommendations.fats.foods = [
+      "Healthy oils in moderation (olive oil, avocado oil)",
+      "Nuts and seeds in moderation",
+      "Fatty fish in moderation",
+    ];
+
+    recommendations.vitamins.level = "Maintain";
+    recommendations.vitamins.percentage = 0;
+    recommendations.vitamins.foods = [
+      "Colorfulfruits and vegetables",
+      "Leafy greens",
+      "Citrus fruits",
+    ];
+  }
+  return recommendations;
+}
+
+export function getPieChartChartDataFromRecomendation(recomendation) {
+  const data = [];
+  for (const nutrient in recomendation) {
+    data.push({
+      name: nutrient,
+      population: recomendation[nutrient].percentage,
+      color: getRandomColor(),
+      legendFontColor: getRandomColor(),
+      legendFontSize: 15,
+    });
+  }
+  return data;
+}
+
+export function getRandomColor() {
+  // Generate random RGB values between 0 and 255
+  var r = Math.floor(Math.random() * 256);
+  var g = Math.floor(Math.random() * 256);
+  var b = Math.floor(Math.random() * 256);
+
+  // Create the CSS color string in RGB format
+  var color = "rgb(" + r + ", " + g + ", " + b + ")";
+
+  return color;
 }
