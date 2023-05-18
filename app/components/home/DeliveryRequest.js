@@ -7,17 +7,10 @@ import colors from "../../utils/colors";
 import { screenWidth } from "../../utils/contants";
 import DeliveryRequestCallout from "./DeliveryRequestCallout";
 
-const DeliveryRequest = ({ request, setVisible }) => {
+const DeliveryRequest = ({ request }) => {
   const location = useLocation();
   return (
     <View style={styles.screen}>
-      <IconButton
-        style={styles.closeBtn}
-        icon="close"
-        mode="outlined"
-        iconColor={colors.danger}
-        onPress={() => setVisible(false)}
-      />
       {location && (
         <View style={styles.mapContainer}>
           <MapView

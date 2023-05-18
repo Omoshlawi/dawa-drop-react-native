@@ -40,7 +40,7 @@ const IconText = ({
           style={[
             styles.text,
             {
-              fontSize: size*0.9,
+              fontSize: size,
               fontWeight,
               color: disableBtn ? disabledColor : color,
             },

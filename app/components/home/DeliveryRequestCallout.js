@@ -12,24 +12,30 @@ const DeliveryRequestCallout = ({ request }) => {
       <View style={styles.container}>
         <Avatar.Icon icon="account" />
         <View style={styles.contentContainer}>
-          <View style={styles.row}>
-            <MaterialCommunityIcons
-              style={styles.icon}
-              name="truck-cargo-container"
-            />
-            <Text>{delivery_mode.mode}</Text>
-          </View>
-          <View style={styles.row}>
-            <MaterialCommunityIcons style={styles.icon} name="clock" />
-            <Text>{time_slot.slot}</Text>
-          </View>
-          <View style={styles.row}>
-            <MaterialCommunityIcons
-              style={styles.icon}
-              name="information-variant"
-            />
-            <Text>{address}</Text>
-          </View>
+          {delivery_mode && (
+            <View style={styles.row}>
+              <MaterialCommunityIcons
+                style={styles.icon}
+                name="truck-cargo-container"
+              />
+              <Text>{delivery_mode.mode}</Text>
+            </View>
+          )}
+          {time_slot && (
+            <View style={styles.row}>
+              <MaterialCommunityIcons style={styles.icon} name="clock" />
+              <Text>{time_slot.slot}</Text>
+            </View>
+          )}
+          {address && (
+            <View style={styles.row}>
+              <MaterialCommunityIcons
+                style={styles.icon}
+                name="information-variant"
+              />
+              <Text>{address}</Text>
+            </View>
+          )}
         </View>
       </View>
     </View>
