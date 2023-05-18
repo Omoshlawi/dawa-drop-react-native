@@ -174,5 +174,9 @@ export const useDelivery = () => {
     apiClient.get("orders/delivery-requests/", params, {
       headers: getAuthHeader(token),
     });
-  return { getDeliveryRequests };
+  const getDeliveries = (token, params) =>
+    apiClient.get("orders/deliveries/", params, {
+      headers: getAuthHeader(token),
+    });
+  return { getDeliveryRequests, getDeliveries };
 };

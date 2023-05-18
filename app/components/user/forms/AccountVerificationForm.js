@@ -31,7 +31,19 @@ const AccountVerificationForm = ({ navigation, route }) => {
       await getUser(true);
       navigation.navigate(routes.TAB_NAVIGATION);
     } else {
-      console.log(response.data);
+      console.log(response.data, response.status);
+
+      if (response.status == 403) {
+        Alert.alert("Failure", response.data.detail);
+      } else if (response.status == 400) {
+        if (response.data instanceof Object) {
+          const errors = [];
+          for (key in response.data) {
+            errors.push(response.data[key].join(";"));
+          }
+          Alert.alert("Failure", errors.join("\n"));
+        }
+      }
     }
   };
 
