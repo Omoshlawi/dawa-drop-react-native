@@ -21,7 +21,11 @@ const HeartRateChart = ({ x, y }) => {
         subtitle="Weight progression with time"
         subtitleStyle={styles.subTitle}
         left={(props) => (
-          <Avatar.Icon {...props} icon="weight-kilogram" style={styles.icon} />
+          <Avatar.Image
+            {...props}
+            source={require("../../assets/heart-rate.png")}
+            style={styles.icon}
+          />
         )}
         right={(props) => (
           <IconButton
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   card: {
-    backgroundColor: colors.light1,
+    backgroundColor: colors.background,
     marginBottom:5
   },
   subTitle: {

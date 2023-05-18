@@ -21,7 +21,11 @@ const ViralLoadChart = ({ x, y }) => {
         subtitle="Weight progression with time"
         subtitleStyle={styles.subTitle}
         left={(props) => (
-          <Avatar.Icon {...props} icon="weight-kilogram" style={styles.icon} />
+          <Avatar.Image
+            {...props}
+            source={require("../../assets/coronavirus.png")}
+            style={styles.icon}
+          />
         )}
         right={(props) => (
           <IconButton
@@ -78,8 +82,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   card: {
-    backgroundColor: colors.light1,
-    marginBottom:5
+    backgroundColor: colors.background,
+    marginBottom: 5,
   },
   subTitle: {
     color: colors.medium,
