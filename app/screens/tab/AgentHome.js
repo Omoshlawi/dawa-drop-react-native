@@ -43,7 +43,7 @@ const AgentHome = ({ navigation }) => {
   );
   return (
     <View style={styles.screen}>
-      <DeliveryRequest request={deliveryRequests} setVisible={() => {}} />
+      <DeliveryRequest request={deliveryRequests} />
       <View style={styles.overlay}>
         <View style={styles.overlatyHeader}>
           <Text style={styles.title}>My Delivery Tasks</Text>
