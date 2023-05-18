@@ -12,7 +12,11 @@ const Screen = Stack.Screen;
 const DashboardNavigation = () => {
   return (
     <Navigator>
-      <Screen name={routes.DASHBOARD_SCREEN} component={DashBoard} />
+      <Screen
+        name={routes.DASHBOARD_SCREEN}
+        component={DashBoard}
+        options={{ title: "Dashboard" }}
+      />
     </Navigator>
   );
 };

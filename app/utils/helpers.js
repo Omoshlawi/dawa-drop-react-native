@@ -292,34 +292,35 @@ export const getTestResultsMonthlyMeans = (tests) => {
 
 export const toPercentage = (list) => {};
 
-// Bard
-function getDistanceBetweenCoordinates(lat1, lng1, lat2, lng2) {
-  const R = 6371; // Earth's radius in kilometers
-  const dLat = lat2 - lat1;
-  const dLng = lng2 - lng1;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+export const calculateBMI = (weight, height) =>{
+  // Convert height to meters
+  height = height / 100;
+
+  // Calculate BMI
+  const bmi = weight / (height * height);
+  return bmi;
 }
 
-// Chatgpyt
-function calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
+export function getBMIStatus(bmi) {
+  if (bmi < 18.5) {
+    return "Underweight";
+  } else if (bmi < 25) {
+    return "Normal weight";
+  } else if (bmi < 30) {
+    return "Overweight";
+  } else {
+    return "Obese";
+  }
 }
 
-function deg2rad(deg) {
-  return deg * (Math.PI / 180);
+function getNutritionRecommendation(bmi) {
+  if (bmi < 18.5) {
+    return "You are underweight. It is recommended to increase your calorie intake and focus on nutrient-rich foods such as lean proteins, whole grains, fruits, vegetables, and healthy fats.";
+  } else if (bmi < 25) {
+    return "Your weight is within the normal range. Maintain a balanced diet with a variety of nutrient-rich foods including lean proteins, whole grains, fruits, vegetables, and healthy fats.";
+  } else if (bmi < 30) {
+    return "You are overweight. It is recommended to focus on portion control, incorporate regular physical activity, and consume a balanced diet with reduced calorie intake.";
+  } else {
+    return "You are obese. It is important to consult with a healthcare professional or registered dietitian for personalized nutrition advice and a comprehensive weight management plan.";
+  }
 }

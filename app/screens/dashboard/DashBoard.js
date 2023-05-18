@@ -10,6 +10,7 @@ import {
 } from "react-native-chart-kit";
 import { Text } from "react-native-paper";
 import {
+  calculateBMI,
   getTestResultsMonthlyMeans,
   getTriadsMonthlyMeans,
 } from "../../utils/helpers";
@@ -20,6 +21,14 @@ import {
   weightChartConfig,
 } from "../../utils/contants";
 import colors from "../../utils/colors";
+import HeightChart from "../../components/charts/HeightChart";
+import WeightChart from "../../components/charts/WeightChart";
+import PressureChart from "../../components/charts/PressureChart";
+import BMIChart from "../../components/charts/BMIChart";
+import ViralLoadChart from "../../components/charts/ViralLoadChart";
+import CD4Chart from "../../components/charts/CD4Chart";
+import TempratureChart from "../../components/charts/TempratureChart";
+import HeartRateChart from "../../components/charts/HeartRateChart";
 
 const DashBoard = ({ navigation }) => {
   const [triads, setTriads] = useState([]);
@@ -69,174 +78,23 @@ const DashBoard = ({ navigation }) => {
     monthlyViralLoads,
     months: testMonths,
   } = getTestResultsMonthlyMeans(testResults);
+  const monthlyBMI = monthlyHeights.map((height, index) => {
+    const bmi = calculateBMI(monthlyWeights[index], height);
+    return bmi ? bmi : 0;
+  });
 
   return (
     <ScrollView style={styles.screen}>
       <View style={styles.triad}>
         <>
-          <Text variant="titleLarge">Weight</Text>
-          <LineChart
-            data={{
-              labels: months,
-              legend: ["Weight Kilograms"],
-              datasets: [
-                {
-                  data: monthlyWeights,
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                },
-              ],
-            }}
-            width={screenWidth * 0.95} // from react-native
-            height={screenHeight * 0.2}
-            // yAxisLabel="$"
-            yAxisSuffix="Kg"
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={weightChartConfig}
-            bezier
-            style={styles.weights}
-          />
-          <Text variant="titleLarge">Height</Text>
-          <LineChart
-            data={{
-              labels: months,
-              legend: ["Height in Inches"],
-              datasets: [
-                {
-                  data: monthlyHeights,
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                },
-              ],
-            }}
-            width={screenWidth * 0.95}
-            height={screenHeight * 0.2}
-            // yAxisLabel="$"
-            yAxisSuffix="'"
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={weightChartConfig}
-            // bezier
-            style={styles.weights}
-          />
-          <Text variant="titleLarge">Blood pressure</Text>
-          <LineChart
-            data={{
-              labels: months,
-              legend: ["Pressure in mm/Hg"],
-              datasets: [
-                {
-                  data: monthlypressure,
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                },
-              ],
-            }}
-            width={screenWidth * 0.95} // from react-native
-            height={screenHeight * 0.2}
-            // yAxisLabel="$"
-            yAxisSuffix=""
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={weightChartConfig}
-            bezier
-            style={styles.weights}
-          />
-        </>
-        <>
-          <Text variant="titleLarge">Cd4 Count</Text>
-          <BarChart
-            data={{
-              labels: testMonths,
-              datasets: [
-                {
-                  data: monthlyCD4Count,
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                },
-              ],
-            }}
-            width={screenWidth * 0.95} // from react-native
-            height={screenHeight * 0.2}
-            // yAxisLabel="$"
-            verticalLabelRotation={-45}
-            yAxisSuffix=""
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={weightChartConfig}
-            style={styles.weights}
-          />
-          <Text variant="titleLarge">Viral Load</Text>
-          <BarChart
-            data={{
-              labels: testMonths,
-              legend: ["Pressure in mm/Hg"],
-              datasets: [
-                {
-                  data: monthlyViralLoads,
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                },
-              ],
-            }}
-            width={screenWidth * 0.95} // from react-native
-            height={screenHeight * 0.2}
-            // yAxisLabel="$"
-            yAxisSuffix=""
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={weightChartConfig}
-            style={styles.weights}
-          />
-        </>
-        <>
-          <Text variant="titleLarge">Temprature</Text>
-          <BarChart
-            data={{
-              labels: testMonths,
-              legend: ["Pressure in mm/Hg"],
-              datasets: [
-                {
-                  data: monthlyTemperature,
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                },
-              ],
-            }}
-            // radius={32}
-            // strokeWidth={16}
-            width={screenWidth * 0.95} // from react-native
-            height={screenHeight * 0.2}
-            chartConfig={weightChartConfig}
-            style={styles.weights}
-          />
-          <Text variant="titleLarge">Heart Rate</Text>
-          <BarChart
-            data={{
-              labels: testMonths,
-              legend: ["Pressure in mm/Hg"],
-              datasets: [
-                {
-                  data: monthlyHeartRate,
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                },
-              ],
-            }}
-            radius={32}
-            strokeWidth={16}
-            width={screenWidth * 0.95} // from react-native
-            height={screenHeight * 0.2}
-            chartConfig={weightChartConfig}
-            style={styles.weights}
-          />
-          <Text variant="titleLarge">Heart Rate</Text>
-          {summary && (
-            <ProgressChart
-              data={{
-                labels: Object.keys(summary.gender_distribution), // optional
-                data: Object.values(summary.gender_distribution).map(
-                  (val) => val / summary.total_patients
-                ),
-              }}
-              width={screenWidth}
-              height={220}
-              strokeWidth={16}
-              radius={32}
-              chartConfig={weightChartConfig}
-              hideLegend={false}
-              style={styles.weights}
-            />
-          )}
+          <WeightChart x={months} y={monthlyWeights} />
+          <HeightChart x={months} y={monthlyHeights} />
+          <PressureChart x={months} y={monthlypressure} />
+          <BMIChart x={months} y={monthlyBMI} />
+          <ViralLoadChart x={months} y={monthlyViralLoads} />
+          <CD4Chart x={months} y={monthlyCD4Count} />
+          <TempratureChart x={months} y={monthlyTemperature} />
+          <HeartRateChart x={months} y={monthlyHeartRate} />
         </>
       </View>
     </ScrollView>
