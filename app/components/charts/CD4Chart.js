@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, View } from "react-native";
+import React, { useState } from "react";
 import {
   LineChart,
   BarChart,
@@ -9,10 +9,44 @@ import {
 import { screenWidth } from "../../utils/contants";
 import { screenHeight } from "../../utils/contants";
 import colors from "../../utils/colors";
-const CD4Chart = ({x,y}) => {
+import { Avatar, Card, IconButton, Text } from "react-native-paper";
+const CD4Chart = ({ x, y }) => {
+  const [showDescription, setShowDescription] = useState(false);
+
   return (
-    <View>
-      <Text variant="titleLarge">Cd4 Count</Text>
+    <Card style={styles.card}>
+      <Card.Title
+        titleVariant="titleLarge"
+        title="CD4 Count"
+        subtitle="Weight progression with time"
+        subtitleStyle={styles.subTitle}
+        left={(props) => (
+          <Avatar.Icon {...props} icon="weight-kilogram" style={styles.icon} />
+        )}
+        right={(props) => (
+          <IconButton
+            {...props}
+            icon="more"
+            onPress={() => setShowDescription(!showDescription)}
+          />
+        )}
+      />
+      {showDescription && (
+        <Card.Content>
+          <Text>
+            It is a long established fact that a reader will be distracted by
+            the readable content of a page when looking at its layout. The point
+            of using Lorem Ipsum is that it has a more-or-less normal
+            distribution of letters, as opposed to using 'Content here, content
+            here', making it look like readable English. Many desktop publishing
+            packages and web page editors now use Lorem Ipsum as their default
+            model text, and a search for 'lorem ipsum' will uncover many web
+            sites still in their infancy. Various versions have evolved over the
+            years, sometimes by accident, sometimes on purpose (injected humour
+            and the like).
+          </Text>
+        </Card.Content>
+      )}
       <BarChart
         data={{
           labels: x,
@@ -32,7 +66,7 @@ const CD4Chart = ({x,y}) => {
         chartConfig={weightChartConfig}
         style={styles.weights}
       />
-    </View>
+    </Card>
   );
 };
 
@@ -41,6 +75,16 @@ export default CD4Chart;
 const styles = StyleSheet.create({
   weights: {
     borderRadius: 16,
+  },
+  icon: {
+    backgroundColor: colors.primary,
+  },
+  card: {
+    backgroundColor: colors.light1,
+    marginBottom:5
+  },
+  subTitle: {
+    color: colors.medium,
   },
 });
 
