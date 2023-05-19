@@ -1,9 +1,9 @@
-import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useHospital } from "../../../api/hooks";
+import { useHospital, useUser } from "../../../api/hooks";
 import { useUserContext } from "../../../context/hooks";
 import { FlatList } from "react-native";
-import { IconButton, Text } from "react-native-paper";
+import { Button, IconButton, Text } from "react-native-paper";
 import { screenWidth } from "../../../utils/contants";
 import colors from "../../../utils/colors";
 import IconText from "../../display/IconText";
@@ -11,6 +11,7 @@ import IconText from "../../display/IconText";
 const RedeemForm = ({ navigation, route }) => {
   const data = route.params;
   const { getAwardRewards } = useHospital();
+  const { postUserInfo, getUser } = useUser();
   const { token } = useUserContext();
   const [awardRewards, setAwardRewards] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,14 +25,50 @@ const RedeemForm = ({ navigation, route }) => {
       setAwardRewards(response.data.results);
     }
   };
-  const handleRedeem = async () => {};
-  const isEligible = (programe_url) => {
+  const handleRedeem = async (reward) => {
     const {
+      redeemable_points,
+      redeem_url,
       current_program_enrolment: {
         program: { url: program },
       },
     } = data;
-    return programe_url === program;
+    const { url, name, point_value } = reward;
+    Alert.alert(
+      "Confirmation",
+      `Are you sure you wana redeme points ${point_value} for ${name}`,
+      [
+        { text: "Cancel" },
+        {
+          text: "Redeeme",
+          onPress: async () => {
+            const response = await postUserInfo({
+              url: redeem_url,
+              token,
+              data: { reward: url },
+              multipart: false,
+            });
+            if (response.ok) {
+              Alert.alert("Success", "Points Redeemed successfuly");
+              getUser(true);
+              navigation.goBack();
+            }
+            if (response.status === 400) {
+              Alert.alert("Failure", response.data.reward.join(";"));
+            }
+          },
+        },
+      ]
+    );
+  };
+  const isEligible = (programe_url, points) => {
+    const {
+      redeemable_points,
+      current_program_enrolment: {
+        program: { url: program },
+      },
+    } = data;
+    return programe_url === program && redeemable_points >= points;
   };
   useEffect(() => {
     handleFetch();
@@ -56,48 +93,64 @@ const RedeemForm = ({ navigation, route }) => {
             program: { name: programe_name, url: program },
           } = item;
           return (
-            <TouchableOpacity onPress={() => {}}>
-              <View style={styles.awardCard}>
-                <View style={styles.badge}>
-                  <IconText
-                    icon={
-                      isEligible(program)
-                        ? "check-decagram-outline"
-                        : "alert-decagram-outline"
-                    }
-                    color={isEligible(program) ? colors.primary : colors.danger}
-                    size={20}
-                    forceEnable
-                  />
-                </View>
-                <Image
-                  style={styles.image}
-                  resizeMode="contain"
-                  source={{ uri: image }}
+            <View style={styles.awardCard}>
+              <View style={styles.badge}>
+                <IconText
+                  icon={
+                    isEligible(program, point_value)
+                      ? "check-decagram-outline"
+                      : "alert-decagram-outline"
+                  }
+                  color={
+                    isEligible(program, point_value)
+                      ? colors.primary
+                      : colors.danger
+                  }
+                  size={20}
+                  forceEnable
                 />
+              </View>
+              <Image
+                style={styles.image}
+                resizeMode="contain"
+                source={{ uri: image }}
+              />
+              <View>
+                <Text
+                  variant="bodyLarge"
+                  style={styles.title}
+                  numberOfLines={1}
+                >
+                  {name}
+                </Text>
+                <Text
+                  style={[styles.title, styles.description]}
+                  numberOfLines={1}
+                >
+                  {`${point_value} points`}
+                </Text>
+                <Text
+                  style={[styles.title, styles.description]}
+                  numberOfLines={1}
+                >
+                  {`${programe_name}`}
+                </Text>
                 <View>
-                  <Text
-                    variant="bodyLarge"
-                    style={styles.title}
-                    numberOfLines={1}
+                  <Button
+                    style={styles.btn}
+                    textColor={colors.primary}
+                    icon="lock-off"
+                    mode="outlined"
+                    disabled={isEligible(program, point_value) == false}
+                    onPress={async () => {
+                      await handleRedeem(item);
+                    }}
                   >
-                    {name}
-                  </Text>
-                  <Text
-                    style={[styles.title, styles.description]}
-                    numberOfLines={1}
-                  >
-                    {`${point_value} points`}
-                  </Text>
-                  <Text
-                    style={[styles.title, styles.description]}
-                    numberOfLines={1}
-                  >
-                    {`${programe_name}`}
-                  </Text>
+                    Redeeme
+                  </Button>
                 </View>
               </View>
-            </TouchableOpacity>
+            </View>
           );
         }}
       />
@@ -117,7 +170,7 @@ const styles = StyleSheet.create({
   },
   awardCard: {
     width: screenWidth * 0.45,
-    backgroundColor: colors.background,
+    backgroundColor: colors.light,
     margin: 5,
     padding: 10,
     borderRadius: 10,
@@ -143,5 +196,9 @@ const styles = StyleSheet.create({
   textRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  btn: {
+    borderRadius: 5,
+    marginHorizontal: 30,
   },
 });

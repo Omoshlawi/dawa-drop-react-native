@@ -35,67 +35,68 @@ const AppointMentsScreen = ({ navigation }) => {
     handleFetchAppointments();
   }, [filterParams]);
   return (
-    <View>
+    <View style={styles.screen}>
       <SearchHeader
         text={filterParams.search}
         onTextChange={(search) => setFilterParams({ ...filterParams, search })}
       />
-
       <Text style={styles.title}>Filter by appointmentTypes</Text>
-      <FlatList
-        horizontal
-        data={appointmentTypes}
-        renderItem={({ item, index }) => {
-          const { type } = item;
-          return (
-            <Chip
-              selected={type === filterParams.type}
-              style={styles.chipFilter}
-              key={index}
-              onPress={() => {
-                if (type === filterParams.type) {
-                  setFilterParams({ ...filterParams, type: "" });
-                } else {
-                  setFilterParams({ ...filterParams, type });
-                }
-              }}
-              textStyle={styles.chipText}
-            >
-              {type}
-            </Chip>
-          );
-        }}
-      />
+      <View>
+        <FlatList
+          horizontal
+          data={appointmentTypes}
+          renderItem={({ item, index }) => {
+            const { type } = item;
+            return (
+              <Chip
+                selected={type === filterParams.type}
+                style={styles.chipFilter}
+                key={index}
+                onPress={() => {
+                  if (type === filterParams.type) {
+                    setFilterParams({ ...filterParams, type: "" });
+                  } else {
+                    setFilterParams({ ...filterParams, type });
+                  }
+                }}
+                textStyle={styles.chipText}
+              >
+                {type}
+              </Chip>
+            );
+          }}
+        />
+      </View>
       <Text style={styles.title}>Appointments</Text>
-
-      <FlatList
-        horizontal
-        data={appointments}
-        renderItem={({ item, index }) => {
-          const {
-            created_at,
-            type: {type},
-            doctor: { name },
-          } = item;
-          return (
-            <List.Item
-              style={styles.listItem}
-              title={`With Doctor ${name}`}
-              description={`${moment(created_at).format(
-                "ddd Do MMMM YYYY"
-              )} | ${type}`}
-              descriptionStyle={styles.listDescription}
-              left={(props) => (
-                <List.Image
-                  {...props}
-                  source={require("./../../assets/medical-appointment.png")}
-                />
-              )}
-              right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            />
-          );
-        }}
-      />
+      <View style={styles.screen}>
+        <FlatList
+          data={appointments}
+          renderItem={({ item, index }) => {
+            const {
+              created_at,
+              type: { type },
+              doctor: { name },
+            } = item;
+            return (
+              <List.Item
+                style={styles.listItem}
+                title={`${type} appointment With Doctor ${name}`}
+                description={`${moment(created_at).format(
+                  "ddd Do MMMM YYYY"
+                )} | ${type}`}
+                descriptionStyle={styles.listDescription}
+                left={(props) => (
+                  <List.Image
+                    {...props}
+                    source={require("./../../assets/medical-appointment.png")}
+                  />
+                )}
+                right={(props) => <List.Icon {...props} icon="chevron-right" />}
+              />
+            );
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -121,5 +122,8 @@ const styles = StyleSheet.create({
   },
   listDescription: {
     color: colors.medium,
+  },
+  screen: {
+    flex: 1,
   },
 });

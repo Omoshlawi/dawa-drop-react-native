@@ -111,7 +111,7 @@ const LoyaltyPointsScreen = ({ navigation }) => {
             <List.Item
               style={styles.listItem}
               title={name}
-              description={points_redeemed}
+              description={`${points_redeemed} points`}
               descriptionStyle={styles.listDescription}
               left={(props) => (
                 <List.Image source={{ uri: image }} {...props} />
