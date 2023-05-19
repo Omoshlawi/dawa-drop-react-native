@@ -87,28 +87,41 @@ const HomeScreen = ({ navigation }) => {
       <StatusBar backgroundColor={colors.primary} />
       <View style={styles.screen}>
         <View style={styles.headecontainer}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate(routes.USER_NAVIGATION, {
-                screen: routes.PROFILE_VIEW_SCREEN,
-                params: user,
-              })
-            }
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            {user && user.profile_information.image ? (
-              <Avatar.Image
-                source={{ uri: user.profile_information.image }}
-                size={45}
-                style={{ backgroundColor: colors.light }}
-              />
-            ) : (
-              <Avatar.Icon
-                icon="account"
-                size={45}
-                style={{ backgroundColor: colors.light }}
-              />
-            )}
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(routes.USER_NAVIGATION, {
+                  screen: routes.PROFILE_VIEW_SCREEN,
+                  params: user,
+                })
+              }
+            >
+              {user && user.profile_information.image ? (
+                <Avatar.Image
+                  source={{ uri: user.profile_information.image }}
+                  size={45}
+                  style={{ backgroundColor: colors.light }}
+                />
+              ) : (
+                <Avatar.Icon
+                  icon="account"
+                  size={45}
+                  style={{ backgroundColor: colors.light }}
+                />
+              )}
+            </TouchableOpacity>
+            <IconButton
+              icon="bell"
+              mode="outlined"
+              size={30}
+              iconColor={colors.primary}
+              style={{
+                backgroundColor: colors.light1,
+              }}
+            />
+          </View>
           <View style={styles.headerTextContainer}>
             {user && (
               <Text
