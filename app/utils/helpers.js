@@ -482,3 +482,51 @@ export function getRandomColor() {
 
   return color;
 }
+
+function getRecommendedNutrients(bmi) {
+  // Create an object to store the recommended nutrients
+  const nutrients = {};
+
+  // Calculate the patient's weight category
+  let weightCategory;
+  if (bmi < 18.5) {
+    weightCategory = "Underweight";
+  } else if (bmi < 25) {
+    weightCategory = "Normal weight";
+  } else if (bmi < 30) {
+    weightCategory = "Overweight";
+  } else {
+    weightCategory = "Obese";
+  }
+
+  // Set the recommended nutrients for each weight category
+  switch (weightCategory) {
+    case "Underweight":
+      (nutrients.calories = 1), 200;
+      nutrients.protein = 50;
+      nutrients.fat = 30;
+      nutrients.carbohydrates = 250;
+      break;
+    case "Normal weight":
+      (nutrients.calories = 2), 000;
+      nutrients.protein = 50;
+      nutrients.fat = 35;
+      nutrients.carbohydrates = 300;
+      break;
+    case "Overweight":
+      (nutrients.calories = 1), 800;
+      nutrients.protein = 50;
+      nutrients.fat = 30;
+      nutrients.carbohydrates = 250;
+      break;
+    case "Obese":
+      (nutrients.calories = 1), 600;
+      nutrients.protein = 50;
+      nutrients.fat = 25;
+      nutrients.carbohydrates = 200;
+      break;
+  }
+
+  // Return the object containing the recommended nutrients
+  return nutrients;
+}

@@ -108,7 +108,21 @@ const DashBoard = ({ navigation }) => {
       <CD4Chart x={months} y={monthlyCD4Count} />
       <TempratureChart x={months} y={monthlyTemperature} />
       <HeartRateChart x={months} y={monthlyHeartRate} />
-
+      <PieChart
+        data={[
+          ...getPieChartChartDataFromRecomendation(
+            getNutrientRecommendations(24)
+          ),
+        ]}
+        width={screenWidth}
+        height={220}
+        chartConfig={weightChartConfig}
+        accessor={"population"}
+        backgroundColor={"transparent"}
+        paddingLeft={"15"}
+        center={[10, 50]}
+        absolute
+      />
     </ScrollView>
   );
 };
