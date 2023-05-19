@@ -12,10 +12,9 @@ import {
 import { Text } from "react-native-paper";
 import {
   calculateBMI,
-  getNutrientRecommendations,
-  getPieChartChartDataFromRecomendation,
   getTestResultsMonthlyMeans,
   getTriadsMonthlyMeans,
+  toPiechartData,
 } from "../../utils/helpers";
 import moment from "moment";
 import {
@@ -34,6 +33,7 @@ import TempratureChart from "../../components/charts/TempratureChart";
 import HeartRateChart from "../../components/charts/HeartRateChart";
 import BMIStatusChart from "../../components/charts/BMIStatusChart";
 import AppointmentsFrequencyChart from "../../components/charts/AppointmentsFrequencyChart";
+import NutritionChart from "../../components/charts/NutritionChart";
 
 const DashBoard = ({ navigation }) => {
   const [triads, setTriads] = useState([]);
@@ -93,6 +93,16 @@ const DashBoard = ({ navigation }) => {
       contentContainerStyle={styles.contentStyle}
       style={styles.screen}
     >
+      <BMIStatusChart />
+      {triads.length !== 0 && (
+        <NutritionChart
+          bmi={parseFloat(
+            calculateBMI(triads[0].weight, triads[0].height)
+          ).toFixed(2)}
+        />
+      )}
+      <BMIChart x={months} y={monthlyBMI} />
+
       <AppointmentsFrequencyChart
         attendanceData={appointments.map(({ created_at }) => ({
           date: created_at,
@@ -102,27 +112,10 @@ const DashBoard = ({ navigation }) => {
       <WeightChart x={months} y={monthlyWeights} />
       <HeightChart x={months} y={monthlyHeights} />
       <PressureChart x={months} y={monthlypressure} />
-      <BMIStatusChart />
-      <BMIChart x={months} y={monthlyBMI} />
       <ViralLoadChart x={months} y={monthlyViralLoads} />
       <CD4Chart x={months} y={monthlyCD4Count} />
       <TempratureChart x={months} y={monthlyTemperature} />
       <HeartRateChart x={months} y={monthlyHeartRate} />
-      <PieChart
-        data={[
-          ...getPieChartChartDataFromRecomendation(
-            getNutrientRecommendations(24)
-          ),
-        ]}
-        width={screenWidth}
-        height={220}
-        chartConfig={weightChartConfig}
-        accessor={"population"}
-        backgroundColor={"transparent"}
-        paddingLeft={"15"}
-        center={[10, 50]}
-        absolute
-      />
     </ScrollView>
   );
 };
@@ -136,10 +129,11 @@ const styles = StyleSheet.create({
 
   screen: {
     backgroundColor: colors.white,
-
+    flex: 1,
     padding: 10,
   },
   contentStyle: {
     alignItems: "center",
+    paddingBottom: 20,
   },
 });

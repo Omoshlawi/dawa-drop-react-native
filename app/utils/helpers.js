@@ -502,25 +502,25 @@ function getRecommendedNutrients(bmi) {
   // Set the recommended nutrients for each weight category
   switch (weightCategory) {
     case "Underweight":
-      (nutrients.calories = 1), 200;
+      nutrients.calories = 1200;
       nutrients.protein = 50;
       nutrients.fat = 30;
       nutrients.carbohydrates = 250;
       break;
     case "Normal weight":
-      (nutrients.calories = 2), 000;
+      nutrients.calories = 2000;
       nutrients.protein = 50;
       nutrients.fat = 35;
       nutrients.carbohydrates = 300;
       break;
     case "Overweight":
-      (nutrients.calories = 1), 800;
+      nutrients.calories = 1800;
       nutrients.protein = 50;
       nutrients.fat = 30;
       nutrients.carbohydrates = 250;
       break;
     case "Obese":
-      (nutrients.calories = 1), 600;
+      nutrients.calories = 1600;
       nutrients.protein = 50;
       nutrients.fat = 25;
       nutrients.carbohydrates = 200;
@@ -529,4 +529,19 @@ function getRecommendedNutrients(bmi) {
 
   // Return the object containing the recommended nutrients
   return nutrients;
+}
+
+export function toPiechartData(bmi) {
+  const data = [];
+  const recomended = getRecommendedNutrients(bmi);
+  for (const nutrient in recomended) {
+    data.push({
+      name: `g ${nutrient}`,
+      population: recomended[nutrient],
+      color: getRandomColor(),
+      legendFontColor: getRandomColor(),
+      legendFontSize: 15,
+    });
+  }
+  return data;
 }

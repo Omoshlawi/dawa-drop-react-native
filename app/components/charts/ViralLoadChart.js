@@ -18,7 +18,7 @@ const ViralLoadChart = ({ x, y }) => {
       <Card.Title
         titleVariant="titleLarge"
         title="Viral Load"
-        subtitle="Weight progression with time"
+        subtitle="HIV virus content in you blood"
         subtitleStyle={styles.subTitle}
         left={(props) => (
           <Avatar.Image

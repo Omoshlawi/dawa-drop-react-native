@@ -1,40 +1,53 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { ContributionGraph } from "react-native-chart-kit";
-import { screenHeight, screenWidth } from "../../utils/contants";
-import colors from "../../utils/colors";
+import {
+  LineChart,
+  BarChart,
+  ProgressChart,
+  PieChart,
+} from "react-native-chart-kit";
 import { Avatar, Card, IconButton } from "react-native-paper";
+import colors from "../../utils/colors";
+import { screenHeight, screenWidth } from "../../utils/contants";
+import { getBMIStatus, toPiechartData } from "../../utils/helpers";
 
-const AppointmentsFrequencyChart = ({ attendanceData }) => {
+const NutritionChart = ({ bmi }) => {
   return (
     <Card style={styles.card}>
       <Card.Title
         titleVariant="titleLarge"
-        title="Appointment Frequency"
-        subtitle="How often you have an appointment with doctors"
+        title="Recomended nutrition"
+        subtitle="Food nutrition content recomended to take in grames"
         subtitleStyle={styles.subTitle}
         left={(props) => (
           <Avatar.Image
             {...props}
-            source={require("../../assets/medical-appointment.png")}
+            source={require("../../assets/diet.png")}
             style={styles.icon}
           />
         )}
       />
-      <ContributionGraph
-        values={attendanceData}
-        endDate={new Date()}
-        numDays={105}
-        width={screenWidth * 0.95} // from react-native
-        height={screenHeight * 0.2}
+      <Card.Content>
+        <Text>Your BMI: {bmi}</Text>
+        <Text>BMI status: {getBMIStatus(bmi)}</Text>
+      </Card.Content>
+      <PieChart
+        data={toPiechartData(bmi)}
+        width={screenWidth * 0.95}
+        height={220}
         chartConfig={weightChartConfig}
+        accessor={"population"}
+        backgroundColor={"transparent"}
+        paddingLeft={"15"}
+        center={[0, 0]}
+        absolute
         style={styles.weights}
       />
     </Card>
   );
 };
 
-export default AppointmentsFrequencyChart;
+export default NutritionChart;
 
 const styles = StyleSheet.create({
   weights: {

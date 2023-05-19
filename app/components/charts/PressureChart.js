@@ -17,7 +17,7 @@ const PressureChart = ({ x, y }) => {
       <Card.Title
         titleVariant="titleLarge"
         title="Blood Pressure"
-        subtitle="Weight progression with time"
+        subtitle="Blood pressure progress over time"
         subtitleStyle={styles.subTitle}
         left={(props) => (
           <Avatar.Image

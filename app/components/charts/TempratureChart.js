@@ -19,7 +19,7 @@ const TempratureChart = ({ x, y }) => {
       <Card.Title
         titleVariant="titleLarge"
         title="Temprature"
-        subtitle="Weight progression with time"
+        subtitle="Bordy temperature over time in 0c"
         subtitleStyle={styles.subTitle}
         left={(props) => (
           <Avatar.Image

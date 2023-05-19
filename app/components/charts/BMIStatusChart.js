@@ -15,7 +15,7 @@ const BMIStatusChart = () => {
     <Card style={styles.card}>
       <Card.Title
         titleVariant="titleLarge"
-        title="BMI Status"
+        title="BMI Scale"
         subtitle="BMI status scales and range"
         subtitleStyle={styles.subTitle}
         left={(props) => (
@@ -25,26 +25,11 @@ const BMIStatusChart = () => {
             style={styles.icon}
           />
         )}
-        right={(props) => (
-          <IconButton
-            {...props}
-            icon="more"
-            onPress={() => setShowDescription(!showDescription)}
-          />
-        )}
       />
-      <ProgressChart
-        data={{
-          labels: ["Underweight", "Normal weight", "Overweight", "Obese"],
-          data: [0.5, 0.7, 0.5, 0.3],
-        }}
-        width={screenWidth * 0.95} // from react-native
-        height={screenHeight * 0.2}
-        strokeWidth={16}
-        radius={32}
-        chartConfig={weightChartConfig}
-        style={styles.weights}
-        hideLegend={false}
+      <Card.Cover
+        source={require("../../assets/BMI-chart.png")}
+        resizeMode="contain"
+        style={styles.img}
       />
     </Card>
   );
@@ -53,6 +38,9 @@ const BMIStatusChart = () => {
 export default BMIStatusChart;
 
 const styles = StyleSheet.create({
+  img: {
+    backgroundColor: colors.background,
+  },
   weights: {
     borderRadius: 16,
   },
@@ -62,6 +50,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.background,
     marginBottom: 5,
+    width: screenWidth * 0.95,
   },
   subTitle: {
     color: colors.medium,

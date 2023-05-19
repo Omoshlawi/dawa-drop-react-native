@@ -17,7 +17,7 @@ const BMIChart = ({ x, y }) => {
       <Card.Title
         titleVariant="titleLarge"
         title="Bordy Mass Index"
-        subtitle="Weight progression with time"
+        subtitle="Your montly BMI pregression"
         subtitleStyle={styles.subTitle}
         left={(props) => (
           <Avatar.Image

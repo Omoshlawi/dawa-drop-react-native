@@ -18,7 +18,7 @@ const CD4Chart = ({ x, y }) => {
       <Card.Title
         titleVariant="titleLarge"
         title="CD4 Count"
-        subtitle="Weight progression with time"
+        subtitle="Blood cells fighting HIV"
         subtitleStyle={styles.subTitle}
         left={(props) => (
           <Avatar.Image

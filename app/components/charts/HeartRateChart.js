@@ -18,7 +18,7 @@ const HeartRateChart = ({ x, y }) => {
       <Card.Title
         titleVariant="titleLarge"
         title="Heart Rate"
-        subtitle="Weight progression with time"
+        subtitle="Number of heart bit per minutes"
         subtitleStyle={styles.subTitle}
         left={(props) => (
           <Avatar.Image
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: colors.background,
-    marginBottom:5
+    marginBottom: 5,
   },
   subTitle: {
     color: colors.medium,
