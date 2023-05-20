@@ -10,6 +10,7 @@ import {
   watchHeadingAsync,
   watchPositionAsync,
 } from "expo-location";
+import { Button } from "react-native-paper";
 
 const AgentDeliveryRouteScreen = ({ navigation, route }) => {
   const delivery = route.params;
@@ -63,6 +64,20 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
     }
   };
 
+  const simulateAgentMovemant = async () => {
+    if (geoJson) {
+      let _routes = geoJson["features"][0]["geometry"]["coordinates"];
+      for (const _route of _routes) {
+        if (webSocketRef.current.readyState !== WebSocket.CONNECTING) {
+          webSocketRef.current.send(
+            JSON.stringify({ latitude: _route[1], longitude: _route[0] })
+          );
+          // await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     const webSocket = new WebSocket(`${location_stream_url}?token=${token}`);
     webSocketRef.current = webSocket;
@@ -106,12 +121,22 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
     }
   }, [location]);
 
+  useEffect(() => {
+    if (
+      realTimeLocation &&
+      realTimeLocation.latitude !== destination.latitude &&
+      realTimeLocation.longitude !== destination.longitude
+    )
+      setPolylineCoords([...polylineCoords, realTimeLocation]);
+  }, [realTimeLocation]);
+
   if (status !== "in_progress") {
     return <Text>Please start the trip to show route</Text>;
   }
 
   return (
     <View style={styles.screen}>
+      <Button onPress={simulateAgentMovemant}>Simulate agent movement</Button>
       {realTimeLocation && (
         <View style={styles.mapContainer}>
           <MapView

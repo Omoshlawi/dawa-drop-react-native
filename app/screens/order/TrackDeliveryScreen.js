@@ -46,7 +46,6 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
     const webSocket = new WebSocket(`${location_stream_url}?token=${token}`);
     webSocketRef.current = webSocket;
     handleGetDirection();
-    handleAgentWebSocket();
     // initials
     webSocket.onopen = () => {
       // webSocket.send(JSON.stringify({ name: "Omosh here" }));
@@ -87,21 +86,6 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
     )
       setPolylineCoords([...polylineCoords, realTimeLocation]);
   }, [realTimeLocation]);
-  const handleAgentWebSocket = async () => {
-    const subscription = await watchPositionAsync(
-      {
-        accuracy: LocationAccuracy.Balanced,
-        distanceInterval: 1,
-      },
-      ({ coords }) => {
-        const { latitude, longitude } = coords;
-        if (webSocketRef.current.readyState !== WebSocket.CONNECTING) {
-          // webSocketRef.current.send(JSON.stringify({ latitude, longitude }));
-        }
-      }
-    );
-    subscriptionRef.current = subscription;
-  };
   const handleGetDirection = async () => {
     const response = await getUserInfo({ url: route_url, token, params: {} });
     if (response.ok) {
@@ -109,22 +93,9 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
     }
   };
 
-  const simulateAgentMovemant = async () => {
-    if (geoJson) {
-      let _routes = geoJson["features"][0]["geometry"]["coordinates"];
-      for (const _route of _routes) {
-        if (webSocketRef.current.readyState !== WebSocket.CONNECTING) {
-          webSocketRef.current.send(
-            JSON.stringify({ latitude: _route[1], longitude: _route[0] })
-          );
-          // await new Promise((resolve) => setTimeout(resolve, 10));
-        }
-      }
-    }
-  };
+
   return (
     <View style={styles.screen}>
-      <Button onPress={simulateAgentMovemant}>Simulate agent movement</Button>
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
