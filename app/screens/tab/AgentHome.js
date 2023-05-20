@@ -16,11 +16,10 @@ import { useFocusEffect } from "@react-navigation/native";
 import colors from "../../utils/colors";
 import { screenWidth } from "../../utils/contants";
 import IconText from "../../components/display/IconText";
-import { Button, Card } from "react-native-paper";
+import { Button, Card, List } from "react-native-paper";
 import routes from "../../navigation/routes";
 import AgentDeliveryJobs from "../../components/home/AgentDeliveryJobs";
-
-
+import DeliveryRequestsList from "../../components/home/DeliveryRequestsList";
 const AgentHome = ({ navigation }) => {
   const location = useLocation();
   const { getDeliveryRequests, getDeliveries } = useDelivery();
@@ -48,8 +47,20 @@ const AgentHome = ({ navigation }) => {
       multipart: false,
     });
     if (response.ok) {
-      Alert.alert("Success!", "Job accepted successfully!\nSee route?");
       await handleFetch();
+      Alert.alert("Success!", "Job accepted successfully!\nSee route?", [
+        { text: "No" },
+        {
+          text: "Yes",
+          onPress: () => {
+            navigation.navigate(routes.ORDER_NAVIGATION, {
+              screen: routes.ORDER_AGENT_DELIVERY_ROUTE_SCREEN,
+              params: response.data,
+            });
+          },
+        },
+      ]);
+
       console.log(response.data);
     } else {
       console.log(response.data);
@@ -68,20 +79,8 @@ const AgentHome = ({ navigation }) => {
         onAcceptRequest={handleAcceptJob}
       />
       <View style={styles.overlay}>
-        <View style={styles.overlatyHeader}>
-          <Text style={styles.title}>My Delivery Tasks</Text>
-          <IconText
-            icon="chevron-right"
-            text="View All"
-            left={false}
-            onPress={() => {
-              navigation.navigate(routes.ORDER_NAVIGATION, {
-                screen: routes.ORDER_AGENT_DELIVERY_SCREEN,
-              });
-            }}
-          />
-        </View>
         <AgentDeliveryJobs deliveries={deliveries} />
+        {/* <DeliveryRequestsList requests={deliveryRequests} /> */}
       </View>
     </View>
   );
@@ -90,22 +89,13 @@ const AgentHome = ({ navigation }) => {
 export default AgentHome;
 
 const styles = StyleSheet.create({
-  overlatyHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  title: {
-    fontWeight: "bold",
-    padding: 5,
-  },
   screen: {
     flex: 1,
   },
-
   overlay: {
     position: "absolute",
     width: "100%",
-    height: "30%",
+    height: "25%",
     bottom: 0,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

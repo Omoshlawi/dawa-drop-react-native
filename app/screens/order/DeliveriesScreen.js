@@ -48,6 +48,8 @@ const DeliveriesScreen = ({ navigation }) => {
     ];
   };
 
+  const handleCancel = async () => {};
+
   useEffect(() => {
     handleFetch();
   }, []);

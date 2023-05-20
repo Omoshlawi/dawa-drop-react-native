@@ -13,12 +13,12 @@ import IconText from "../display/IconText";
 import { useNavigation } from "@react-navigation/native";
 import routes from "../../navigation/routes";
 
-const AgentDeliveryJobs = ({ deliveries }) => {
+const DeliveryRequestsList = ({ requests }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.overlatyHeader}>
-        <Text style={styles.title}>My Delivery Tasks</Text>
+        <Text style={styles.title}>Delivery Requests</Text>
         <IconText
           icon="chevron-right"
           text="View All"
@@ -32,12 +32,17 @@ const AgentDeliveryJobs = ({ deliveries }) => {
       </View>
       <FlatList
         horizontal
-        data={deliveries.filter(
-          ({ status }) => status === null || status === "in_progress"
-        )}
+        data={requests}
         keyExtractor={({ url }) => url}
         renderItem={({ item }) => {
-          const { phone_number, address, status } = item;
+          const {
+            destination,
+            address,
+            accept_url,
+            delivery_mode,
+            time_slot,
+            created_at,
+          } = item;
           return (
             <TouchableOpacity>
               <View style={styles.card}>
@@ -46,11 +51,7 @@ const AgentDeliveryJobs = ({ deliveries }) => {
                   resizeMode="contain"
                   source={require("./../../assets/delivery-truck.png")}
                 />
-                <Text style={styles.text}>{phone_number}</Text>
                 <Text style={styles.text}>To {address}</Text>
-                <Text style={styles.text}>
-                  {status === "in_progress" ? "In progress" : "Pending"}
-                </Text>
               </View>
             </TouchableOpacity>
           );
@@ -60,7 +61,7 @@ const AgentDeliveryJobs = ({ deliveries }) => {
   );
 };
 
-export default AgentDeliveryJobs;
+export default DeliveryRequestsList;
 
 const styles = StyleSheet.create({
   container: {
@@ -76,8 +77,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   img: {
-    width: screenWidth * 0.1,
-    height: screenWidth * 0.1,
+    width: screenWidth * 0.15,
+    height: screenWidth * 0.15,
   },
   overlatyHeader: {
     flexDirection: "row",
