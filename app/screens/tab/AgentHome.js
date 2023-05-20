@@ -5,10 +5,11 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import useLocation from "../../hooks/useLocation";
-import { useDelivery } from "../../api/hooks";
+import { useDelivery, useUser } from "../../api/hooks";
 import { useUserContext } from "../../context/hooks";
 import DeliveryRequest from "../../components/home/DeliveryRequest";
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,6 +18,8 @@ import { screenWidth } from "../../utils/contants";
 import IconText from "../../components/display/IconText";
 import { Button, Card } from "react-native-paper";
 import routes from "../../navigation/routes";
+import AgentDeliveryJobs from "../../components/home/AgentDeliveryJobs";
+
 
 const AgentHome = ({ navigation }) => {
   const location = useLocation();
@@ -24,6 +27,7 @@ const AgentHome = ({ navigation }) => {
   const [deliveryRequests, setDeliveryRequests] = useState([]);
   const [deliveries, setDeliveries] = useState([]);
   const { token } = useUserContext();
+  const { postUserInfo } = useUser();
 
   const handleFetch = async () => {
     let response = await getDeliveryRequests(token, {});
@@ -36,6 +40,22 @@ const AgentHome = ({ navigation }) => {
     }
   };
 
+  const handleAcceptJob = async (acceptUrl) => {
+    const response = await postUserInfo({
+      url: acceptUrl,
+      token,
+      data: location,
+      multipart: false,
+    });
+    if (response.ok) {
+      Alert.alert("Success!", "Job accepted successfully!\nSee route?");
+      await handleFetch();
+      console.log(response.data);
+    } else {
+      console.log(response.data);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       handleFetch();
@@ -43,7 +63,10 @@ const AgentHome = ({ navigation }) => {
   );
   return (
     <View style={styles.screen}>
-      <DeliveryRequest request={deliveryRequests} />
+      <DeliveryRequest
+        request={deliveryRequests}
+        onAcceptRequest={handleAcceptJob}
+      />
       <View style={styles.overlay}>
         <View style={styles.overlatyHeader}>
           <Text style={styles.title}>My Delivery Tasks</Text>
@@ -58,32 +81,7 @@ const AgentHome = ({ navigation }) => {
             }}
           />
         </View>
-        <FlatList
-          horizontal
-          data={deliveries.filter(
-            ({ status }) => status === null || status === "in_progress"
-          )}
-          keyExtractor={({ url }) => url}
-          renderItem={({ item }) => {
-            const { phone_number, address, status } = item;
-            return (
-              <TouchableOpacity>
-                <View style={styles.card}>
-                  <Image
-                    style={styles.img}
-                    resizeMode="contain"
-                    source={require("./../../assets/delivery-truck.png")}
-                  />
-                  <Text style={styles.text}>{phone_number}</Text>
-                  <Text style={styles.text}>To {address}</Text>
-                  <Text style={styles.text}>
-                    {status === "in_progress" ? "In progress" : "Pending"}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
+        <AgentDeliveryJobs deliveries={deliveries} />
       </View>
     </View>
   );
@@ -92,7 +90,6 @@ const AgentHome = ({ navigation }) => {
 export default AgentHome;
 
 const styles = StyleSheet.create({
-  text: {},
   overlatyHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -104,18 +101,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
-  img: {
-    width: screenWidth * 0.15,
-    height: screenWidth * 0.15,
-  },
-  card: {
-    backgroundColor: colors.white,
-    width: screenWidth * 0.3,
-    borderRadius: 10,
-    padding: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   overlay: {
     position: "absolute",
     width: "100%",
