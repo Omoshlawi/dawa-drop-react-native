@@ -39,7 +39,14 @@ const AgentDeliveryJobs = ({ deliveries }) => {
         renderItem={({ item }) => {
           const { phone_number, address, status } = item;
           return (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(routes.ORDER_NAVIGATION, {
+                  screen: routes.ORDER_AGENT_DELIVERY_ROUTE_SCREEN,
+                  params: item,
+                })
+              }
+            >
               <View style={styles.card}>
                 <Image
                   style={styles.img}

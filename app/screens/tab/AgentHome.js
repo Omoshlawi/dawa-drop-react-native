@@ -60,8 +60,6 @@ const AgentHome = ({ navigation }) => {
           },
         },
       ]);
-
-      console.log(response.data);
     } else {
       console.log(response.data);
     }
