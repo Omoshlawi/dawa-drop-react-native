@@ -100,20 +100,30 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!realTimeLocation && location) {
+      setRealTimeLocation(location);
+    }
+  }, [location]);
+
+  if (status !== "in_progress") {
+    return <Text>Please start the trip to show route</Text>;
+  }
+
   return (
     <View style={styles.screen}>
-      {location && (
+      {realTimeLocation && (
         <View style={styles.mapContainer}>
           <MapView
             style={styles.map}
             initialRegion={{
-              latitude: location.latitude,
-              longitude: location.longitude,
+              latitude: realTimeLocation.latitude,
+              longitude: realTimeLocation.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
           >
-            <Marker coordinate={location}>
+            <Marker coordinate={start_location}>
               <Image
                 source={require("../../assets/hospitalmarker.png")}
                 style={{ width: 60, height: 60 }}
