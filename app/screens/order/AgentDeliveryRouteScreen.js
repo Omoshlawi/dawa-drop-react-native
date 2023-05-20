@@ -75,6 +75,7 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
           // await new Promise((resolve) => setTimeout(resolve, 10));
         }
       }
+      
     }
   };
 
