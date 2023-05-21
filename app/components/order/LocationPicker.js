@@ -30,10 +30,10 @@ const LocationPicker = () => {
         <Text
           style={[
             styles.input,
-            deliverLocation ? {} : { color: colors.medium },
+            values.longitude || values.latitude ? {} : { color: colors.medium },
           ]}
         >
-          {deliverLocation
+          {values.longitude || values.latitude
             ? `(${values.latitude}, ${values.longitude})`
             : "Choose Delivery Location"}
         </Text>
