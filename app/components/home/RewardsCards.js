@@ -69,7 +69,7 @@ export default RewardsCards;
 
 const styles = StyleSheet.create({
   programImage: {
-    height: screenWidth * 0.2,
+    height: screenWidth * 0.18,
   },
   programesContainer: {
     // padding: 10,

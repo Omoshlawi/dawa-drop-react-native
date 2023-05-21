@@ -88,7 +88,12 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.screen}>
         <View style={styles.headecontainer}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingTop: 10,
+              paddingHorizontal: 10,
+            }}
           >
             <TouchableOpacity
               onPress={() =>
@@ -108,6 +113,14 @@ const HomeScreen = ({ navigation }) => {
                 <Avatar.Icon icon="account" size={45} style={styles.avatar} />
               )}
             </TouchableOpacity>
+            {user && (
+              <Text
+                variant="titleLarge"
+                style={[styles.greeting, { paddingBottom: 0 }]}
+              >
+                Welcome {user.account_information.username}
+              </Text>
+            )}
             <IconButton
               icon="bell"
               mode="outlined"
@@ -119,15 +132,16 @@ const HomeScreen = ({ navigation }) => {
               }}
             />
           </View>
-          {user && (
-            <Text
-              variant="titleLarge"
-              style={[styles.greeting, { paddingBottom: 0 }]}
-            >
-              Hello {user.account_information.username}
-            </Text>
-          )}
-          <Text variant="bodyLarge" style={styles.greeting}>
+
+          <Image
+            style={styles.image}
+            resizeMode="contain"
+            source={require("../../assets/drugs.png")}
+          />
+          <Text
+            variant="bodyLarge"
+            style={[styles.greeting, { paddingTop: 10, textAlign: "center" }]}
+          >
             Dawa Drop, delivering medicine to your door step.
           </Text>
         </View>
@@ -136,28 +150,6 @@ const HomeScreen = ({ navigation }) => {
           backgroundColor={colors.white}
         />
         <View style={styles.middleContainer}>
-          {showCreateProfile && (
-            <List.Item
-              onPress={() => {
-                navigation.navigate(routes.USER_NAVIGATION, {
-                  screen: routes.USER_FIND_ACCOUNT_SCREEN,
-                });
-              }}
-              style={styles.listItem}
-              titleStyle={styles.listTitle}
-              title="Create your profile"
-              left={(props) => (
-                <List.Icon icon="magnify" {...props} color={colors.white} />
-              )}
-              right={(props) => (
-                <List.Icon
-                  icon="chevron-right"
-                  {...props}
-                  color={colors.white}
-                />
-              )}
-            />
-          )}
           <List.Item
             onPress={() => setShowModal(true)}
             style={styles.listItem}
@@ -179,20 +171,26 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.order}>
           <TouchableOpacity
             style={styles.orderBtn}
-            onPress={() =>
-              navigation.navigate(routes.ORDER_NAVIGATION, {
-                screen: routes.ORDER_SCREEN,
-              })
-            }
+            onPress={() => {
+              if (showCreateProfile) {
+                navigation.navigate(routes.USER_NAVIGATION, {
+                  screen: routes.USER_FIND_ACCOUNT_SCREEN,
+                });
+              } else {
+                navigation.navigate(routes.ORDER_NAVIGATION, {
+                  screen: routes.ORDER_SCREEN,
+                });
+              }
+            }}
           >
             <MaterialCommunityIcons
-              name="plus"
+              name={showCreateProfile ? "magnify" : "plus"}
               size={40}
               color={colors.primary}
             />
           </TouchableOpacity>
           <Text variant="headlineLarge" style={styles.orderText}>
-            New Order
+            {showCreateProfile ? "Create profile" : "New Order"}
           </Text>
         </View>
         <Modal visible={showModal} animationType="slide">
@@ -206,6 +204,10 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  image: {
+    height: 110,
+    width: screenWidth * 0.9,
+  },
   orderBtn: {
     backgroundColor: colors.white,
     borderRadius: 40,
