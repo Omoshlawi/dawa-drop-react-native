@@ -49,7 +49,7 @@ const RewardsCards = ({ rewards, backgroundColor = colors.light }) => {
                 {/* <View style={styles.devidor} /> */}
                 <View>
                   <Text
-                    variant="bodyLarge"
+                    variant="titleSmall"
                     style={styles.title}
                     numberOfLines={1}
                   >
@@ -69,17 +69,17 @@ export default RewardsCards;
 
 const styles = StyleSheet.create({
   programImage: {
-    height: screenWidth * 0.18,
+    height: screenWidth * 0.15,
   },
   programesContainer: {
     // padding: 10,
   },
   programeCard: {
     // height: screenWidth * 0.35,
-    width: screenWidth * 0.25,
+    width: screenWidth * 0.2,
     margin: 5,
 
-    borderRadius: 30,
+    borderRadius: 20,
     padding: 5,
   },
   devidor: {
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.medium,
     textAlign: "center",
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   text: {
     color: colors.medium,
