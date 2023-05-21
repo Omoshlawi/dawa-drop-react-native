@@ -1,4 +1,10 @@
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  SectionList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
@@ -39,17 +45,44 @@ const OrdersHistoryScreen = ({ navigation }) => {
     setOrders(results);
   };
 
+  const ordersToSectionListData = (myorders) => {
+    const unallocated = myorders.filter(
+      ({ is_allocated }) => is_allocated === false
+    );
+    const delivered = myorders.filter(
+      ({ is_delivered }) => is_delivered === true
+    );
+    const inProgress = myorders.filter(
+      ({ is_delivered, is_allocated, delivery }) =>
+        is_allocated === true &&
+        delivery.status === "in_progress" &&
+        is_delivered === false
+    );
+    const cancelled = myorders.filter(
+      ({ is_delivered, is_allocated, delivery }) =>
+        is_allocated === true && delivery.status === "canceled"
+    );
+    return [
+      { title: "Unallocated Orders", data: unallocated },
+      { title: "In progress Orders", data: inProgress },
+      { title: "Cancelled Orders", data: cancelled },
+      { title: "Delivered Orders", data: delivered },
+    ];
+  };
   useEffect(() => {
     handleFetch();
   }, []);
 
   return (
     <View style={styles.screen}>
-      <FlatList
-        data={orders}
+      <SectionList
+        sections={ordersToSectionListData(orders)}
         refreshing={refreshing}
         onRefresh={handleFetch}
         keyExtractor={({ url }) => url}
+        renderSectionHeader={({ section: { title, data } }) =>
+          data.length ? <Text style={styles.title}>{title}</Text> : null
+        }
         renderItem={({ item }) => {
           const {
             order_id,
@@ -79,11 +112,14 @@ const OrdersHistoryScreen = ({ navigation }) => {
                 } `}
                 subtitleStyle={{ color: colors.medium }}
                 left={(props) => (
-                  <Avatar.Icon
-                    icon="shopping"
+                  <Avatar.Image
+                    source={require("../../assets/pending.png")}
                     {...props}
-                    style={{ backgroundColor: colors.light }}
-                    color={is_delivered ? colors.success : colors.danger}
+                    style={{
+                      backgroundColor: is_delivered
+                        ? colors.success
+                        : colors.primary,
+                    }}
                   />
                 )}
                 right={(props) =>
@@ -141,5 +177,10 @@ const styles = StyleSheet.create({
     width: screenWidth,
     color: colors.medium,
     padding: 30,
+  },
+  title: {
+    textTransform: "capitalize",
+    padding: 10,
+    fontWeight: "bold",
   },
 });
