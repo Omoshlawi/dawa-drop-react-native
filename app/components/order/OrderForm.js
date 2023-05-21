@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Alert, Modal, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import {
   AppForm,
@@ -7,9 +7,12 @@ import {
   AppFormSubmitButton,
 } from "../../components/forms";
 import LocationPicker from "./LocationPicker";
-import { List } from "react-native-paper";
+import { Button, List } from "react-native-paper";
 import colors from "../../utils/colors";
 import AppFormItemListPicker from "../forms/AppFormItemListPicker";
+import OrderConfirmation from "./OrderConfirmation";
+import Dialog from "../dialog/Dialog";
+import AppButton from "../input/AppButton";
 const validationSchemer = Yup.object().shape({
   delivery_mode: Yup.string().label("Delivery Mode").required(),
   time_slot: Yup.string().label("Delivery Time Slot").required(),
@@ -28,6 +31,7 @@ const OrderForm = ({
   prescription,
   update,
 }) => {
+  const [showDialig, setShowDialog] = useState(false);
   return (
     <View>
       <AppForm
@@ -87,14 +91,26 @@ const OrderForm = ({
           placeholder="Phone Number"
         />
         <LocationPicker />
-        <AppFormSubmitButton
-          title={update ? "Update" : "Order Now"}
-          loading={loading}
+        <AppButton
           disabled={
             Boolean(futureAppointments) === false ||
             Boolean(prescription) == false
           }
+          title={update ? "Update" : "Order Now"}
+          onPress={() => setShowDialog(true)}
+          loading={loading}
         />
+        <Dialog
+          title="Confirmation!"
+          visible={showDialig}
+          onRequestClose={() => setShowDialog(false)}
+        >
+          <OrderConfirmation
+            deliveryModes={deliveryModes}
+            deliveryTimeSlots={deliveryTimeSlots}
+            onSubmit={() => setShowDialog(false)}
+          />
+        </Dialog>
       </AppForm>
     </View>
   );
@@ -102,4 +118,8 @@ const OrderForm = ({
 
 export default OrderForm;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  mordal: {
+    backgroundColor: "red",
+  },
+});
