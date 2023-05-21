@@ -77,10 +77,12 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     width: screenWidth * 0.3,
+    height: screenWidth * 0.3,
     borderRadius: 10,
     padding: 5,
     justifyContent: "center",
     alignItems: "center",
+    margin: 5,
   },
   img: {
     width: screenWidth * 0.1,

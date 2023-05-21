@@ -1,18 +1,21 @@
-import { StyleSheet, Text, View, SectionList } from "react-native";
+import { StyleSheet, Text, View, SectionList, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "../../context/hooks";
-import { useDelivery } from "../../api/hooks";
+import { useDelivery, useUser } from "../../api/hooks";
 import SearchHeader from "../../components/SearchHeader";
 import colors from "../../utils/colors";
 import { Avatar, Button, Card, IconButton, List } from "react-native-paper";
 import moment from "moment";
 import IconText from "../../components/display/IconText";
 import { callNumber } from "../../utils/helpers";
+import useLocation from "../../hooks/useLocation";
 
 const DeliveriesScreen = ({ navigation }) => {
   const { token } = useUserContext();
   const { getDeliveries } = useDelivery();
   const [deliveries, setDeliveries] = useState([]);
+  const { getUserInfo, postUserInfo } = useUser();
+  const location = useLocation();
 
   const handleFetch = async () => {
     let response = await getDeliveries(token, {});
@@ -48,7 +51,45 @@ const DeliveriesScreen = ({ navigation }) => {
     ];
   };
 
-  const handleCancel = async () => {};
+  const handleCancel = async ({ cancel_url, delivery_id }) => {
+    Alert.alert(
+      "Confirmation",
+      "Are you sure you want to cancel delivery " + delivery_id,
+      [
+        {
+          text: "Yes",
+          onPress: async () => {
+            const response = await getUserInfo({
+              url: cancel_url,
+              token,
+              params: {},
+            });
+            if (response.ok) {
+              Alert.alert("Sucess!", "Trip canceled successfully");
+              await handleFetch();
+            } else {
+              Alert.alert("Failure", "Failed to cancel trip");
+            }
+          },
+        },
+        { text: "No" },
+      ]
+    );
+    console.log(cancel_url);
+  };
+
+  const handleRestarts = async ({ start_url }) => {
+    const response = await postUserInfo({
+      url: start_url,
+      token,
+      data: location,
+      multipart: false,
+    });
+    if (response.ok) {
+      alert("Trip restarted");
+      await handleFetch();
+    } else console.log(response.data, response.problem);
+  };
 
   useEffect(() => {
     handleFetch();
@@ -109,6 +150,7 @@ const DeliveriesScreen = ({ navigation }) => {
                       textColor={colors.danger}
                       mode="outlined"
                       style={{ borderColor: colors.danger }}
+                      onPress={async () => await handleCancel(item)}
                     >
                       Cancel trip
                     </Button>
@@ -124,7 +166,15 @@ const DeliveriesScreen = ({ navigation }) => {
                     </Button>
                   </>
                 )}
-                {status === "canceled" && <Button>Hellow</Button>}
+                {status === "canceled" && (
+                  <Button
+                    icon="refresh"
+                    onPress={async () => await handleRestarts(item)}
+                    buttonColor={colors.primary}
+                  >
+                    Restart
+                  </Button>
+                )}
                 {status === null && (
                   <Button icon="truck" buttonColor={colors.primary}>
                     Start Trip
