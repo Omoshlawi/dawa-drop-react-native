@@ -10,6 +10,7 @@ import {
   IconButton,
   List,
   Text,
+  Button,
 } from "react-native-paper";
 import moment from "moment/moment";
 import QuanterSizer from "../../components/input/QuanterSizer";
@@ -63,28 +64,50 @@ const OrdersHistoryScreen = ({ navigation }) => {
             reach_out_phone_number,
           } = item;
           return (
-            <List.Item
+            <Card
               style={styles.listItem}
               onPress={() =>
                 navigation.navigate(routes.ORDERS_DETAIL_SCREEN, item)
               }
-              title={order_id}
-              description={`${moment(created_at).format(
-                "Do MMM YYYY, h:mm a"
-              )} ${is_allocated ? "| Allocated" : ""} ${
-                is_delivered ? "| Delivered" : ""
-              } `}
-              descriptionStyle={{ color: colors.medium }}
-              left={(props) => (
-                <Avatar.Icon
-                  icon="shopping"
-                  {...props}
-                  style={{ backgroundColor: colors.light }}
-                  color={is_delivered ? colors.success : colors.danger}
-                />
-              )}
-              right={(props) => <IconButton icon="chevron-right" {...props} />}
-            />
+            >
+              <Card.Title
+                title={order_id}
+                subtitle={`${moment(created_at).format(
+                  "Do MMM YYYY, h:mm a"
+                )} ${is_allocated ? "| Allocated" : ""} ${
+                  is_delivered ? "| Delivered" : ""
+                } `}
+                subtitleStyle={{ color: colors.medium }}
+                left={(props) => (
+                  <Avatar.Icon
+                    icon="shopping"
+                    {...props}
+                    style={{ backgroundColor: colors.light }}
+                    color={is_delivered ? colors.success : colors.danger}
+                  />
+                )}
+                right={(props) =>
+                  is_delivered ? (
+                    <IconButton icon="chevron-right" {...props} />
+                  ) : (
+                    <Button
+                      icon="square-edit-outline"
+                      textColor={colors.primary}
+                      // disabled={!Boolean(agent_phone)}
+                      onPress={() =>
+                        navigation.navigate(routes.ORDER_NAVIGATION, {
+                          screen: routes.ORDER_SCREEN,
+                          params: item,
+                        })
+                      }
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              <Card.Actions></Card.Actions>
+            </Card>
           );
         }}
       />
@@ -103,6 +126,8 @@ const styles = StyleSheet.create({
   listItem: {
     backgroundColor: colors.white,
     marginTop: 5,
+    elevation: 0,
+    borderRadius: 0,
   },
   screen: {
     marginBottom: 20,
