@@ -11,7 +11,9 @@ const RewardsCards = ({ rewards, backgroundColor = colors.light }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Programs Rewards to win</Text>
+      <Text style={styles.header} variant="titleMedium">
+        Programs Rewards to win
+      </Text>
       <FlatList
         data={rewards}
         contentContainerStyle={styles.programesContainer}
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.25,
     margin: 5,
 
-    borderRadius: 10,
+    borderRadius: 30,
     padding: 5,
   },
   devidor: {
@@ -95,11 +97,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   header: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     fontWeight: "bold",
+    paddingTop: 5,
+    color: colors.white,
   },
   container: {
-    // backgroundColor: colors.background,
+    backgroundColor: colors.primary,
+    borderRadius: 40,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    padding: 10,
   },
   row: {
     flexDirection: "row",

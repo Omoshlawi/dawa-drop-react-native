@@ -21,6 +21,7 @@ import AdsConttainer from "../../components/home/AdsContainer";
 import { Modal } from "react-native";
 import NearHopitals from "../../components/home/NearHopitals";
 import { StatusBar } from "expo-status-bar";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUserContext();
@@ -84,7 +85,6 @@ const HomeScreen = ({ navigation }) => {
   // console.log((user));
   return (
     <AppSafeArea>
-      <StatusBar backgroundColor={colors.primary} />
       <View style={styles.screen}>
         <View style={styles.headecontainer}>
           <View
@@ -102,14 +102,10 @@ const HomeScreen = ({ navigation }) => {
                 <Avatar.Image
                   source={{ uri: user.profile_information.image }}
                   size={45}
-                  style={{ backgroundColor: colors.light }}
+                  style={styles.avatar}
                 />
               ) : (
-                <Avatar.Icon
-                  icon="account"
-                  size={45}
-                  style={{ backgroundColor: colors.light }}
-                />
+                <Avatar.Icon icon="account" size={45} style={styles.avatar} />
               )}
             </TouchableOpacity>
             <IconButton
@@ -119,69 +115,89 @@ const HomeScreen = ({ navigation }) => {
               iconColor={colors.primary}
               style={{
                 backgroundColor: colors.light1,
+                margin: 0,
               }}
             />
           </View>
-          <View style={styles.headerTextContainer}>
-            {user && (
-              <Text
-                variant="titleLarge"
-                style={{ fontSize: 30, color: colors.light1 }}
-              >
-                Welcome {user.account_information.username}
-              </Text>
-            )}
-          </View>
-          <AdsConttainer />
-          <View style={styles.headerTextContainer}>
+          {user && (
             <Text
-              variant="bodyLarge"
-              style={{ color: colors.white, fontWeight: "bold" }}
+              variant="titleLarge"
+              style={[styles.greeting, { paddingBottom: 0 }]}
             >
-              Dawa drop, delivering medicine to oyu door step.
+              Hello {user.account_information.username}
             </Text>
-          </View>
+          )}
+          <Text variant="bodyLarge" style={styles.greeting}>
+            Dawa Drop, delivering medicine to your door step.
+          </Text>
         </View>
-        <View style={styles.bodycontainer}>
-          <View style={styles.radiusContainer} />
-          <View style={styles.radiusContainer1} />
-          <ScrollView style={styles.scroll}>
-            <RewardsCards
-              rewards={awardRewards}
-              backgroundColor={colors.white}
+        <ProgrameCards
+          awardPrograms={awardPrograms}
+          backgroundColor={colors.white}
+        />
+        <View style={styles.middleContainer}>
+          {showCreateProfile && (
+            <List.Item
+              onPress={() => {
+                navigation.navigate(routes.USER_NAVIGATION, {
+                  screen: routes.USER_FIND_ACCOUNT_SCREEN,
+                });
+              }}
+              style={styles.listItem}
+              titleStyle={styles.listTitle}
+              title="Create your profile"
+              left={(props) => (
+                <List.Icon icon="magnify" {...props} color={colors.white} />
+              )}
+              right={(props) => (
+                <List.Icon
+                  icon="chevron-right"
+                  {...props}
+                  color={colors.white}
+                />
+              )}
             />
-            <ProgrameCards
-              awardPrograms={awardPrograms}
-              backgroundColor={colors.white}
-            />
-            {showCreateProfile && (
-              <List.Item
-                onPress={() => {
-                  navigation.navigate(routes.USER_NAVIGATION, {
-                    screen: routes.USER_FIND_ACCOUNT_SCREEN,
-                  });
-                }}
-                style={styles.listItem}
-                title="Create your profile"
-                left={(props) => <List.Icon icon="magnify" {...props} />}
-                right={(props) => <List.Icon icon="chevron-right" {...props} />}
+          )}
+          <List.Item
+            onPress={() => setShowModal(true)}
+            style={styles.listItem}
+            title="View Near by Clinics"
+            titleStyle={styles.listTitle}
+            left={(props) => (
+              <List.Icon
+                icon="hospital-building"
+                {...props}
+                color={colors.white}
               />
             )}
-            <List.Item
-              onPress={() => setShowModal(true)}
-              style={styles.listItem}
-              title="View Near by Clinics"
-              left={(props) => (
-                <List.Icon icon="hospital-building" {...props} />
-              )}
-              right={(props) => <List.Icon icon="chevron-right" {...props} />}
-            />
-          </ScrollView>
-
-          <Modal visible={showModal} animationType="slide">
-            <NearHopitals hospitals={clinics} setVisible={setShowModal} />
-          </Modal>
+            right={(props) => (
+              <List.Icon icon="chevron-right" {...props} color={colors.white} />
+            )}
+          />
         </View>
+        <RewardsCards rewards={awardRewards} backgroundColor={colors.white} />
+        <View style={styles.order}>
+          <TouchableOpacity
+            style={styles.orderBtn}
+            onPress={() =>
+              navigation.navigate(routes.ORDER_NAVIGATION, {
+                screen: routes.ORDER_SCREEN,
+              })
+            }
+          >
+            <MaterialCommunityIcons
+              name="plus"
+              size={40}
+              color={colors.primary}
+            />
+          </TouchableOpacity>
+          <Text variant="headlineLarge" style={styles.orderText}>
+            New Order
+          </Text>
+        </View>
+        <Modal visible={showModal} animationType="slide">
+          <NearHopitals hospitals={clinics} setVisible={setShowModal} />
+        </Modal>
       </View>
     </AppSafeArea>
   );
@@ -190,22 +206,32 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  radiusContainer: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    backgroundColor: colors.primary,
-    height: 60,
-    width: 60,
+  orderBtn: {
+    backgroundColor: colors.white,
+    borderRadius: 40,
+    padding: 20,
   },
-  radiusContainer1: {
+  orderText: {
+    color: colors.white,
+    opacity: 0.5,
+    padding: 10,
+  },
+  order: {
+    backgroundColor: colors.primary,
+    borderRadius: 40,
+    flexDirection: "row-reverse",
+    // justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginBottom: 10,
+    // alignSelf: "flex-end",
     position: "absolute",
     right: 0,
-    top: 0,
-    backgroundColor: colors.light1,
-    height: 60,
-    width: 60,
-    borderTopRightRadius: 40,
+    bottom: 0,
+  },
+  greeting: {
+    padding: 20,
+    color: colors.light1,
   },
   screen: {
     backgroundColor: colors.light1,
@@ -213,32 +239,33 @@ const styles = StyleSheet.create({
   },
   headecontainer: {
     backgroundColor: colors.primary,
-    flex: 1,
-    borderBottomLeftRadius: 40,
-    // maxHeight: screenWidth * 2,
-    // minHeight: screenWidth,
+    // flex: 1,
+    borderRadius: 40,
+    marginHorizontal: 10,
+    marginBottom: 10,
     padding: 10,
   },
+  middleContainer: {
+    backgroundColor: colors.primary,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 40,
+  },
+  listTitle: {
+    color: colors.white,
+    fontWeight: "bold",
+  },
+  avatar: { backgroundColor: colors.light },
   bodycontainer: {
     backgroundColor: colors.light1,
-    // padding: 5,
     flex: 2,
   },
   title: {
     fontWeight: "bold",
   },
   listItem: {
-    backgroundColor: colors.white,
-    margin: 5,
-    padding: 5,
-    height: 80,
     justifyContent: "center",
-  },
-  headerTextContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 2,
   },
   scroll: {
     marginTop: 20,
