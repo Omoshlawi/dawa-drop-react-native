@@ -18,6 +18,7 @@ import AppFormItemListPicker from "../../components/forms/AppFormItemListPicker"
 import { screenWidth } from "../../utils/contants";
 import LocationPicker from "../../components/order/LocationPicker";
 import OrderForm from "../../components/order/OrderForm";
+import AlertDialog from "../../components/dialog/AlertDialog";
 const validationSchemer = Yup.object().shape({
   delivery_mode: Yup.string().label("Delivery Mode").required(),
   time_slot: Yup.string().label("Delivery Time Slot").required(),
@@ -154,6 +155,13 @@ const OrderScreen = ({ navigation, route }) => {
         futureAppointments={futureAppointments}
         prescription={prescription}
         update={Boolean(order)}
+      />
+      <AlertDialog
+        visible={
+          Boolean(futureAppointments) === false ||
+          Boolean(prescription) == false
+        }
+        message="Sorry, you are not eligible for making order"
       />
     </View>
   );

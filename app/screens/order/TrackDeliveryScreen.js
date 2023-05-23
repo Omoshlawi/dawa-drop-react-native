@@ -13,6 +13,7 @@ import {
   watchPositionAsync,
 } from "expo-location";
 import Dialog from "../../components/dialog/Dialog";
+import AlertDialog from "../../components/dialog/AlertDialog";
 /**
  * Client tract delivery
  * https://openrouteservice.org/dev/#/home
@@ -90,9 +91,7 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   const handleGetDirection = async () => {
     const response = await getUserInfo({ url: route_url, token, params: {} });
     if (response.ok) {
-      const data = response.data;
-      setGeoJson(data);
-      setShowError(!(data && !data["error"]));
+      setGeoJson(response.data);
     }
   };
 
@@ -153,32 +152,12 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
           />
         </MapView>
       </View>
-      <Dialog
-        onRequestClose={() => setShowError(false)}
-        visible={showError}
-        title={"Error"}
-      >
-        <View style={{ width: 300 }}>
-          <Image
-            source={require("../../assets/error.png")}
-            style={{ width: 100, height: 100, alignSelf: "center" }}
-          />
-          <Text
-            variant="headlineMedium"
-            style={{ textAlign: "center", fontWeight: "bold" }}
-          >
-            Could not find apropriate route or path
-          </Text>
-          <Button
-            onPress={() => {
-              setShowError(false);
-            }}
-            mode="outlined"
-          >
-            Ok
-          </Button>
-        </View>
-      </Dialog>
+      {geoJson && (
+        <AlertDialog
+          visible={geoJson["error"]}
+          message="Could not find apropriate route or path"
+        />
+      )}
     </View>
   );
 };
