@@ -1,8 +1,8 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, IconButton } from "react-native-paper";
+import { Button, IconButton, Text } from "react-native-paper";
 import useLocation from "../../hooks/useLocation";
-import MapView, { Marker, Polyline, Geojson } from "react-native-maps";
+import MapView, { Marker, Polyline, Geojson, Callout } from "react-native-maps";
 import colors from "../../utils/colors";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
@@ -12,7 +12,7 @@ import {
   watchHeadingAsync,
   watchPositionAsync,
 } from "expo-location";
-
+import Dialog from "../../components/dialog/Dialog";
 /**
  * Client tract delivery
  * https://openrouteservice.org/dev/#/home
@@ -29,6 +29,7 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   const { getUserInfo } = useUser();
   const subscriptionRef = useRef(null);
   const webSocketRef = useRef(null);
+  const [showError, setShowError] = useState(false);
   const {
     delivery: {
       destination,
@@ -89,10 +90,11 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
   const handleGetDirection = async () => {
     const response = await getUserInfo({ url: route_url, token, params: {} });
     if (response.ok) {
-      setGeoJson(response.data);
+      const data = response.data;
+      setGeoJson(data);
+      setShowError(!(data && !data["error"]));
     }
   };
-
 
   return (
     <View style={styles.screen}>
@@ -108,16 +110,22 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
         >
           <Marker coordinate={current_location}>
             <Image
-              source={require("../../assets/hospitalmarker.png")}
+              source={require("../../assets/hospital.png")}
               style={{ width: 60, height: 60 }}
             />
+            <Callout>
+              <Text>Agent start Location</Text>
+            </Callout>
           </Marker>
           {realTimeLocation && (
             <Marker coordinate={realTimeLocation}>
               <Image
-                source={require("../../assets/hospitalmarker.png")}
+                source={require("../../assets/rec.png")}
                 style={{ width: 60, height: 60 }}
               />
+              <Callout>
+                <Text>Agent Current location</Text>
+              </Callout>
             </Marker>
           )}
           <Marker coordinate={destination}>
@@ -125,15 +133,18 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
               source={require("../../assets/hospitalmarker.png")}
               style={{ width: 60, height: 60 }}
             />
+            <Callout>
+              <Text>Agent Destination Location</Text>
+            </Callout>
           </Marker>
-          {geoJson && (
+          {geoJson && !geoJson["error"] ? (
             <Geojson
               geojson={geoJson}
               strokeColor={colors.danger}
               fillColor="red"
               strokeWidth={4}
             />
-          )}
+          ) : null}
           <Polyline
             coordinates={polylineCoords}
             strokeColor="blue" // fallback for when `strokeColors` is not supported by the map-provider
@@ -142,6 +153,32 @@ const TrackDeliveryScreen = ({ navigation, route }) => {
           />
         </MapView>
       </View>
+      <Dialog
+        onRequestClose={() => setShowError(false)}
+        visible={showError}
+        title={"Error"}
+      >
+        <View style={{ width: 300 }}>
+          <Image
+            source={require("../../assets/error.png")}
+            style={{ width: 100, height: 100, alignSelf: "center" }}
+          />
+          <Text
+            variant="headlineMedium"
+            style={{ textAlign: "center", fontWeight: "bold" }}
+          >
+            Could not find apropriate route or path
+          </Text>
+          <Button
+            onPress={() => {
+              setShowError(false);
+            }}
+            mode="outlined"
+          >
+            Ok
+          </Button>
+        </View>
+      </Dialog>
     </View>
   );
 };

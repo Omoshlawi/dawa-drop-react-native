@@ -9,6 +9,7 @@ import moment from "moment";
 import IconText from "../../components/display/IconText";
 import { callNumber } from "../../utils/helpers";
 import useLocation from "../../hooks/useLocation";
+import routes from "../../navigation/routes";
 
 const DeliveriesScreen = ({ navigation }) => {
   const { token } = useUserContext();
@@ -118,6 +119,12 @@ const DeliveriesScreen = ({ navigation }) => {
                       icon="chevron-right"
                       text="route"
                       left={false}
+                      onPress={() => {
+                        navigation.navigate(routes.ORDER_NAVIGATION, {
+                          screen: routes.ORDER_AGENT_DELIVERY_ROUTE_SCREEN,
+                          params: item,
+                        });
+                      }}
                     />
                   ) : null
                 }

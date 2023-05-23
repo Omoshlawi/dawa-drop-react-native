@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Image, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import MapView, { Marker, Polyline, Geojson } from "react-native-maps";
+import MapView, { Marker, Polyline, Geojson, Callout } from "react-native-maps";
 import useLocation from "../../hooks/useLocation";
 import { useUser } from "../../api/hooks";
 import { useUserContext } from "../../context/hooks";
@@ -10,7 +10,8 @@ import {
   watchHeadingAsync,
   watchPositionAsync,
 } from "expo-location";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
+import Dialog from "../../components/dialog/Dialog";
 
 const AgentDeliveryRouteScreen = ({ navigation, route }) => {
   const delivery = route.params;
@@ -36,6 +37,7 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [realTimeLocation, setRealTimeLocation] = useState(null);
   const [polylineCoords, setPolylineCoords] = useState([]);
+  const [showError, setShowError] = useState(false);
   const { token } = useUserContext();
   const { getUserInfo } = useUser();
   const subscriptionRef = useRef(null);
@@ -60,7 +62,9 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
   const handleGetDirection = async () => {
     const response = await getUserInfo({ url: route_url, token, params: {} });
     if (response.ok) {
-      setGeoJson(response.data);
+      const data = response.data;
+      setGeoJson(data);
+      setShowError(!(data && !data["error"]));
     }
   };
 
@@ -75,7 +79,6 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
           // await new Promise((resolve) => setTimeout(resolve, 10));
         }
       }
-      
     }
   };
 
@@ -137,7 +140,12 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.screen}>
-      <Button onPress={simulateAgentMovemant}>Simulate agent movement</Button>
+      <Button
+        onPress={simulateAgentMovemant}
+        disabled={!(geoJson && !geoJson["error"])}
+      >
+        Simulate agent movement
+      </Button>
       {realTimeLocation && (
         <View style={styles.mapContainer}>
           <MapView
@@ -151,16 +159,22 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
           >
             <Marker coordinate={start_location}>
               <Image
-                source={require("../../assets/hospitalmarker.png")}
+                source={require("../../assets/hospital.png")}
                 style={{ width: 60, height: 60 }}
               />
+              <Callout>
+                <Text>Your start Location</Text>
+              </Callout>
             </Marker>
             {realTimeLocation && (
               <Marker coordinate={realTimeLocation}>
                 <Image
-                  source={require("../../assets/hospitalmarker.png")}
+                  source={require("../../assets/rec.png")}
                   style={{ width: 60, height: 60 }}
                 />
+                <Callout>
+                  <Text>Your current Location</Text>
+                </Callout>
               </Marker>
             )}
             <Marker coordinate={destination}>
@@ -168,15 +182,18 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
                 source={require("../../assets/hospitalmarker.png")}
                 style={{ width: 60, height: 60 }}
               />
+              <Callout>
+                <Text>Your destination Location</Text>
+              </Callout>
             </Marker>
-            {geoJson && (
+            {geoJson && !geoJson["error"] ? (
               <Geojson
                 geojson={geoJson}
                 strokeColor={colors.danger}
                 fillColor="red"
                 strokeWidth={4}
               />
-            )}
+            ) : null}
             <Polyline
               coordinates={polylineCoords}
               strokeColor="blue" // fallback for when `strokeColors` is not supported by the map-provider
@@ -184,6 +201,32 @@ const AgentDeliveryRouteScreen = ({ navigation, route }) => {
               zIndex={1}
             />
           </MapView>
+          <Dialog
+            onRequestClose={() => setShowError(false)}
+            visible={showError}
+            title={"Error"}
+          >
+            <View style={{ width: 300 }}>
+              <Image
+                source={require("../../assets/error.png")}
+                style={{ width: 100, height: 100, alignSelf: "center" }}
+              />
+              <Text
+                variant="headlineMedium"
+                style={{ textAlign: "center", fontWeight: "bold" }}
+              >
+                Could not find apropriate route or path
+              </Text>
+              <Button
+                onPress={() => {
+                  setShowError(false);
+                }}
+                mode="outlined"
+              >
+                Ok
+              </Button>
+            </View>
+          </Dialog>
         </View>
       )}
     </View>
