@@ -37,6 +37,7 @@ export default Object.freeze({
   USER_FIND_ACCOUNT_SCREEN: "Find Account Screen",
   USER_APPOINTMENTS_SCREEN: "Appointments Screen",
   USER_PRESCRIPTIONS_SCREEN: "Prescriptions Screen",
+  USER_SETTINGS_SCREEN: "Settings Screen",
   ORDER_AGENT_DELIVERY_SCREEN: "Delivery Screen",
   ORDER_AGENT_DELIVERY_ROUTE_SCREEN: "DeliveryRoute Screen",
   TAB_AGENT_HOME_SCREEN: "Agent Home",

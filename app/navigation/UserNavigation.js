@@ -10,6 +10,7 @@ import TransferDetailScreen from "../screens/user/TransferDetailScreen";
 import FindAccountScreen from "../screens/user/FindAccountScreen";
 import AppointMentsScreen from "../screens/user/AppointMentsScreen";
 import PrescriptionsScreen from "../screens/user/PrescriptionsScreen";
+import SettingsScreen from "../screens/user/SettingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -83,6 +84,13 @@ const UserNavigation = () => {
         component={PrescriptionsScreen}
         options={({ route }) => ({
           title: "My Prescriptions",
+        })}
+      />
+      <Screen
+        name={routes.USER_SETTINGS_SCREEN}
+        component={SettingsScreen}
+        options={({ route }) => ({
+          title: "Settings",
         })}
       />
     </Navigator>

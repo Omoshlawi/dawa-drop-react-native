@@ -88,10 +88,9 @@ const AccountScreen = ({ navigation }) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        disabled
         onPress={() =>
           navigation.navigate(routes.USER_NAVIGATION, {
-            screen: routes.ORDERS_SCREEN,
+            screen: routes.USER_SETTINGS_SCREEN,
           })
         }
       >
