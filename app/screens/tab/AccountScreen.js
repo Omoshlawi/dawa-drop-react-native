@@ -1,16 +1,18 @@
 import { Alert, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AppSafeArea from "../../components/AppSafeArea";
 import ListItem from "../../components/ListItem";
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
 import routes from "../../navigation/routes";
-import { Avatar, Card, IconButton } from "react-native-paper";
+import { Avatar, Button, Card, IconButton, List } from "react-native-paper";
 import colors from "../../utils/colors";
+import Dialog from "../../components/dialog/Dialog";
 
 const AccountScreen = ({ navigation }) => {
   const { user } = useUserContext();
   const { getUser, logout } = useUser();
+  const [showAbout, setShowAbout] = useState(false);
   useEffect(() => {
     if (!user) {
       getUser();
@@ -110,14 +112,7 @@ const AccountScreen = ({ navigation }) => {
           )}
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        disabled
-        onPress={() =>
-          navigation.navigate(routes.USER_NAVIGATION, {
-            screen: routes.PAYMENTS_SCREEN,
-          })
-        }
-      >
+      <TouchableOpacity onPress={() => setShowAbout(true)}>
         <Card.Title
           style={styles.listItem}
           subtitle="About"
@@ -160,6 +155,32 @@ const AccountScreen = ({ navigation }) => {
           )}
         />
       </TouchableOpacity>
+      <Dialog
+        visible={showAbout}
+        title="About DawaDrop"
+        onRequestClose={() => setShowAbout(false)}
+      >
+        <View style={styles.dialog}>
+          <List.Item
+            title="Version"
+            description="2.0"
+            left={(props) => <List.Icon {...props} icon="information" />}
+            style={{ backgroundColor: colors.light1 }}
+          />
+          <Text style={{ padding: 10 }}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </Text>
+          <Button mode="outlined" onPress={() => setShowAbout(false)}>
+            Ok
+          </Button>
+        </View>
+      </Dialog>
     </AppSafeArea>
   );
 };
@@ -173,5 +194,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     backgroundColor: colors.light,
+  },
+  dialog: {
+    width: 300,
   },
 });
