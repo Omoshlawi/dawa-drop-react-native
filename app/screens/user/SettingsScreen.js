@@ -20,7 +20,6 @@ const SettingsScreen = () => {
       enablePin(1234);
     }
   };
-  console.log(appConfiguration);
   return (
     <View>
       <List.Section title="Privacy Settings">

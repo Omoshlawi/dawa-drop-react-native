@@ -12,7 +12,7 @@ import { SettingsContextProvider } from "./app/context/SettingsContext";
 import useAsyncStorage from "./app/hooks/useAsyncStorage";
 
 export default function App() {
-  const appState = useRef(null);
+  const appStateDubscriptionRef = useRef(null);
   const [token, setToken, clearToken] = useSecureStore("token", null);
   const [appConf, setAppConf, clearAppConf] = useAsyncStorage("config", {
     privacy: {
@@ -27,14 +27,13 @@ export default function App() {
     if (nextAppState === "active") {
       // App gains focus
       // Perform your login logic here
-      console.log("App is active");
-      // console.log(appConf, setAppConf, clearAppConf);
+      console.log("App is active, state is ", appConf);
     } else if (nextAppState.match(/inactive|background/)) {
       // App goes to background or is closed
       // Perform any necessary cleanup or logout logic here
 
-      console.log("App is in background or closed");
       if (appConf && appConf.privacy.enabled) {
+        console.log("App is in background or closed, state is ", appConf);
         setAppConf({
           ...appConf,
           privacy: { ...appConf.privacy, isAuthenticated: false },
@@ -45,16 +44,29 @@ export default function App() {
 
   useEffect(() => {
     // // Subscribe to app state changes
-    const subscription = AppState.addEventListener(
+    appStateDubscriptionRef.current = AppState.addEventListener(
       "change",
       handleAppStateChange
     );
+
+    if (
+      appConf &&
+      appStateDubscriptionRef.current &&
+      !appConf.privacy.enabled
+    ) {
+      appStateDubscriptionRef.current.remove();
+    }
     // // Clean up the subscription when component unmounts
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-  console.log(appConf);
+    // return () => {
+    //   if (
+    //     appConf &&
+    //     appStateDubscriptionRef.current &&
+    //     !appConf.privacy.enabled
+    //   ) {
+    //     appStateDubscriptionRef.current.remove();
+    //   }
+    // };
+  }, [appConf]);
 
   return (
     <UserContextProvider value={{ token, setToken, clearToken, user, setUser }}>

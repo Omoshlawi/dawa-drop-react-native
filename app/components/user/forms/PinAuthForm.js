@@ -39,7 +39,7 @@ const PinAuthForm = () => {
         setError(authenticate(parseInt(pin.join(""))) === false);
         setLoading(false);
         setPin([]);
-      }, 3000);
+      }, 1000);
     }
   }, [pin]);
 
