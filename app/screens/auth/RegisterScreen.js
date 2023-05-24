@@ -6,7 +6,6 @@ import PasswordInputField from "../../components/input/PasswordInputField";
 import colors from "../../utils/colors";
 import AppButton from "../../components/input/AppButton";
 import routes from "../../navigation/routes";
-import * as Yup from "yup";
 import {
   AppForm,
   AppFormField,
@@ -15,6 +14,7 @@ import {
 import { useUserContext } from "../../context/hooks";
 import { useUser } from "../../api/hooks";
 
+import * as Yup from "yup";
 const validationSchemer = Yup.object().shape({
   username: Yup.string().label("Username").required(),
   email: Yup.string().label("Email").required(),

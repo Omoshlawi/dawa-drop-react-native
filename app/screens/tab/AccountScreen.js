@@ -62,10 +62,9 @@ const AccountScreen = ({ navigation }) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        disabled
         onPress={() =>
-          navigation.navigate(routes.USER_NAVIGATION, {
-            screen: routes.ORDERS_SCREEN,
+          navigation.navigate(routes.FORMS_NAVIGATION, {
+            screen: routes.FORMS_CHANGE_PASSWORD_FORM,
           })
         }
       >

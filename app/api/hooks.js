@@ -6,6 +6,10 @@ export const useUser = () => {
   const { setUser, token, setToken, clearToken, user } = useUserContext();
   const login = (data) => apiClient.post("users/login/", data);
   const register = (data) => apiClient.post("users/register/", data);
+  const changePassword = (data, token) =>
+    apiClient.post("users/change-password/", data, {
+      headers: getAuthHeader(token),
+    });
   const logout = () => clearToken(true);
   const getUser = async (force) => {
     if (!force && user) {
@@ -118,6 +122,7 @@ export const useUser = () => {
       headers: getAuthHeader(token),
     });
   return {
+    changePassword,
     getTestResults,
     getTriads,
     getAppointments,

@@ -3,10 +3,14 @@ import React, { useState } from "react";
 import Dialog from "./Dialog";
 import { Text, Button } from "react-native-paper";
 
-const AlertDialog = ({ success, visible, message }) => {
+const AlertDialog = ({ success, visible, message, onDismiss }) => {
   const [show, setShow] = useState(Boolean(visible));
   return (
-    <Dialog visible={show} onRequestClose={() => setShow(false)}>
+    <Dialog
+      visible={show}
+      onRequestClose={() => setShow(false)}
+      onDismiss={onDismiss}
+    >
       <View style={{ width: 300 }}>
         <Image
           source={
@@ -25,6 +29,7 @@ const AlertDialog = ({ success, visible, message }) => {
         <Button
           onPress={() => {
             setShow(false);
+            if (onDismiss instanceof Function) onDismiss();
           }}
           mode="outlined"
         >
