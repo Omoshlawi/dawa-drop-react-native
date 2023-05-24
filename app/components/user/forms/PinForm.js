@@ -85,7 +85,7 @@ const PinForm = ({ length = 4, onValueChanged, onPinComplete }) => {
         {keys.map((key) => (
           <TouchableOpacity
             key={key}
-            disabled={pin.length >= 4 || loading}
+            disabled={pin.length >= length || loading}
             style={styles.keyBoardKey}
             onPress={() => handleKeyPress(key)}
           >

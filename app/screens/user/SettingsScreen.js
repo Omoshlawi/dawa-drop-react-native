@@ -37,6 +37,7 @@ const SettingsScreen = () => {
       <PinForm
         onValueChanged={(value) => console.log(value)}
         onPinComplete={(value) => console.log(value)}
+        length={10}
       />
     </View>
   );
