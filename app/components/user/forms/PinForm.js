@@ -15,7 +15,13 @@ import _ from "lodash";
 
 const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-const PinForm = ({ length = 4, onValueChanged, onPinComplete, error }) => {
+const PinForm = ({
+  length = 4,
+  onValueChanged,
+  onPinComplete,
+  error,
+  style,
+}) => {
   const digits = _.range(1, length + 1);
   const [pin, setPin] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -47,7 +53,7 @@ const PinForm = ({ length = 4, onValueChanged, onPinComplete, error }) => {
   }, [pin]);
 
   return (
-    <View>
+    <View style={style}>
       {loading ? (
         <ActivityIndicator color={colors.primary} size={100} />
       ) : (
