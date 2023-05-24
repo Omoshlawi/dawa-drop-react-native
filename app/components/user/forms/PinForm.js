@@ -15,14 +15,12 @@ import _ from "lodash";
 
 const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-const PinForm = ({ length = 4, onValueChanged, onPinComplete }) => {
+const PinForm = ({ length = 4, onValueChanged, onPinComplete, error }) => {
   const digits = _.range(1, length + 1);
   const [pin, setPin] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const handleKeyPress = (key) => {
-    setError(false);
     setPin([...pin, key]);
     if (onValueChanged instanceof Function) {
       onValueChanged([...pin, key].join(""));
@@ -71,7 +69,7 @@ const PinForm = ({ length = 4, onValueChanged, onPinComplete }) => {
               />
             ))}
           </View>
-          {error && <Text style={styles.error}>Wrong pin</Text>}
+          {error && <Text style={styles.error}>{error}</Text>}
         </>
       )}
       <View style={styles.actions}>
