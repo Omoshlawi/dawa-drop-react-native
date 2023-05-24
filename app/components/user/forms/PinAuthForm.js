@@ -10,15 +10,19 @@ import React, { useCallback, useEffect, useState } from "react";
 import colors from "../../../utils/colors";
 import { screenWidth } from "../../../utils/contants";
 import { ActivityIndicator, IconButton } from "react-native-paper";
+import { useSettinsContext } from "../../../context/hooks";
 
 const digits = [1, 2, 3, 4];
 const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 const PinAuthForm = () => {
   const [pin, setPin] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const { authenticate } = useSettinsContext();
+  const [error, setError] = useState(false);
 
   const handleKeyPress = (key) => {
+    setError(false);
     setPin([...pin, key]);
   };
 
@@ -28,27 +32,43 @@ const PinAuthForm = () => {
     setPin(pin1);
   };
 
-  console.log(pin);
+  useEffect(() => {
+    if (pin.length >= 4) {
+      setLoading(true);
+      setTimeout(() => {
+        setError(authenticate(parseInt(pin.join(""))) === false);
+        setLoading(false);
+        setPin([]);
+      }, 3000);
+    }
+  }, [pin]);
 
   return (
     <View>
       {loading ? (
         <ActivityIndicator color={colors.primary} size={100} />
       ) : (
-        <View style={styles.digits}>
-          {digits.map((item) => (
-            <View
-              style={[
-                styles.digitCard,
-                {
-                  backgroundColor:
-                    pin.length >= item ? colors.primary : colors.light1,
-                },
-              ]}
-              key={item}
-            />
-          ))}
-        </View>
+        <>
+          <View style={styles.digits}>
+            {digits.map((item) => (
+              <View
+                style={[
+                  styles.digitCard,
+
+                  {
+                    backgroundColor:
+                      pin.length >= item ? colors.primary : colors.light1,
+                  },
+                  error && {
+                    backgroundColor: colors.danger,
+                  },
+                ]}
+                key={item}
+              />
+            ))}
+          </View>
+          {error && <Text style={styles.error}>Wrong pin</Text>}
+        </>
       )}
       <View style={styles.actions}>
         <IconButton
@@ -111,5 +131,10 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: "row-reverse",
+  },
+  error: {
+    textAlign: "center",
+    color: colors.danger,
+    padding: 10,
   },
 });
