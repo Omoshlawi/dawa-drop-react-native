@@ -12,7 +12,7 @@ export const useSettinsContext = () => {
   const { appConfiguration, setAppConfiguration, clearAppConfiguration } =
     useContext(SettingsContext);
   const { privacy } = appConfiguration;
-  const { pin, setPin, isAuthenticated, clearPin, enabled } = privacy;
+  const { pin, isAuthenticated, enabled } = privacy;
   const authenticate = (userPiin) => {
     setAppConfiguration({
       ...appConfiguration,
@@ -24,10 +24,8 @@ export const useSettinsContext = () => {
     // enable pin
     setAppConfiguration({
       ...appConfiguration,
-      privacy: { ...privacy, enabled: true },
+      privacy: { ...privacy, enabled: true, pin: userPin },
     });
-    // set pin
-    setPin(userPin);
   };
 
   const disablePin = (userPin) => {
@@ -41,9 +39,11 @@ export const useSettinsContext = () => {
   return {
     pin,
     isAuthenticated,
-    clearPin,
     authenticate,
     enablePin,
     disablePin,
+    privacyEnabled: enabled,
+    clearAppConfiguration,
+    appConfiguration,
   };
 };

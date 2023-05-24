@@ -13,13 +13,10 @@ import useAsyncStorage from "./app/hooks/useAsyncStorage";
 
 export default function App() {
   const [token, setToken, clearToken] = useSecureStore("token", null);
-  const [pin, setPin, clearPin] = useSecureStore("pin", null);
   const [appConf, setAppConf, clearAppConf] = useAsyncStorage("config", {
     privacy: {
       isAuthenticated: false,
-      pin,
-      setPin,
-      clearPin,
+      pin: null,
       enabled: false,
     },
   });
