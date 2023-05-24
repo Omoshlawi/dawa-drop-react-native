@@ -3,16 +3,10 @@ import React, { useEffect } from "react";
 import { List, Switch } from "react-native-paper";
 import colors from "../../utils/colors";
 import { useSettinsContext } from "../../context/hooks";
+import PinForm from "../../components/user/forms/PinForm";
 
 const SettingsScreen = () => {
-  const [expanded, setExpanded] = React.useState(true);
-  const {
-    enablePin,
-    disablePin,
-    privacyEnabled,
-    appConfiguration,
-    clearAppConfiguration,
-  } = useSettinsContext();
+  const { enablePin, disablePin, privacyEnabled } = useSettinsContext();
   const handleToggleEnablePrivacy = () => {
     if (privacyEnabled) {
       disablePin(1234);
@@ -25,7 +19,7 @@ const SettingsScreen = () => {
       <List.Section title="Privacy Settings">
         <List.Accordion
           title="Enable pin"
-          left={(props) => <List.Icon {...props} icon="folder" />}
+          left={(props) => <List.Icon {...props} icon="shield-key-outline" />}
           right={(props) => (
             <Switch
               value={privacyEnabled}
@@ -40,6 +34,10 @@ const SettingsScreen = () => {
           <List.Item title="Second item" />
         </List.Accordion>
       </List.Section>
+      <PinForm
+        onValueChanged={(value) => console.log(value)}
+        onPinComplete={(value) => console.log(value)}
+      />
     </View>
   );
 };

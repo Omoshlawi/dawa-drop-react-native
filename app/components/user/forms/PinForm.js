@@ -11,19 +11,22 @@ import colors from "../../../utils/colors";
 import { screenWidth } from "../../../utils/contants";
 import { ActivityIndicator, IconButton } from "react-native-paper";
 import { useSettinsContext } from "../../../context/hooks";
+import _ from "lodash";
 
-const digits = [1, 2, 3, 4];
 const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-const PinAuthForm = () => {
+const PinForm = ({ length = 4, onValueChanged, onPinComplete }) => {
+  const digits = _.range(1, length + 1);
   const [pin, setPin] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { authenticate } = useSettinsContext();
   const [error, setError] = useState(false);
 
   const handleKeyPress = (key) => {
     setError(false);
     setPin([...pin, key]);
+    if (onValueChanged instanceof Function) {
+      onValueChanged([...pin, key].join(""));
+    }
   };
 
   const handleBackSpace = () => {
@@ -33,10 +36,12 @@ const PinAuthForm = () => {
   };
 
   useEffect(() => {
-    if (pin.length >= 4) {
+    if (pin.length >= length) {
       setLoading(true);
       setTimeout(() => {
-        setError(authenticate(parseInt(pin.join(""))) === false);
+        if (onPinComplete instanceof Function) {
+          onPinComplete(pin.join(""));
+        }
         setLoading(false);
         setPin([]);
       }, 1000);
@@ -54,7 +59,6 @@ const PinAuthForm = () => {
               <View
                 style={[
                   styles.digitCard,
-
                   {
                     backgroundColor:
                       pin.length >= item ? colors.primary : colors.light1,
@@ -93,7 +97,7 @@ const PinAuthForm = () => {
   );
 };
 
-export default PinAuthForm;
+export default PinForm;
 
 const styles = StyleSheet.create({
   digitCard: {
