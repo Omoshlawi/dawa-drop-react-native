@@ -1,17 +1,18 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserContextProvider } from "./app/context/UserContext";
 import useSecureStore from "./app/hooks/useSecureStore";
 import MainNavigation from "./app/navigation/MainNavigation";
 import { StatusBar } from "expo-status-bar";
 import Dialog from "./app/components/dialog/Dialog";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, AppState } from "react-native";
 import { screenWidth } from "./app/utils/contants";
 import PinAuthForm from "./app/components/user/forms/PinAuthForm";
 import { SettingsContextProvider } from "./app/context/SettingsContext";
 import useAsyncStorage from "./app/hooks/useAsyncStorage";
 
 export default function App() {
+  const appState = useRef(null);
   const [token, setToken, clearToken] = useSecureStore("token", null);
   const [appConf, setAppConf, clearAppConf] = useAsyncStorage("config", {
     privacy: {
@@ -21,7 +22,40 @@ export default function App() {
     },
   });
   const [user, setUser] = useState();
+
+  const handleAppStateChange = (nextAppState) => {
+    if (nextAppState === "active") {
+      // App gains focus
+      // Perform your login logic here
+      console.log("App is active");
+      // console.log(appConf, setAppConf, clearAppConf);
+    } else if (nextAppState.match(/inactive|background/)) {
+      // App goes to background or is closed
+      // Perform any necessary cleanup or logout logic here
+
+      console.log("App is in background or closed");
+      if (appConf && appConf.privacy.enabled) {
+        setAppConf({
+          ...appConf,
+          privacy: { ...appConf.privacy, isAuthenticated: false },
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    // // Subscribe to app state changes
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+    // // Clean up the subscription when component unmounts
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   console.log(appConf);
+
   return (
     <UserContextProvider value={{ token, setToken, clearToken, user, setUser }}>
       <SettingsContextProvider

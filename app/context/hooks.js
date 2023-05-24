@@ -36,8 +36,16 @@ export const useSettinsContext = () => {
       });
     }
   };
+
+  const deAuthenticate = () => {
+    setAppConfiguration({
+      ...appConfiguration,
+      privacy: { ...privacy, isAuthenticated: false },
+    });
+  };
   return {
     pin,
+    deAuthenticate,
     isAuthenticated,
     authenticate,
     enablePin,
