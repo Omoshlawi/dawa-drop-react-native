@@ -65,8 +65,7 @@ const SettingsScreen = () => {
           expanded={privacyEnabled}
           onPress={handeSetPin}
         >
-          <List.Item title="First item" />
-          <List.Item title="Second item" />
+          {/* <List.Item title="First item" />  */}
         </List.Accordion>
       </List.Section>
       <Dialog visible={showDialog} title={steps[currentStep]}>

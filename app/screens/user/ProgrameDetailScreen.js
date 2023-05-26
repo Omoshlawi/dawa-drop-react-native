@@ -19,6 +19,7 @@ const ProgrameDetailScreen = ({ navigation, route }) => {
     point_rate,
     rewards,
     members_count,
+    entry_points,
     is_default,
     created_at,
   } = program;
@@ -33,7 +34,7 @@ const ProgrameDetailScreen = ({ navigation, route }) => {
       <View style={styles.textContainer}>
         <List.Item
           title={name}
-          description={is_default ? "Default" : ""}
+          description={`${entry_points} entry points`}
           style={styles.listItem}
           descriptionStyle={styles.description}
         />
